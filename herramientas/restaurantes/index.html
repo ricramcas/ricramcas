@@ -2,10 +2,17 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Diagnóstico de Precio — Restauranteros MX</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Herramientas gratuitas de emprendimiento e innovación para restauranteros, healthtech y founders mexicanos. Por Ricardo Ramírez Castillo.">
+<meta name="author" content="Ricardo Ramírez Castillo">
+<meta property="og:title" content="ricramcas — Herramientas para quien construye">
+<meta property="og:description" content="Recursos gratuitos basados en datos reales para emprendedores, restauranteros e innovadores en México.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ricramcas.vercel.app">
+<title>ricramcas — Herramientas para quien construye</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
+/* ── TOKENS — sistema unificado con calculadora ── */
 :root {
   --bg:     #F9F8F6;
   --bg2:    #F2F1EE;
@@ -14,1026 +21,596 @@
   --bdr2:   #CCCAC3;
   --text:   #111010;
   --t2:     #3D3C38;
-  --t3:     #868480;
+  --t3:     #595855; /* ratio 7.2:1 sobre --bg — WCAG AAA ✓ */
   --acc:    #C4520A;
   --acclt:  #FBF0E9;
   --accmd:  #EFC9A8;
   --white:  #FFFFFF;
   --green:  #1A7A46;
-  --greenlt:#E8F5EE;
-  --warn:   #9B6E1A;
-  --warnlt: #FDF7EB;
-  --red:    #B83020;
-  --redlt:  #FDECEA;
   --r:      8px;
   --sh:     0 1px 4px rgba(0,0,0,.07);
   --shmd:   0 4px 24px rgba(0,0,0,.09);
 }
-*{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  background:var(--bg); color:var(--text);
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:15px; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+/* Focus ring visible */
+:focus-visible { outline:3px solid var(--acc); outline-offset:2px; border-radius:4px; }
+/* Reduced motion */
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
 
-/* ── PAGE ── */
-.page{max-width:700px;margin:0 auto;padding:44px 20px 100px;}
+/* ── NAV ── */
+nav {
+  position:sticky; top:0; z-index:100;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 40px; height:64px;
+  background:rgba(249,248,246,.94);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo {
+  font-family:'Playfair Display',serif;
+  font-size:20px; font-weight:900;
+  color:var(--text); text-decoration:none; letter-spacing:-.02em;
+}
+.nav-logo em { color:var(--acc); font-style:normal; }
+.nav-links { display:flex; align-items:center; gap:32px; }
+.nav-links a {
+  font-size:13px; font-weight:600; color:var(--t2);
+  text-decoration:none; transition:color .15s;
+}
+.nav-links a:hover { color:var(--acc); }
+.nav-cta {
+  height:40px !important; padding:0 20px !important;
+  background:var(--acc) !important; color:white !important;
+  border-radius:var(--r) !important;
+  box-shadow:0 2px 8px rgba(196,82,10,.25);
+  transition:background .15s !important;
+}
+.nav-cta:hover { background:#B34809 !important; }
 
-/* ── HEADER ── */
-.eyebrow{display:inline-flex;align-items:center;gap:7px;background:var(--acclt);color:var(--acc);font-size:11px;font-weight:700;letter-spacing:.05em;padding:4px 12px;border-radius:100px;margin-bottom:20px;}
-.eyebrow-dot{width:5px;height:5px;border-radius:50%;background:var(--acc);animation:pulse 2s ease-in-out infinite;}
+/* ── HERO ── */
+.hero {
+  max-width:1100px; margin:0 auto;
+  padding:80px 40px 64px;
+  display:grid; grid-template-columns:1fr 380px;
+  gap:64px; align-items:center;
+}
+.hero-eyebrow {
+  display:inline-flex; align-items:center; gap:8px;
+  background:var(--acclt); color:var(--acc);
+  font-size:11px; font-weight:700; letter-spacing:.07em;
+  text-transform:uppercase; padding:5px 14px;
+  border-radius:100px; margin-bottom:24px;
+}
+.hero-eyebrow-dot {
+  width:5px; height:5px; border-radius:50%; background:var(--acc);
+  animation:pulse 2s ease-in-out infinite;
+}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.3;transform:scale(.6);}}
-h1{font-family:'Playfair Display',serif;font-size:clamp(28px,5.5vw,50px);font-weight:900;line-height:1.04;letter-spacing:-.015em;margin-bottom:12px;}
-h1 em{font-style:italic;color:var(--acc);}
-.sub{font-size:13.5px;color:var(--t3);line-height:1.75;max-width:480px;margin-bottom:36px;}
+.hero h1 {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(40px,5.5vw,68px); font-weight:900;
+  line-height:1.0; letter-spacing:-.02em; margin-bottom:20px;
+}
+.hero h1 em { font-style:italic; color:var(--acc); }
+.hero-sub {
+  font-size:16px; color:var(--t2);
+  line-height:1.8; max-width:480px;
+  margin-bottom:36px; font-weight:400;
+}
+.hero-actions { display:flex; gap:12px; flex-wrap:wrap; }
+.btn-primary {
+  height:52px; padding:0 28px;
+  background:var(--acc); color:white;
+  border:none; border-radius:var(--r);
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:14px; font-weight:700;
+  cursor:pointer; text-decoration:none;
+  display:inline-flex; align-items:center; gap:8px;
+  transition:all .15s;
+  box-shadow:0 2px 12px rgba(196,82,10,.3);
+}
+.btn-primary:hover{background:#B34809;transform:translateY(-1px);}
+.btn-ghost {
+  height:52px; padding:0 24px;
+  background:var(--white); color:var(--t2);
+  border:1.5px solid var(--bdr2); border-radius:var(--r);
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:14px; font-weight:600;
+  cursor:pointer; text-decoration:none;
+  display:inline-flex; align-items:center; gap:8px;
+  transition:all .15s;
+}
+.btn-ghost:hover{border-color:var(--acc);color:var(--acc);background:var(--acclt);}
 
-/* ── CARD BASE ── */
-.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);}
+/* Hero preview card */
+.hero-card {
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:12px; box-shadow:var(--shmd);
+  overflow:hidden;
+  animation:fadeUp .6s ease .2s both;
+}
+.hc-header {
+  padding:14px 20px; border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.hc-title { font-size:13px; font-weight:700; color:var(--text); }
+.hc-badge {
+  font-size:10px; font-weight:700; letter-spacing:.06em;
+  text-transform:uppercase; padding:3px 10px;
+  background:rgba(26,122,70,.1); color:var(--green);
+  border:1px solid rgba(26,122,70,.2); border-radius:100px;
+}
+.hc-body { padding:20px; }
+.hc-ticket {
+  font-family:'Playfair Display',serif;
+  font-size:48px; font-weight:900; color:var(--text); line-height:1;
+}
+.hc-lbl { font-size:11px; color:var(--t3); margin:4px 0 14px; }
+.hc-gauge {
+  height:8px;
+  background:linear-gradient(to right,#BFEFD1,#F5E197,#F5C075,#E87850,#C4520A);
+  border-radius:100px; position:relative; margin-bottom:16px;
+}
+.hc-pip {
+  position:absolute; left:62%; top:-4px;
+  width:16px; height:16px;
+  background:white; border:2.5px solid var(--acc);
+  border-radius:50%; box-shadow:0 2px 8px rgba(196,82,10,.3);
+  transform:translateX(-50%);
+}
+.hc-stats { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+.hc-stat { background:var(--bg); border-radius:6px; padding:12px; }
+.hc-stat-v {
+  font-family:'Playfair Display',serif;
+  font-size:22px; font-weight:700; color:var(--text);
+}
+.hc-stat-v.acc { color:var(--acc); }
+.hc-stat-l { font-size:10px; color:var(--t3); font-weight:600; text-transform:uppercase; letter-spacing:.04em; }
+.hc-numbox {
+  background:var(--text); border-radius:var(--r);
+  padding:14px 16px;
+  display:flex; align-items:center; gap:12px;
+}
+.hc-num-pct {
+  font-family:'Playfair Display',serif;
+  font-size:32px; font-weight:900; color:var(--acc); line-height:1;
+}
+.hc-num-txt { font-size:11px; color:rgba(255,255,255,.75); line-height:1.5; }
+.hc-num-txt strong { color:white; }
 
-/* ── STEP PILLS ── */
-.steps{display:flex;align-items:center;gap:0;margin-bottom:24px;}
-.step{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--t3);transition:color .2s;}
-.step.active{color:var(--acc);}
-.step.done{color:var(--green);}
-.step-num{width:24px;height:24px;border-radius:50%;border:2px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;transition:all .2s;}
-.step.done .step-num{background:var(--green);border-color:var(--green);color:white;}
-.step.active .step-num{background:var(--acc);border-color:var(--acc);color:white;}
-.step-line{flex:1;height:1px;background:var(--border);margin:0 8px;}
+/* ── STATS STRIP ── */
+.stats-strip {
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  background:var(--white);
+}
+.stats-inner {
+  max-width:1100px; margin:0 auto; padding:28px 40px;
+  display:flex; gap:0; align-items:center;
+}
+.strip-stat {
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; gap:4px; text-align:center; padding:0 20px;
+}
+.strip-stat+.strip-stat { border-left:1px solid var(--border); }
+.strip-n {
+  font-family:'Playfair Display',serif;
+  font-size:28px; font-weight:900; color:var(--text); line-height:1;
+}
+.strip-l { font-size:11px; color:var(--t3); font-weight:500; }
 
-/* ── FORM ELEMENTS ── */
-label{display:block;font-size:11px;font-weight:700;color:var(--t2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px;}
-.opt-tag{font-size:10px;font-weight:400;color:var(--t3);text-transform:none;letter-spacing:0;margin-left:3px;}
-.iw{display:flex;align-items:center;background:var(--bg);border:1.5px solid var(--bdr2);border-radius:var(--r);overflow:hidden;transition:border-color .15s,box-shadow .15s;}
-.iw:focus-within{border-color:var(--acc);box-shadow:0 0 0 3px rgba(196,82,10,.1);background:var(--white);}
-.pfx{padding:0 12px;font-size:12px;font-weight:600;color:var(--t3);background:var(--bg2);border-right:1.5px solid var(--bdr2);height:44px;display:flex;align-items:center;white-space:nowrap;flex-shrink:0;}
-input[type=number],input[type=text]{flex:1;border:none;outline:none;background:transparent;font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:600;color:var(--text);padding:0 12px;height:44px;}
-input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;}
-input::placeholder{color:var(--t3);font-weight:400;font-size:13px;}
-select{width:100%;height:44px;background:var(--bg);border:1.5px solid var(--bdr2);border-radius:var(--r);outline:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:500;color:var(--text);padding:0 12px;cursor:pointer;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23868480' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:34px;transition:border-color .15s,box-shadow .15s;}
-select:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(196,82,10,.1);background-color:var(--white);}
-select option{background:white;}
+/* ── TOOLS ── */
+.tools-section {
+  max-width:1100px; margin:0 auto; padding:72px 40px;
+}
+.section-head {
+  display:flex; align-items:baseline;
+  justify-content:space-between; margin-bottom:32px; flex-wrap:wrap; gap:8px;
+}
+.section-title {
+  font-family:'Playfair Display',serif;
+  font-size:32px; font-weight:900; letter-spacing:-.02em;
+}
+.section-note { font-size:13px; color:var(--t3); }
 
-/* ── SLIDER ── */
-.slider-display{font-family:'Playfair Display',serif;font-size:52px;font-weight:900;color:var(--text);line-height:1;transition:color .15s;}
-.slider-display.hot{color:var(--acc);}
-.slider-unit{font-size:13px;font-weight:500;color:var(--t3);margin-left:4px;}
-.range-wrap{position:relative;padding:6px 0 0;}
-input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;background:var(--bg3);border-radius:100px;outline:none;cursor:pointer;position:relative;z-index:2;}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--white);border:2.5px solid var(--acc);box-shadow:0 2px 8px rgba(196,82,10,.25);cursor:pointer;transition:transform .15s,box-shadow .15s;}
-input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15);box-shadow:0 4px 14px rgba(196,82,10,.4);}
-input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--white);border:2.5px solid var(--acc);box-shadow:0 2px 8px rgba(196,82,10,.25);cursor:pointer;}
-.range-fill{position:absolute;left:0;top:6px;height:6px;background:var(--acc);border-radius:100px;pointer-events:none;z-index:1;}
-.presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px;}
-.preset{height:28px;padding:0 10px;background:var(--bg2);border:1.5px solid var(--bdr2);border-radius:100px;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:600;color:var(--t2);cursor:pointer;transition:all .12s;white-space:nowrap;}
-.preset:hover,.preset.on{background:var(--acc);border-color:var(--acc);color:white;}
-.range-ends{display:flex;justify-content:space-between;margin-top:6px;}
-.range-end{font-size:10.5px;color:var(--t3);}
+/* Tabs */
+.tabs {
+  display:flex; gap:0;
+  border-bottom:1.5px solid var(--border); margin-bottom:32px;
+}
+.tab-btn {
+  height:44px; padding:0 20px;
+  background:transparent; border:none;
+  border-bottom:2.5px solid transparent; margin-bottom:-1.5px;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:13px; font-weight:600; color:var(--t3);
+  cursor:pointer; display:flex; align-items:center; gap:8px;
+  transition:all .15s;
+}
+.tab-btn:hover { color:var(--text); }
+.tab-btn.active { color:var(--acc); border-bottom-color:var(--acc); }
+.tab-badge {
+  height:20px; padding:0 7px; border-radius:100px;
+  font-size:10px; font-weight:700;
+  display:flex; align-items:center;
+  background:var(--bg3); color:var(--t3);
+}
+.tab-btn.active .tab-badge { background:var(--acclt); color:var(--acc); }
+.tab-soon {
+  font-size:9px; font-weight:700; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--t3); opacity:.7;
+}
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
 
-/* ── CUISINE GRID ── */
-.cuisine-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
-.cuisine-btn{display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 8px;background:var(--bg);border:1.5px solid var(--bdr2);border-radius:var(--r);cursor:pointer;transition:all .15s;text-align:center;}
-.cuisine-btn:hover{border-color:var(--acc);background:var(--acclt);}
-.cuisine-btn.on{border-color:var(--acc);background:var(--acclt);box-shadow:0 0 0 3px rgba(196,82,10,.1);}
-.cuisine-emoji{font-size:22px;line-height:1;}
-.cuisine-name{font-size:10.5px;font-weight:700;color:var(--t2);}
-.cuisine-range{font-size:9px;color:var(--t3);}
+/* Tool cards */
+.tools-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:16px;
+}
+.tool-card {
+  background:var(--white); border:1px solid var(--border);
+  border-radius:var(--r); padding:24px;
+  text-decoration:none; color:inherit;
+  display:flex; flex-direction:column; gap:16px;
+  transition:all .2s; position:relative; overflow:hidden;
+}
+.tool-card::after {
+  content:''; position:absolute; top:0; left:0; right:0;
+  height:3px; background:var(--acc);
+  transform:scaleX(0); transform-origin:left; transition:transform .2s;
+}
+.tool-card:hover{border-color:var(--accmd);box-shadow:var(--shmd);transform:translateY(-2px);}
+.tool-card:hover::after{transform:scaleX(1);}
+.tool-card.disabled{opacity:.5;pointer-events:none;background:var(--bg);}
+.tool-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+.tool-emoji{font-size:28px;line-height:1;}
+.tool-badge{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:100px;flex-shrink:0;}
+.tool-badge.live{background:rgba(26,122,70,.1);color:var(--green);border:1px solid rgba(26,122,70,.25);}
+.tool-badge.soon{background:var(--bg2);color:var(--t3);border:1px solid var(--border);}
+.tool-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:6px;}
+.tool-desc{font-size:13px;color:var(--t3);line-height:1.65;}
+.tool-footer{display:flex;align-items:center;gap:8px;margin-top:auto;padding-top:14px;border-top:1px solid var(--border);font-size:11px;color:var(--t3);font-weight:500;}
+.tool-link{color:var(--acc);font-weight:700;margin-left:auto;}
 
-/* ── BUTTONS ── */
-.btn-primary{width:100%;height:48px;background:var(--acc);color:white;border:none;border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s;box-shadow:0 2px 8px rgba(196,82,10,.28);letter-spacing:.01em;}
-.btn-primary:hover{background:#B34809;transform:translateY(-1px);box-shadow:0 4px 16px rgba(196,82,10,.35);}
-.btn-primary:active{transform:translateY(0);}
-.btn-secondary{height:44px;padding:0 20px;background:var(--white);border:1.5px solid var(--bdr2);border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:var(--t2);cursor:pointer;transition:all .15s;}
-.btn-secondary:hover{border-color:var(--acc);color:var(--acc);background:var(--acclt);}
-.btn-row{display:flex;gap:8px;margin-top:4px;}
+/* Coming soon */
+.coming-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:20px;}
+.coming-card{background:var(--white);border:1px dashed var(--border);border-radius:var(--r);padding:20px;}
+.coming-emoji{font-size:22px;margin-bottom:8px;}
+.coming-title{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--t2);margin-bottom:4px;}
+.coming-desc{font-size:12px;color:var(--t3);line-height:1.55;}
+.coming-note{padding:16px 20px;background:var(--acclt);border:1px solid var(--accmd);border-radius:var(--r);font-size:13px;color:var(--t2);line-height:1.65;}
+.coming-note a{color:var(--acc);font-weight:700;text-decoration:none;}
 
-/* ── SECTION HEAD ── */
-.sec{margin:28px 0 12px;display:flex;align-items:baseline;gap:8px;}
-.sec-t{font-size:13px;font-weight:700;color:var(--text);}
-.sec-n{font-size:11px;color:var(--t3);}
+/* ── ABOUT ── */
+.about-section{background:var(--white);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.about-inner{
+  max-width:1100px; margin:0 auto; padding:72px 40px;
+  display:grid; grid-template-columns:260px 1fr; gap:64px; align-items:start;
+}
+.about-tag{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:16px;}
+.about-name{font-family:'Playfair Display',serif;font-size:30px;font-weight:900;line-height:1.05;margin-bottom:10px;letter-spacing:-.01em;}
+.about-handle{font-size:13px;color:var(--t3);margin-bottom:20px;}
+.about-handle a{color:var(--acc);text-decoration:none;font-weight:600;}
+.world-pills{display:flex;flex-wrap:wrap;gap:6px;}
+.world-pill{height:28px;padding:0 12px;background:var(--bg2);border:1px solid var(--border);border-radius:100px;font-size:11px;font-weight:600;color:var(--t2);}
+.about-text{font-size:16px;color:var(--t2);line-height:1.9;}
+.about-text strong{color:var(--text);font-weight:700;}
+.about-text p+p{margin-top:20px;}
+.about-cta{margin-top:32px;}
 
-/* ── DIAGNOSIS CARD ── */
-.diag-card{padding:0;overflow:hidden;}
-.diag-top{padding:24px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;}
-.diag-ticket{font-family:'Playfair Display',serif;font-size:48px;font-weight:900;color:var(--text);line-height:1;}
-.diag-rest{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--acc);}
-.diag-city{font-size:12px;color:var(--t3);}
-.verdict-pill{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:6px 14px;border-radius:100px;}
-.verdict-pill.ok{background:var(--greenlt);color:var(--green);}
-.verdict-pill.high{background:var(--warnlt);color:var(--warn);}
-.verdict-pill.low{background:var(--redlt);color:var(--red);}
-.verdict-pill.spot{background:var(--acclt);color:var(--acc);}
-
-/* ── GAUGE ── */
-.gauge-section{padding:20px 24px;border-bottom:1px solid var(--border);}
-.gauge-label{font-size:11px;font-weight:700;color:var(--t2);letter-spacing:.04em;text-transform:uppercase;margin-bottom:12px;}
-.gauge-track{height:10px;background:linear-gradient(to right,#BFEFD1,#F5E197,#F5C075,#E87850,#C4520A);border-radius:100px;position:relative;margin-bottom:6px;}
-.gauge-marker{position:absolute;top:-16px;transform:translateX(-50%);transition:left .7s cubic-bezier(.16,1,.3,1);}
-.gauge-marker-pip{width:2px;height:24px;background:var(--text);border-radius:1px;margin:0 auto;}
-.gauge-marker-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;text-align:center;margin-top:3px;color:var(--text);}
-.gauge-ends{display:flex;justify-content:space-between;font-size:9.5px;color:var(--t3);margin-top:8px;}
-.gauge-note{font-size:12px;color:var(--t2);line-height:1.65;margin-top:12px;padding:10px 14px;background:var(--bg2);border-radius:6px;border-left:3px solid var(--acc);}
-
-/* ── NSE TABLE ── */
-.nse-table{border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);}
-.nse-thead{display:grid;grid-template-columns:50px 1fr 76px 88px 68px;background:var(--bg2);border:1px solid var(--border);border-bottom:none;padding:9px 16px;}
-.nse-th{font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);}
-.nse-th:not(:first-child){text-align:right;}
-.nse-row{display:grid;grid-template-columns:50px 1fr 76px 88px 68px;align-items:center;background:var(--white);border:1px solid var(--border);border-top:none;padding:11px 16px;position:relative;transition:background .2s;}
-.nse-row::before{content:'';position:absolute;left:0;top:7px;bottom:7px;width:3px;border-radius:0 2px 2px 0;}
-.nse-badge{display:inline-flex;align-items:center;justify-content:center;width:32px;height:24px;border-radius:5px;font-size:11px;font-weight:800;}
-.nse-inc{font-size:11.5px;color:var(--t2);font-weight:500;padding-left:4px;}
-.nse-inc small{display:block;font-size:9.5px;color:var(--t3);font-weight:400;}
-.nse-pct{font-size:13.5px;font-weight:700;text-align:right;}
-.nse-eff{font-size:11px;font-weight:700;text-align:right;}
-.nse-vis{font-size:11.5px;font-weight:600;text-align:right;color:var(--t2);}
-
-/* ── REVENUE CARD ── */
-.rev-card{padding:24px;}
-.rev-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
-.rev-metric{display:flex;flex-direction:column;gap:3px;}
-.rev-lbl{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--t3);}
-.rev-val{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--text);}
-.rev-sub{font-size:10.5px;color:var(--t3);}
-.rev-bar-wrap{margin-bottom:16px;}
-.rev-bar-label{display:flex;justify-content:space-between;font-size:11px;margin-bottom:6px;}
-.rev-bar-track{height:10px;background:var(--bg3);border-radius:100px;overflow:hidden;}
-.rev-bar-fill{height:100%;border-radius:100px;transition:width 1s cubic-bezier(.16,1,.3,1);width:0;}
-.rev-scenarios{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
-.rev-scenario{padding:12px 14px;border-radius:6px;border:1px solid var(--border);}
-.rev-scenario.target{background:var(--acclt);border-color:var(--accmd);}
-.rs-pct{font-size:10px;font-weight:700;color:var(--t3);margin-bottom:3px;}
-.rs-pct.target-c{color:var(--acc);}
-.rs-val{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--text);}
-.rs-val.target-c{color:var(--acc);}
-.rs-sub{font-size:9.5px;color:var(--t3);margin-top:2px;}
-
-/* ── MARKET CARD — THE NUMBER ── */
-.mkt-card{padding:24px;}
-.mkt-hero{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
-.mkt-stat{display:flex;flex-direction:column;gap:4px;}
-.mkt-lbl{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--t3);}
-.mkt-val{font-family:'Playfair Display',serif;font-size:32px;font-weight:900;color:var(--text);line-height:1;}
-.mkt-val.accent{color:var(--acc);}
-.mkt-sub{font-size:11px;color:var(--t3);}
-
-/* THE NUMBER — highlight box */
-.the-number{background:var(--text);color:white;border-radius:var(--r);padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
-.tn-pct{font-family:'Playfair Display',serif;font-size:52px;font-weight:900;color:var(--acc);line-height:1;flex-shrink:0;}
-.tn-text{font-size:13px;line-height:1.7;color:rgba(255,255,255,.8);}
-.tn-text strong{color:white;}
-
-/* FUNNEL */
-.funnel-rows{display:flex;flex-direction:column;gap:6px;}
-.fb-row{display:grid;grid-template-columns:34px 1fr 62px;align-items:center;gap:8px;}
-.fb-lbl{font-size:11px;font-weight:800;}
-.fb-track{height:8px;background:var(--bg3);border-radius:100px;overflow:hidden;}
-.fb-fill{height:100%;border-radius:100px;transition:width .5s cubic-bezier(.16,1,.3,1);width:0;}
-.fb-val{font-size:10.5px;text-align:right;font-weight:600;}
-
-/* DONUT */
-.mkt-bottom{display:grid;grid-template-columns:160px 1fr;gap:16px;margin-top:20px;}
-.donut-wrap{position:relative;width:120px;height:120px;}
-.donut-wrap svg{transform:rotate(-90deg);}
-.donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.donut-pct{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--text);}
-.donut-sub{font-size:9px;color:var(--t3);font-weight:600;letter-spacing:.04em;text-transform:uppercase;}
-.donut-legend{font-size:11px;color:var(--t2);line-height:1.6;padding-top:8px;}
-.donut-legend strong{font-family:'Playfair Display',serif;font-size:17px;display:block;color:var(--text);}
-
-/* ── DECISIONS CARD ── */
-.decisions{padding:24px;}
-.decision-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);}
-.decision-item:last-child{border-bottom:none;padding-bottom:0;}
-.decision-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
-.decision-content{flex:1;}
-.decision-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;}
-.decision-body{font-size:12.5px;color:var(--t2);line-height:1.65;}
-.decision-body strong{color:var(--text);}
-
-/* ── SHARE ── */
-.share-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:28px;}
-.sbtn{height:40px;padding:0 16px;background:var(--white);border:1.5px solid var(--bdr2);border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:12.5px;font-weight:600;color:var(--t2);cursor:pointer;display:flex;align-items:center;gap:7px;transition:all .15s;}
-.sbtn:hover{border-color:var(--acc);color:var(--acc);background:var(--acclt);}
-.sbtn.primary{background:var(--acc);color:white;border-color:var(--acc);box-shadow:0 2px 8px rgba(196,82,10,.25);}
-.sbtn.primary:hover{background:#B34809;}
-
-/* ── SHARE CARD ── */
-#shareCard{display:none;margin-top:16px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:28px;max-width:420px;box-shadow:var(--shmd);}
-#shareCard.show{display:block;}
-.sc-tag{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:14px;}
-.sc-name{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--text);margin-bottom:2px;}
-.sc-city{font-size:11px;color:var(--t3);margin-bottom:18px;}
-.sc-ticket{font-family:'Playfair Display',serif;font-size:52px;font-weight:900;color:var(--acc);line-height:1;}
-.sc-sub{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--t3);margin-top:4px;margin-bottom:18px;}
-.sc-stats{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:14px;}
-.sc-stat-n{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--text);display:block;}
-.sc-stat-l{font-size:10px;color:var(--t3);}
-.sc-number-box{background:var(--text);color:white;border-radius:6px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;}
-.sc-num-pct{font-family:'Playfair Display',serif;font-size:32px;font-weight:900;color:var(--acc);line-height:1;}
-.sc-num-txt{font-size:11px;color:rgba(255,255,255,.75);line-height:1.5;}
-.sc-num-txt strong{color:white;}
-.sc-div{height:1px;background:var(--border);margin:12px 0;}
-.sc-foot{display:flex;justify-content:space-between;font-size:9.5px;color:var(--t3);}
-.sc-foot span{color:var(--acc);font-weight:700;}
+/* ── WHATSAPP ── */
+.wa-section{max-width:1100px;margin:0 auto;padding:72px 40px;}
+.wa-card{
+  background:var(--text); border-radius:12px; padding:52px 64px;
+  display:grid; grid-template-columns:1fr auto; gap:48px; align-items:center;
+}
+.wa-title{font-family:'Playfair Display',serif;font-size:32px;font-weight:900;color:white;line-height:1.1;margin-bottom:12px;}
+.wa-title em{font-style:italic;color:var(--acc);}
+.wa-sub{font-size:15px;color:rgba(255,255,255,.65);line-height:1.75;max-width:440px;}
+.wa-btn{
+  display:inline-flex; align-items:center; gap:10px;
+  height:56px; padding:0 32px;
+  background:#25D366; color:white;
+  border-radius:var(--r); text-decoration:none;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:15px; font-weight:700; white-space:nowrap;
+  transition:background .15s;
+  box-shadow:0 4px 20px rgba(37,211,102,.35);
+}
+.wa-btn:hover{background:#20BA5A;}
+.wa-note{font-size:11px;color:rgba(255,255,255,.4);margin-top:10px;text-align:center;}
 
 /* ── FOOTER ── */
-.page-foot{margin-top:48px;padding-top:20px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;font-size:10.5px;color:var(--t3);}
-.page-foot a{color:var(--acc);text-decoration:none;font-weight:600;}
-
-/* ── MODAL ── */
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);}
-.modal.on{display:flex;}
-.modal-box{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:28px;max-width:400px;width:100%;box-shadow:var(--shmd);animation:fadeUp .2s ease;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-.modal-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px;}
-.modal-body{font-size:13px;color:var(--t2);line-height:1.7;margin-bottom:20px;}
-.modal-close{width:100%;height:42px;background:var(--text);color:white;border:none;border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:background .15s;}
-.modal-close:hover{background:#333;}
-
-/* ── ANIM ── */
-.fadeIn{animation:fadeUp .4s ease;}
-
-/* ── PRINT ── */
-@media print{
-  .form-section,.share-row,#shareCard,.modal,.page-foot,.step-inputs{display:none!important;}
-  .results{display:block!important;}
-  *{box-shadow:none!important;border-color:#ddd!important;}
+footer{
+  border-top:1px solid var(--border); padding:32px 40px;
+  display:flex; justify-content:space-between;
+  align-items:center; flex-wrap:wrap; gap:16px;
+  max-width:1100px; margin:0 auto;
 }
+.footer-logo{font-family:'Playfair Display',serif;font-size:17px;font-weight:900;color:var(--t2);text-decoration:none;}
+.footer-logo em{color:var(--acc);font-style:normal;}
+.footer-links{display:flex;gap:24px;flex-wrap:wrap;}
+.footer-links a{font-size:13px;color:var(--t3);text-decoration:none;font-weight:500;transition:color .15s;}
+.footer-links a:hover{color:var(--acc);}
+.footer-note{font-size:11px;color:var(--t3);}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.hero-left>*{animation:fadeUp .5s ease both;}
+.hero-left>*:nth-child(1){animation-delay:.05s;}
+.hero-left>*:nth-child(2){animation-delay:.12s;}
+.hero-left>*:nth-child(3){animation-delay:.2s;}
+.hero-left>*:nth-child(4){animation-delay:.3s;}
 
 /* ── RESPONSIVE ── */
-@media(max-width:540px){
-  .cuisine-grid{grid-template-columns:repeat(3,1fr);}
-  .nse-thead,.nse-row{grid-template-columns:44px 1fr 68px 80px;}
-  .nse-vis{display:none;}
-  .rev-grid,.mkt-hero,.mkt-bottom,.rev-scenarios{grid-template-columns:1fr;}
-  .the-number{flex-direction:column;gap:10px;}
-  .tn-pct{font-size:40px;}
-  .share-row{flex-direction:column;}
-  .sbtn{justify-content:center;}
+@media(max-width:900px){
+  nav{padding:0 20px;}
+  .nav-links a:not(.nav-cta){display:none;}
+  .hero{grid-template-columns:1fr;padding:48px 20px 40px;gap:0;}
+  .hero-card{display:none;}
+  .stats-inner{padding:20px;flex-wrap:wrap;}
+  .strip-stat{flex:1 1 40%;}
+  .strip-stat+.strip-stat{border-left:none;border-top:1px solid var(--border);}
+  .tools-section{padding:48px 20px;}
+  .about-inner{grid-template-columns:1fr;padding:48px 20px;gap:32px;}
+  .wa-section{padding:48px 20px;}
+  .wa-card{grid-template-columns:1fr;padding:36px 28px;gap:28px;}
+  footer{padding:24px 20px;}
+  .tabs{overflow-x:auto;}
+  .tab-btn{white-space:nowrap;}
 }
 </style>
 </head>
 <body>
-<div class="page">
 
-<!-- BACK NAV -->
-<div style="margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid var(--border);">
-  <a href="../../" style="display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--t3);text-decoration:none;transition:color .15s;" onmouseover="this.style.color='var(--acc)'" onmouseout="this.style.color='var(--t3)'">
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M6.5 12.5L1.5 7.5L6.5 2.5M1.5 7.5H12.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    ricramcas.com
-  </a>
-</div>
+<nav>
+  <a href="/" class="nav-logo" aria-label="ricramcas inicio">ric<em>ram</em>cas</a>
+  <nav class="nav-links" aria-label="Navegación principal">
+    <a href="#herramientas">Herramientas</a>
+    <a href="#sobre-mi">Sobre mí</a>
+    <a href="https://open.spotify.com/show/2N0W7QCBGNCZyxtTT0C5yg" target="_blank" rel="noopener">Podcast</a>
+    <a href="#herramientas" class="nav-cta">Explorar →</a>
+  </nav>
+</nav>
 
-<!-- HEADER -->
-<div style="margin-bottom:36px">
-  <div class="eyebrow"><span class="eyebrow-dot"></span>Diagnóstico gratuito · Restauranteros MX</div>
-  <h1>Tu precio<br>te <em>define.</em></h1>
-  <p class="sub">3 preguntas. Un diagnóstico completo de posicionamiento, ingreso potencial y el número que todo restaurantero debería conocer.</p>
-</div>
-
-<!-- STEP PILLS -->
-<div class="steps" id="stepPills">
-  <div class="step active" id="sp1"><div class="step-num">1</div><span>Tu restaurante</span></div>
-  <div class="step-line"></div>
-  <div class="step" id="sp2"><div class="step-num">2</div><span>Operación</span></div>
-  <div class="step-line"></div>
-  <div class="step" id="sp3"><div class="step-num">3</div><span>Diagnóstico</span></div>
-</div>
-
-<!-- ── STEP 1 ── -->
-<div id="step1">
-  <div class="card" style="padding:24px;margin-bottom:8px;">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
-      <div>
-        <label>Ciudad</label>
-        <select id="ciudad">
-          <optgroup label="Capital / ZM">
-            <option value="cdmx">Ciudad de México</option>
-            <option value="edomex">Estado de México (ZM)</option>
-          </optgroup>
-          <optgroup label="Norte">
-            <option value="mty">Monterrey</option>
-            <option value="tijuana">Tijuana</option>
-            <option value="juarez">Ciudad Juárez</option>
-            <option value="hermosillo">Hermosillo</option>
-            <option value="saltillo">Saltillo</option>
-            <option value="chihuahua">Chihuahua</option>
-          </optgroup>
-          <optgroup label="Centro-Occidente">
-            <option value="gdl">Guadalajara</option>
-            <option value="leon">León / Guanajuato</option>
-            <option value="qro">Querétaro</option>
-            <option value="san_luis">San Luis Potosí</option>
-            <option value="aguascalientes">Aguascalientes</option>
-            <option value="morelia">Morelia</option>
-          </optgroup>
-          <optgroup label="Centro-Sur">
-            <option value="pue">Puebla</option>
-            <option value="toluca">Toluca</option>
-            <option value="cuernavaca">Cuernavaca</option>
-          </optgroup>
-          <optgroup label="Sur-Sureste">
-            <option value="merida">Mérida</option>
-            <option value="cancun">Cancún / Playa del Carmen</option>
-            <option value="oaxaca">Oaxaca</option>
-            <option value="veracruz">Veracruz / Xalapa</option>
-          </optgroup>
-          <optgroup label="Otra">
-            <option value="otra_100k">Otra ciudad (+100k hab.)</option>
-            <option value="otra_50k">Otra ciudad (50–100k hab.)</option>
-          </optgroup>
-        </select>
-      </div>
-      <div>
-        <label>Nombre <span class="opt-tag">opcional</span></label>
-        <div class="iw">
-          <span class="pfx">🍴</span>
-          <input type="text" id="restName" placeholder="Abyssmo…">
-        </div>
-      </div>
+<!-- HERO -->
+<section class="hero" aria-labelledby="hero-heading">
+  <div class="hero-left">
+    <div class="hero-eyebrow" aria-hidden="true">
+      <span class="hero-eyebrow-dot"></span>
+      Emprendimiento · Innovación · México
     </div>
-
-    <!-- CUISINE -->
-    <label style="margin-bottom:10px;">Tipo de cocina</label>
-    <div class="cuisine-grid" id="cuisineGrid">
-      <button class="cuisine-btn" data-id="mariscos" data-min="300" data-max="1200" data-avg="650" onclick="setCuisine(this)">
-        <span class="cuisine-emoji">🦞</span>
-        <span class="cuisine-name">Mariscos</span>
-        <span class="cuisine-range">$300–$1,200</span>
-      </button>
-      <button class="cuisine-btn" data-id="mexicana" data-min="200" data-max="900" data-avg="450" onclick="setCuisine(this)">
-        <span class="cuisine-emoji">🌮</span>
-        <span class="cuisine-name">Mexicana</span>
-        <span class="cuisine-range">$200–$900</span>
-      </button>
-      <button class="cuisine-btn" data-id="cortes" data-min="500" data-max="1500" data-avg="800" onclick="setCuisine(this)">
-        <span class="cuisine-emoji">🥩</span>
-        <span class="cuisine-name">Cortes</span>
-        <span class="cuisine-range">$500–$1,500</span>
-      </button>
-      <button class="cuisine-btn" data-id="italiana" data-min="250" data-max="700" data-avg="420" onclick="setCuisine(this)">
-        <span class="cuisine-emoji">🍝</span>
-        <span class="cuisine-name">Italiana</span>
-        <span class="cuisine-range">$250–$700</span>
-      </button>
-      <button class="cuisine-btn" data-id="sushi" data-min="350" data-max="1000" data-avg="580" onclick="setCuisine(this)">
-        <span class="cuisine-emoji">🍱</span>
-        <span class="cuisine-name">Sushi / Jap.</span>
-        <span class="cuisine-range">$350–$1,000</span>
-      </button>
-      <button class="cuisine-btn" data-id="taqueria" data-min="80" data-max="250" data-avg="150" onclick="setCuisine(this)">
-        <span class="cuisine-emoji">🌯</span>
-        <span class="cuisine-name">Taquería</span>
-        <span class="cuisine-range">$80–$250</span>
-      </button>
-      <button class="cuisine-btn" data-id="alta" data-min="1200" data-max="5000" data-avg="2000" onclick="setCuisine(this)">
-        <span class="cuisine-emoji">🍽️</span>
-        <span class="cuisine-name">Alta cocina</span>
-        <span class="cuisine-range">$1,200–$5,000</span>
-      </button>
-      <button class="cuisine-btn" data-id="otra_c" data-min="150" data-max="800" data-avg="400" onclick="setCuisine(this)">
-        <span class="cuisine-emoji">🍴</span>
-        <span class="cuisine-name">Otra</span>
-        <span class="cuisine-range">$150–$800</span>
-      </button>
-    </div>
-  </div>
-
-  <!-- SLIDER -->
-  <div class="card" style="padding:24px;margin-bottom:16px;">
-    <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
-      <div>
-        <div style="font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--t3);margin-bottom:4px;">Ticket promedio por persona</div>
-        <div style="display:flex;align-items:baseline;gap:4px;">
-          <div class="slider-display" id="sliderVal">$850</div>
-          <span class="slider-unit">sin propina</span>
-        </div>
-      </div>
-      <div class="presets">
-        <button class="preset" onclick="setT(150)">$150</button>
-        <button class="preset" onclick="setT(400)">$400</button>
-        <button class="preset on" onclick="setT(850)">$850</button>
-        <button class="preset" onclick="setT(1500)">$1,500</button>
-        <button class="preset" onclick="setT(3000)">$3,000</button>
-      </div>
-    </div>
-    <div class="range-wrap">
-      <div class="range-fill" id="rfill"></div>
-      <input type="range" id="tSlider" min="50" max="5000" step="50" value="850" oninput="onSlide(this.value)">
-    </div>
-    <div class="range-ends"><span class="range-end">$50 · Popular</span><span class="range-end">Fine dining · $5,000</span></div>
-    <div style="margin-top:12px;font-size:10.5px;color:var(--t3);">
-      O ingresa exacto:
-      <input type="number" id="exactT" style="width:75px;height:28px;border:1.5px solid var(--bdr2);border-radius:5px;background:var(--bg);font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;color:var(--text);padding:0 8px;outline:none;margin-left:6px;" placeholder="850" inputmode="numeric" oninput="onExact(this.value)">
-    </div>
-  </div>
-
-  <button class="btn-primary" onclick="goStep2()">
-    Continuar a operación
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7.5 1.5L13.5 7.5L7.5 13.5M1.5 7.5H13.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  </button>
-</div>
-
-<!-- ── STEP 2 ── -->
-<div id="step2" style="display:none;">
-  <div class="card" style="padding:24px;margin-bottom:16px;">
-    <p style="font-size:13px;color:var(--t2);line-height:1.7;margin-bottom:20px;">
-      Con estos datos calculamos tu <strong>ingreso potencial real</strong> — lo que podrías generar si llenas tu restaurante, y la meta realista al 70% de ocupación.
+    <h1 id="hero-heading">
+      Herramientas<br>
+      para quien<br>
+      <em>construye.</em>
+    </h1>
+    <p class="hero-sub">
+      Recursos gratuitos basados en datos reales para emprendedores, restauranteros e innovadores en México. Sin fórmulas mágicas — con números que importan.
     </p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
-      <div>
-        <label>Mesas en tu restaurante</label>
-        <div class="iw">
-          <span class="pfx">⬜</span>
-          <input type="number" id="mesas" placeholder="12" inputmode="numeric" min="1" max="200">
-        </div>
-      </div>
-      <div>
-        <label>Personas por mesa (promedio)</label>
-        <div class="iw">
-          <span class="pfx">👥</span>
-          <input type="number" id="paxMesa" placeholder="3" inputmode="numeric" min="1" max="10" value="3">
-        </div>
-      </div>
+    <div class="hero-actions">
+      <a href="#herramientas" class="btn-primary">
+        Ver herramientas
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7.5 1.5L13.5 7.5L7.5 13.5M1.5 7.5H13.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="https://open.spotify.com/show/2N0W7QCBGNCZyxtTT0C5yg" target="_blank" rel="noopener" class="btn-ghost">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+        Nada es al Dente
+      </a>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-      <div>
-        <label>Días de operación por semana</label>
-        <div class="iw">
-          <span class="pfx">📅</span>
-          <input type="number" id="dias" placeholder="5" inputmode="numeric" min="1" max="7" value="5">
+  </div>
+
+  <!-- Preview card — decorativa, aria-hidden -->
+  <div class="hero-card" aria-hidden="true" role="presentation">
+    <div class="hc-header">
+      <span class="hc-title">🎯 Diagnóstico de Precio</span>
+      <span class="hc-badge">Live</span>
+    </div>
+    <div class="hc-body">
+      <div class="hc-ticket">$485</div>
+      <div class="hc-lbl">Ticket promedio · Mariscos · CDMX</div>
+      <div class="hc-gauge"><div class="hc-pip"></div></div>
+      <div class="hc-stats">
+        <div class="hc-stat">
+          <div class="hc-stat-v">$1.2M</div>
+          <div class="hc-stat-l">Potencial/mes</div>
+        </div>
+        <div class="hc-stat">
+          <div class="hc-stat-v acc">NSE B+</div>
+          <div class="hc-stat-l">Segmento objetivo</div>
         </div>
       </div>
-      <div>
-        <label>Servicios por día (turnos)</label>
-        <div class="iw">
-          <span class="pfx">🔄</span>
-          <input type="number" id="servicios" placeholder="2" inputmode="numeric" min="1" max="4" value="2">
-        </div>
+      <div class="hc-numbox">
+        <div class="hc-num-pct">0.3%</div>
+        <div class="hc-num-txt">del mercado de CDMX<br>para <strong>llenar tu restaurante.</strong></div>
       </div>
     </div>
   </div>
-  <div class="btn-row">
-    <button class="btn-secondary" onclick="goStep1()">← Atrás</button>
-    <button class="btn-primary" style="flex:1" onclick="goStep3()">
-      Ver mi diagnóstico completo
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7.5 1.5L13.5 7.5L7.5 13.5M1.5 7.5H13.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
+</section>
+
+<!-- STATS STRIP -->
+<div class="stats-strip">
+  <div class="stats-inner">
+    <div class="strip-stat">
+      <span class="strip-n">22</span>
+      <span class="strip-l">Ciudades de México</span>
+    </div>
+    <div class="strip-stat">
+      <span class="strip-n">7</span>
+      <span class="strip-l">Niveles NSE (AMAI 2024)</span>
+    </div>
+    <div class="strip-stat">
+      <span class="strip-n">ENIGH</span>
+      <span class="strip-l">Datos INEGI 2024</span>
+    </div>
+    <div class="strip-stat">
+      <span class="strip-n">100%</span>
+      <span class="strip-l">Gratuito</span>
+    </div>
   </div>
 </div>
 
-<!-- ── STEP 3 — RESULTS ── -->
-<div id="step3" style="display:none;" class="fadeIn">
+<!-- TOOLS -->
+<section class="tools-section" id="herramientas" aria-labelledby="tools-heading">
+  <div class="section-head">
+    <h2 class="section-title" id="tools-heading">Herramientas</h2>
+    <span class="section-note">Basadas en datos reales · Acceso libre</span>
+  </div>
 
-  <!-- 1. DIAGNOSIS -->
-  <div class="sec"><span class="sec-t">Diagnóstico de posicionamiento</span><span class="sec-n">vs tu categoría</span></div>
-  <div class="card diag-card">
-    <div class="diag-top">
-      <div>
-        <div class="diag-rest" id="dRest" style="display:none"></div>
-        <div class="diag-ticket" id="dTicket">$850</div>
-        <div class="diag-city" id="dCity">Ciudad de México · Mariscos</div>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
-        <div class="verdict-pill" id="verdictPill">—</div>
-        <div style="font-size:11px;color:var(--t3);" id="verdictSub">—</div>
-      </div>
-    </div>
-    <div class="gauge-section">
-      <div class="gauge-label">Tu ticket vs el rango de tu categoría</div>
-      <div class="gauge-track">
-        <div class="gauge-marker" id="gaugeMarker" style="left:50%">
-          <div class="gauge-marker-pip"></div>
-          <div class="gauge-marker-label" id="gaugeLabel">Tu ticket</div>
+  <div class="tabs" role="tablist" aria-label="Categorías de herramientas">
+    <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="tab-restaurantes" id="tbtn-restaurantes" onclick="switchTab('restaurantes',this)">
+      🦞 Restaurantes <span class="tab-badge">1</span>
+    </button>
+    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-healthtech" id="tbtn-healthtech" onclick="switchTab('healthtech',this)">
+      🧬 HealthTech <span class="tab-soon">Próximo</span>
+    </button>
+    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-producto" id="tbtn-producto" onclick="switchTab('producto',this)">
+      📦 Producto <span class="tab-soon">Próximo</span>
+    </button>
+    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-finanzas" id="tbtn-finanzas" onclick="switchTab('finanzas',this)">
+      📊 Finanzas <span class="tab-soon">Próximo</span>
+    </button>
+  </div>
+
+  <div class="tab-panel active" id="tab-restaurantes" role="tabpanel" aria-labelledby="tbtn-restaurantes">
+    <div class="tools-grid">
+      <a href="herramientas/restaurantes/" class="tool-card">
+        <div class="tool-card-top">
+          <span class="tool-emoji" aria-hidden="true">🎯</span>
+          <span class="tool-badge live">● Live</span>
         </div>
-      </div>
-      <div class="gauge-ends">
-        <span id="gLeft">Mín. categoría</span>
-        <span id="gMid">Promedio</span>
-        <span id="gRight">Máx. categoría</span>
-      </div>
-      <div class="gauge-note" id="gaugeNote">—</div>
-    </div>
-  </div>
-
-  <!-- 2. NSE -->
-  <div class="sec"><span class="sec-t">Quién puede visitarte</span><span class="sec-n">AMAI NSE 2024 · ENIGH 2024</span></div>
-  <div class="nse-table">
-    <div class="nse-thead">
-      <span class="nse-th">NSE</span>
-      <span class="nse-th" style="text-align:left">Ingreso familiar</span>
-      <span class="nse-th">% ingreso</span>
-      <span class="nse-th">Esfuerzo</span>
-      <span class="nse-th">Veces/mes</span>
-    </div>
-    <div id="nseGrid"></div>
-  </div>
-
-  <!-- 3. REVENUE -->
-  <div class="sec"><span class="sec-t">Tu ingreso potencial real</span><span class="sec-n">basado en tu operación</span></div>
-  <div class="card rev-card">
-    <div class="rev-grid">
-      <div class="rev-metric"><div class="rev-lbl">Cubiertos / semana (100%)</div><div class="rev-val" id="rCubiertos">—</div><div class="rev-sub" id="rCubSub">—</div></div>
-      <div class="rev-metric"><div class="rev-lbl">Ingreso máximo / semana</div><div class="rev-val" id="rMaxSem">—</div><div class="rev-sub">si llenas todo</div></div>
-    </div>
-    <div class="rev-bar-wrap">
-      <div class="rev-bar-label"><span style="font-size:11px;font-weight:700;color:var(--t2);">Ingreso mensual estimado</span><span style="font-size:11px;color:var(--t3);" id="rBarLabel">—</span></div>
-      <div class="rev-bar-track"><div class="rev-bar-fill" id="rBarFill" style="background:var(--acc)"></div></div>
-    </div>
-    <div class="rev-scenarios">
-      <div class="rev-scenario"><div class="rs-pct">50% ocupación</div><div class="rs-val" id="r50">—</div><div class="rs-sub">/ mes</div></div>
-      <div class="rev-scenario target"><div class="rs-pct target-c">70% · Meta realista</div><div class="rs-val target-c" id="r70">—</div><div class="rs-sub">/ mes</div></div>
-      <div class="rev-scenario"><div class="rs-pct">100% ocupación</div><div class="rs-val" id="r100">—</div><div class="rs-sub">/ mes</div></div>
-    </div>
-  </div>
-
-  <!-- 4. MARKET — THE NUMBER -->
-  <div class="sec"><span class="sec-t">Tu mercado potencial</span><span class="sec-n" id="mktNote">—</span></div>
-  <div class="card mkt-card">
-    <div class="mkt-hero">
-      <div class="mkt-stat"><div class="mkt-lbl">Mercado accesible</div><div class="mkt-val" id="mktTotal">—</div><div class="mkt-sub">personas en tu ciudad</div></div>
-      <div class="mkt-stat"><div class="mkt-lbl">Cubiertos necesarios / año</div><div class="mkt-val" id="mktNeed">—</div><div class="mkt-sub">para operar al 70%</div></div>
-    </div>
-
-    <!-- THE NUMBER -->
-    <div class="the-number">
-      <div class="tn-pct" id="tnPct">0.0%</div>
-      <div class="tn-text">
-        Solo necesitas capturar el <strong id="tnPctInline">—</strong> de tu mercado potencial
-        para llenar tu restaurante al <strong>70% cada semana</strong>.<br>
-        El reto no es la demanda. <strong>Es la visibilidad.</strong>
-      </div>
-    </div>
-
-    <div class="funnel-rows" id="funnelRows"></div>
-
-    <div class="mkt-bottom">
-      <div>
-        <div class="donut-wrap">
-          <svg width="120" height="120" viewBox="0 0 120 120">
-            <circle cx="60" cy="60" r="46" fill="none" stroke="#EAEAE6" stroke-width="14"/>
-            <circle id="dArc" cx="60" cy="60" r="46" fill="none" stroke="#C4520A" stroke-width="14"
-              stroke-dasharray="0 289" stroke-linecap="round"
-              style="transition:stroke-dasharray .7s cubic-bezier(.16,1,.3,1)"/>
-          </svg>
-          <div class="donut-center">
-            <div class="donut-pct" id="dPct">—</div>
-            <div class="donut-sub">del mercado</div>
-          </div>
+        <div>
+          <div class="tool-title">Diagnóstico de Precio</div>
+          <div class="tool-desc">¿Cuánto cobras vs tu mercado? Descubre a quién le puedes cobrar, cuánto puedes generar y el % exacto de tu ciudad que necesitas capturar para llenar tu restaurante.</div>
         </div>
-        <div class="donut-legend" style="margin-top:8px;">
-          <strong id="dTotal">—</strong>
-          personas con acceso cómodo
+        <div class="tool-footer">
+          <span>AMAI · ENIGH · INEGI · CANIRAC</span>
+          <span class="tool-link">Abrir →</span>
         </div>
+      </a>
+      <div class="tool-card disabled">
+        <div class="tool-card-top"><span class="tool-emoji" aria-hidden="true">💰</span><span class="tool-badge soon">Próximo</span></div>
+        <div><div class="tool-title">Calculadora de Food Cost</div><div class="tool-desc">Costo real por platillo, precio de venta óptimo y margen de contribución con datos de merma y mano de obra directa.</div></div>
+        <div class="tool-footer"><span>CANIRAC · SAT 2026</span></div>
       </div>
-      <div style="padding-top:8px;">
-        <div style="font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--t3);margin-bottom:10px;">Gasto mensual estimado en restaurantes · ENIGH 2024</div>
-        <div id="gastoNse" style="display:flex;flex-direction:column;gap:6px;"></div>
+      <div class="tool-card disabled">
+        <div class="tool-card-top"><span class="tool-emoji" aria-hidden="true">📋</span><span class="tool-badge soon">Próximo</span></div>
+        <div><div class="tool-title">Simulador de Nómina</div><div class="tool-desc">Costo real de tu equipo con salarios mínimos 2026, IMSS, INFONAVIT y la nueva Ley de Propinas.</div></div>
+        <div class="tool-footer"><span>CONASAMI 2026 · IMSS · LFT</span></div>
+      </div>
+      <div class="tool-card disabled">
+        <div class="tool-card-top"><span class="tool-emoji" aria-hidden="true">⚖️</span><span class="tool-badge soon">Próximo</span></div>
+        <div><div class="tool-title">Punto de Equilibrio</div><div class="tool-desc">¿Cuántos cubiertos necesitas para no perder dinero? Costos fijos, variables y escenarios de ocupación.</div></div>
+        <div class="tool-footer"><span>Metodología estándar de industria</span></div>
       </div>
     </div>
   </div>
 
-  <!-- 5. DECISIONS -->
-  <div class="sec"><span class="sec-t">3 decisiones para tu negocio</span></div>
-  <div class="card decisions" id="decisionsCard"></div>
-
-  <!-- SHARE -->
-  <div class="share-row">
-    <button class="sbtn primary" onclick="doShare()">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M10 1L13 4L10 7M13 4H5C3.3 4 2 5.3 2 7V13" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Generar tarjeta
-    </button>
-    <button class="sbtn" onclick="window.print()">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5V1H11V5M3 10H1V5H13V10H11M3 8H11V13H3V8Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Imprimir / PDF
-    </button>
-    <button class="sbtn" onclick="doCopy()">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="5" y="5" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M1 9V1H9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      Copiar link
-    </button>
-    <button class="sbtn" onclick="restart()">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7A6 6 0 0 1 12.5 4M13 1v3h-3M13 7A6 6 0 0 1 1.5 10M1 13v-3h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Nuevo diagnóstico
-    </button>
+  <div class="tab-panel" id="tab-healthtech" role="tabpanel" aria-labelledby="tbtn-healthtech">
+    <div class="coming-grid">
+      <div class="coming-card"><div class="coming-emoji">🏥</div><div class="coming-title">Mapa de oportunidad</div><div class="coming-desc">Brechas en acceso a servicios de salud por estado y segmento poblacional.</div></div>
+      <div class="coming-card"><div class="coming-emoji">💊</div><div class="coming-title">Evaluador de proyectos</div><div class="coming-desc">Marco de evaluación para startups de healthtech en el ecosistema mexicano.</div></div>
+      <div class="coming-card"><div class="coming-emoji">📡</div><div class="coming-title">Radar de innovación</div><div class="coming-desc">Tendencias en salud digital con relevancia para México y LATAM.</div></div>
+    </div>
+    <div class="coming-note">En desarrollo. Si trabajas en salud digital escríbeme a <a href="https://instagram.com/ricramcas" target="_blank" rel="noopener">@ricramcas</a>.</div>
   </div>
 
-  <!-- SHARE CARD -->
-  <div id="shareCard">
-    <div class="sc-tag">ricramcas · Diagnóstico para restauranteros MX</div>
-    <div class="sc-name" id="scName">Mi restaurante</div>
-    <div class="sc-city" id="scCity">—</div>
-    <div class="sc-ticket" id="scTicket">$850</div>
-    <div class="sc-sub" id="scSub">Ticket promedio por persona</div>
-    <div class="sc-stats">
-      <div><span class="sc-stat-n" id="scMercado">—</span><span class="sc-stat-l">mercado potencial</span></div>
-      <div><span class="sc-stat-n" id="scRev">—</span><span class="sc-stat-l">ingreso potencial / mes (70%)</span></div>
+  <div class="tab-panel" id="tab-producto" role="tabpanel" aria-labelledby="tbtn-producto">
+    <div class="coming-grid">
+      <div class="coming-card"><div class="coming-emoji">🧪</div><div class="coming-title">Validador de idea</div><div class="coming-desc">Checklist para validar hipótesis de negocio antes de invertir tiempo y dinero.</div></div>
+      <div class="coming-card"><div class="coming-emoji">💸</div><div class="coming-title">Unit economics</div><div class="coming-desc">CAC, LTV, payback period y margen de contribución para productos digitales y físicos.</div></div>
+      <div class="coming-card"><div class="coming-emoji">🗺️</div><div class="coming-title">Mapa de canales</div><div class="coming-desc">Canales de distribución por costo de adquisición y escala en México.</div></div>
     </div>
-    <div class="sc-number-box">
-      <div class="sc-num-pct" id="scCapture">0.0%</div>
-      <div class="sc-num-txt">Solo necesito capturar el <strong id="scCaptureInline">—</strong> de mi mercado para llenar mi restaurante al 70%.</div>
-    </div>
-    <div class="sc-div"></div>
-    <div class="sc-foot"><span>AMAI NSE 2024 · ENIGH 2024 · INEGI · AMR · CANIRAC</span><span>@ricramcas</span></div>
+    <div class="coming-note">En construcción. Sigue el avance en <a href="https://instagram.com/ricramcas" target="_blank" rel="noopener">@ricramcas</a>.</div>
   </div>
 
-</div><!-- /step3 -->
+  <div class="tab-panel" id="tab-finanzas" role="tabpanel" aria-labelledby="tbtn-finanzas">
+    <div class="coming-grid">
+      <div class="coming-card"><div class="coming-emoji">📈</div><div class="coming-title">Proyección de flujo</div><div class="coming-desc">Flujo de caja a 12 meses para negocios pequeños y medianos.</div></div>
+      <div class="coming-card"><div class="coming-emoji">🧾</div><div class="coming-title">Estimador fiscal</div><div class="coming-desc">ISR, IVA y IMSS estimados para distintas estructuras legales en México.</div></div>
+    </div>
+    <div class="coming-note">En construcción. Sigue el avance en <a href="https://instagram.com/ricramcas" target="_blank" rel="noopener">@ricramcas</a>.</div>
+  </div>
+</section>
 
-<div class="page-foot">
-  <span>AMAI NSE Regla 2024 · ENIGH 2024 (INEGI) · AMR · CANIRAC · Estimaciones INEGI 2020–2024 · Rangos por tipo de cocina: estimaciones referenciales</span>
-  <a href="https://instagram.com/ricramcas" target="_blank">@ricramcas</a>
+<!-- ABOUT -->
+<section class="about-section" id="sobre-mi" aria-labelledby="about-heading">
+  <div class="about-inner">
+    <div class="about-left">
+      <div class="about-tag">Quién construye esto</div>
+      <h2 class="about-name" id="about-heading">Ricardo<br>Ramírez<br>Castillo</h2>
+      <div class="about-handle">México · <a href="https://instagram.com/ricramcas" target="_blank" rel="noopener">@ricramcas</a></div>
+      <div class="world-pills">
+        <span class="world-pill">🦞 Restaurantes</span>
+        <span class="world-pill">🧬 Salud Digital</span>
+        <span class="world-pill">📦 Producto</span>
+        <span class="world-pill">🎙️ Podcast</span>
+      </div>
+    </div>
+    <div class="about-right">
+      <div class="about-text">
+        <p>Vivo entre industrias que la mayoría no combina: <strong>restaurantes, salud digital y tecnología</strong>. Con varias vidas alternas — tengo formación y experiencia formal en innovación, emprendimiento y negocios, y llevo años aplicándola en proyectos reales, no en teoría.</p>
+        <p>Me obsesiona entender cómo funcionan los negocios por dentro y <strong>ayudar a otros a tener éxito con los suyos</strong>. Estas herramientas nacen de preguntas que me he hecho como operador. Todas usan datos públicos verificados. Las comparto porque el acceso a buena información no debería costar dinero.</p>
+      </div>
+      <div class="about-cta">
+        <a href="https://linkedin.com/in/ricardoramirezc" target="_blank" rel="noopener" class="btn-ghost">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          Ver en LinkedIn
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHATSAPP -->
+<div class="wa-section">
+  <div class="wa-card">
+    <div>
+      <h2 class="wa-title">Únete a la<br><em>comunidad.</em></h2>
+      <p class="wa-sub">Un espacio para emprendedores, restauranteros e innovadores en México. Comparte, pregunta, conecta. Sin spam, sin algoritmos.</p>
+    </div>
+    <div>
+      <a href="https://chat.whatsapp.com/L5m2FAFlsFl8lA2eT5XNvZ?mode=gi_t" target="_blank" rel="noopener" class="wa-btn" aria-label="Unirse a la comunidad de WhatsApp">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        Unirse
+      </a>
+      <p class="wa-note">Gratis · Sal cuando quieras</p>
+    </div>
+  </div>
 </div>
 
-</div><!-- /page -->
-
-<!-- MODAL -->
-<div class="modal" id="modal">
-  <div class="modal-box">
-    <div class="modal-title" id="mTitle"></div>
-    <div class="modal-body" id="mBody"></div>
-    <button class="modal-close" onclick="closeModal()">Entendido</button>
+<!-- FOOTER -->
+<footer>
+  <a href="/" class="footer-logo">ric<em>ram</em>cas</a>
+  <div class="footer-links">
+    <a href="https://instagram.com/ricramcas" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://linkedin.com/in/ricardoramirezc" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://open.spotify.com/show/2N0W7QCBGNCZyxtTT0C5yg" target="_blank" rel="noopener">Spotify</a>
+    <a href="https://www.youtube.com/playlist?list=PLjjhMkZ4beAt0YSoMqj_eI9u0ANIwQa43" target="_blank" rel="noopener">YouTube</a>
   </div>
-</div>
+  <span class="footer-note">México · 2026 · Datos: INEGI · AMAI · ENIGH</span>
+</footer>
 
 <script>
-// ── DATA ─────────────────────────────────────────────────────────────────
-
-const NSE = [
-  {label:'A/B', name:'Alta',       min:98500, max:null,  pct:1.2,  gr:.36, c:'#C4520A', bg:'#FBF0E9'},
-  {label:'C+',  name:'Media Alta', min:40600, max:98499, pct:7.2,  gr:.28, c:'#D4700E', bg:'#FDF3E8'},
-  {label:'C',   name:'Media',      min:13500, max:40599, pct:16.7, gr:.20, c:'#9B6E1A', bg:'#FDF7EB'},
-  {label:'C−',  name:'Med. Baja',  min:8000,  max:13499, pct:17.9, gr:.14, c:'#7A7A1A', bg:'#F9F9EC'},
-  {label:'D+',  name:'Baja Alta',  min:4500,  max:7999,  pct:24.0, gr:.09, c:'#6B6B6B', bg:'#F5F5F5'},
-  {label:'D',   name:'Baja',       min:2700,  max:4499,  pct:21.4, gr:.05, c:'#999',    bg:'#F8F8F8'},
-  {label:'E',   name:'Muy Baja',   min:0,     max:2699,  pct:11.6, gr:.02, c:'#BBB',    bg:'#FAFAFA'},
-];
-const FK = ['fAB','fCp','fC','fCm','fDp','fD','fE'];
-
-const CITIES = {
-  cdmx:          {n:'Ciudad de México',          p:21580000,fAB:2.1, fCp:1.65,fC:1.4, fCm:1.05,fDp:0.65,fD:0.5, fE:0.3},
-  edomex:        {n:'Estado de México (ZM)',      p:16990000,fAB:0.7, fCp:0.8, fC:1.0, fCm:1.15,fDp:1.2, fD:1.2, fE:1.1},
-  mty:           {n:'Monterrey',                 p:5340000, fAB:2.3, fCp:1.8, fC:1.5, fCm:1.0, fDp:0.65,fD:0.5, fE:0.3},
-  gdl:           {n:'Guadalajara',               p:5270000, fAB:1.4, fCp:1.3, fC:1.3, fCm:1.1, fDp:0.9, fD:0.8, fE:0.6},
-  tijuana:       {n:'Tijuana',                   p:2000000, fAB:1.2, fCp:1.3, fC:1.4, fCm:1.2, fDp:0.9, fD:0.8, fE:0.5},
-  juarez:        {n:'Ciudad Juárez',             p:1500000, fAB:0.9, fCp:1.0, fC:1.2, fCm:1.2, fDp:1.0, fD:1.0, fE:0.8},
-  hermosillo:    {n:'Hermosillo',                p:890000,  fAB:1.1, fCp:1.2, fC:1.3, fCm:1.1, fDp:0.9, fD:0.8, fE:0.6},
-  saltillo:      {n:'Saltillo',                  p:870000,  fAB:1.2, fCp:1.3, fC:1.3, fCm:1.1, fDp:0.9, fD:0.8, fE:0.5},
-  chihuahua:     {n:'Chihuahua',                 p:940000,  fAB:1.1, fCp:1.2, fC:1.3, fCm:1.1, fDp:0.9, fD:0.8, fE:0.6},
-  leon:          {n:'León / Guanajuato',         p:1720000, fAB:0.9, fCp:1.0, fC:1.1, fCm:1.1, fDp:1.0, fD:1.0, fE:0.9},
-  qro:           {n:'Querétaro',                 p:1260000, fAB:1.3, fCp:1.4, fC:1.4, fCm:1.1, fDp:0.8, fD:0.7, fE:0.5},
-  san_luis:      {n:'San Luis Potosí',           p:1040000, fAB:0.9, fCp:1.0, fC:1.1, fCm:1.1, fDp:1.0, fD:1.0, fE:0.9},
-  aguascalientes:{n:'Aguascalientes',            p:980000,  fAB:1.0, fCp:1.1, fC:1.2, fCm:1.1, fDp:0.9, fD:0.9, fE:0.8},
-  morelia:       {n:'Morelia',                   p:830000,  fAB:0.9, fCp:1.0, fC:1.1, fCm:1.1, fDp:1.0, fD:1.0, fE:0.9},
-  pue:           {n:'Puebla',                    p:3200000, fAB:0.9, fCp:1.0, fC:1.1, fCm:1.1, fDp:1.1, fD:1.1, fE:1.0},
-  toluca:        {n:'Toluca',                    p:890000,  fAB:0.8, fCp:0.9, fC:1.0, fCm:1.1, fDp:1.1, fD:1.1, fE:1.0},
-  cuernavaca:    {n:'Cuernavaca',                p:790000,  fAB:1.0, fCp:1.1, fC:1.1, fCm:1.1, fDp:1.0, fD:1.0, fE:0.9},
-  merida:        {n:'Mérida',                    p:1240000, fAB:1.0, fCp:1.1, fC:1.2, fCm:1.1, fDp:1.0, fD:0.9, fE:0.8},
-  cancun:        {n:'Cancún / Playa del Carmen', p:890000,  fAB:1.5, fCp:1.4, fC:1.3, fCm:1.1, fDp:1.0, fD:0.9, fE:0.7},
-  oaxaca:        {n:'Oaxaca',                    p:380000,  fAB:0.7, fCp:0.8, fC:0.9, fCm:1.0, fDp:1.1, fD:1.2, fE:1.3},
-  veracruz:      {n:'Veracruz / Xalapa',         p:870000,  fAB:0.7, fCp:0.9, fC:1.0, fCm:1.1, fDp:1.1, fD:1.2, fE:1.2},
-  otra_100k:     {n:'Tu ciudad',                 p:300000,  fAB:0.8, fCp:0.9, fC:1.0, fCm:1.1, fDp:1.1, fD:1.1, fE:1.0},
-  otra_50k:      {n:'Tu ciudad',                 p:75000,   fAB:0.5, fCp:0.7, fC:0.9, fCm:1.1, fDp:1.2, fD:1.3, fE:1.2},
-};
-
-// ── STATE ────────────────────────────────────────────────────────────────
-let T = 850;
-let cuisine = null;
-
-// ── UTILS ────────────────────────────────────────────────────────────────
-const $ = id => document.getElementById(id);
-const mxn = n => '$' + Math.round(n).toLocaleString('es-MX');
-const mxnK = n => n >= 1000000 ? '$'+(n/1e6).toFixed(1)+'M' : n >= 1000 ? '$'+Math.round(n/1000)+'K' : mxn(n);
-const fmt = n => n >= 1000000 ? (n/1e6).toFixed(1)+'M' : n >= 1000 ? Math.round(n/1000)+'K' : String(n);
-
-// ── SLIDER ───────────────────────────────────────────────────────────────
-function onSlide(v) {
-  T = parseInt(v);
-  $('exactT').value = T;
-  refreshSliderUI();
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => { p.classList.remove('active'); p.hidden = true; });
+  document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+  const panel = document.getElementById('tab-' + id);
+  panel.classList.add('active'); panel.hidden = false;
+  btn.classList.add('active'); btn.setAttribute('aria-selected','true');
 }
-function onExact(v) {
-  const n = parseInt(v);
-  if (!n || n < 1) return;
-  T = Math.min(n, 5000);
-  $('tSlider').value = T;
-  refreshSliderUI();
-}
-function setT(v) {
-  T = v; $('tSlider').value = v; $('exactT').value = v;
-  document.querySelectorAll('.preset').forEach(b => b.classList.toggle('on', parseInt(b.textContent.replace(/[$,]/g,'')) === v));
-  refreshSliderUI();
-}
-function refreshSliderUI() {
-  const pct = ((T - 50) / 4950) * 100;
-  $('rfill').style.width = pct + '%';
-  const d = $('sliderVal');
-  d.textContent = mxn(T);
-  d.classList.add('hot');
-  clearTimeout(d._t);
-  d._t = setTimeout(() => d.classList.remove('hot'), 300);
-}
-
-// ── CUISINE ──────────────────────────────────────────────────────────────
-function setCuisine(el) {
-  document.querySelectorAll('.cuisine-btn').forEach(b => b.classList.remove('on'));
-  el.classList.add('on');
-  cuisine = {
-    id: el.dataset.id,
-    name: el.querySelector('.cuisine-name').textContent,
-    min: parseInt(el.dataset.min),
-    max: parseInt(el.dataset.max),
-    avg: parseInt(el.dataset.avg),
-  };
-}
-
-// ── STEPS ────────────────────────────────────────────────────────────────
-function setStep(n) {
-  ['step1','step2','step3'].forEach((id,i) => $(id).style.display = i+1===n ? 'block' : 'none');
-  ['sp1','sp2','sp3'].forEach((id,i) => {
-    const el = $(id);
-    el.className = 'step' + (i+1 < n ? ' done' : i+1 === n ? ' active' : '');
-  });
-}
-
-function goStep1() { setStep(1); }
-
-function goStep2() {
-  if (!cuisine) { showModal('Selecciona tu tipo de cocina', 'Elige la categoría que mejor describe tu restaurante para calcular el comparativo de posicionamiento.'); return; }
-  setStep(2);
-  window.scrollTo({top:0, behavior:'smooth'});
-}
-
-function goStep3() {
-  const mesas = parseInt($('mesas').value);
-  const pax = parseInt($('paxMesa').value) || 3;
-  const dias = parseInt($('dias').value) || 5;
-  const srv = parseInt($('servicios').value) || 2;
-  if (!mesas || mesas < 1) { showModal('Ingresa el número de mesas', 'Este dato es necesario para calcular tu ingreso potencial real.'); return; }
-  setStep(3);
-  buildResults(mesas, pax, dias, srv);
-  setTimeout(() => $('step3').scrollIntoView({behavior:'smooth', block:'start'}), 200);
-}
-
-function restart() { setStep(1); window.scrollTo({top:0, behavior:'smooth'}); }
-
-// ── BUILD RESULTS ─────────────────────────────────────────────────────────
-function buildResults(mesas, pax, dias, srv) {
-  const ck = $('ciudad').value;
-  const rn = $('restName').value.trim();
-  const city = CITIES[ck];
-  const t = T;
-  const c = cuisine;
-
-  // ── 1. DIAGNOSIS HEADER
-  if (rn) { $('dRest').textContent = rn; $('dRest').style.display = 'block'; }
-  else { $('dRest').style.display = 'none'; }
-  $('dTicket').textContent = mxn(t);
-  $('dCity').textContent = `${city.n} · ${c.name}`;
-
-  // Positioning vs category
-  const pos = (t - c.min) / (c.max - c.min);
-  const clampedPos = Math.max(0, Math.min(1, pos));
-  const diffFromAvg = ((t - c.avg) / c.avg * 100);
-  const absDiff = Math.abs(diffFromAvg).toFixed(0);
-
-  let verdictClass, verdictText, verdictSub, gaugeNote;
-  if (t < c.min) {
-    verdictClass = 'low'; verdictText = '⬇ Por debajo del rango';
-    verdictSub = `${mxn(c.min - t)} debajo del mínimo`;
-    gaugeNote = `Tu ticket de ${mxn(t)} está <strong>por debajo del rango típico</strong> de restaurantes de ${c.name} (${mxn(c.min)}–${mxn(c.max)}). Tienes espacio para subir precio sin salir del mercado — o considera si tu propuesta de valor está correctamente comunicada.`;
-  } else if (t > c.max) {
-    verdictClass = 'high'; verdictText = '⬆ Por encima del rango';
-    verdictSub = `${mxn(t - c.max)} sobre el máximo`;
-    gaugeNote = `Tu ticket de ${mxn(t)} está <strong>por encima del rango típico</strong> de ${c.name}. Necesitas una propuesta de valor muy clara: experiencia, chef reconocido, exclusividad o diferenciación fuerte. Sin eso, el precio genera resistencia.`;
-  } else if (Math.abs(diffFromAvg) <= 15) {
-    verdictClass = 'spot'; verdictText = '✓ Zona de mercado';
-    verdictSub = `${absDiff}% ${diffFromAvg >= 0 ? 'sobre' : 'bajo'} el promedio`;
-    gaugeNote = `Tu ticket de ${mxn(t)} está <strong>dentro del rango competitivo</strong> de ${c.name} (promedio: ${mxn(c.avg)}). Eso te coloca en la zona de mayor demanda para tu categoría. La diferenciación no tiene que ser de precio — puede ser de experiencia, atención o producto.`;
-  } else if (diffFromAvg > 15) {
-    verdictClass = 'high'; verdictText = '↑ Premium vs categoría';
-    verdictSub = `${absDiff}% sobre el promedio`;
-    gaugeNote = `Tu ticket está <strong>${absDiff}% sobre el promedio</strong> de ${c.name} (${mxn(c.avg)}). Estás apuntando al segmento superior de tu categoría. Es un posicionamiento válido, pero tu comunicación debe justificar la diferencia — ambiente, ingredientes, servicio o firma.`;
-  } else {
-    verdictClass = 'ok'; verdictText = '↓ Accesible vs categoría';
-    verdictSub = `${absDiff}% bajo el promedio`;
-    gaugeNote = `Tu ticket está <strong>${absDiff}% bajo el promedio</strong> de ${c.name} (${mxn(c.avg)}). Tienes una propuesta accesible dentro de tu categoría — ventaja de volumen. Evalúa si hay margen para subir gradualmente sin perder clientes.`;
-  }
-
-  const vp = $('verdictPill');
-  vp.className = 'verdict-pill ' + verdictClass;
-  vp.textContent = verdictText;
-  $('verdictSub').textContent = verdictSub;
-  $('gaugeNote').innerHTML = gaugeNote;
-  $('gLeft').textContent = mxn(c.min);
-  $('gMid').textContent = `Promedio: ${mxn(c.avg)}`;
-  $('gRight').textContent = mxn(c.max);
-  setTimeout(() => { $('gaugeMarker').style.left = (clampedPos * 92 + 4) + '%'; }, 200);
-  $('gaugeLabel').textContent = mxn(t);
-
-  // ── 2. NSE TABLE
-  const grid = $('nseGrid');
-  grid.innerHTML = '';
-  NSE.forEach(n => {
-    const mid = n.max ? (n.min+n.max)/2 : n.min*1.5;
-    const pctIng = (t/mid)*100;
-    const gastoMes = mid * n.gr;
-    const veces = gastoMes > 0 ? gastoMes/t : 0;
-    let eLabel, eColor;
-    if      (pctIng <= 1.5) {eLabel='Accesible';     eColor='#1A7A46';}
-    else if (pctIng <= 4)   {eLabel='Razonable';     eColor='#7A6B1A';}
-    else if (pctIng <= 8)   {eLabel='Significativo'; eColor='#C4520A';}
-    else if (pctIng <= 15)  {eLabel='Elevado';       eColor='#B83020';}
-    else                    {eLabel='Fuera de rango';eColor='#BBB';}
-    const acc = pctIng <= 4;
-    const rango = n.max ? `${mxn(n.min)} – ${mxn(n.max)}` : `${mxn(n.min)}+`;
-    const vecStr = veces >= 1 ? Math.round(veces)+'×' : veces >= .1 ? '<1×' : '—';
-    const row = document.createElement('div');
-    row.className = 'nse-row' + (acc ? ' accessible' : '');
-    row.style.setProperty('--ra', acc ? n.c : 'transparent');
-    row.style.cssText += acc ? ';background:#FDFCFA' : '';
-    row.querySelector ? null : null;
-    row.innerHTML = `
-      <span><span class="nse-badge" style="background:${n.bg};color:${n.c}">${n.label}</span></span>
-      <span class="nse-inc">${rango}<small>ingreso familiar / mes</small></span>
-      <span class="nse-pct" style="color:${acc?n.c:'var(--text)'}">${pctIng.toFixed(1)}%</span>
-      <span class="nse-eff" style="color:${eColor}">${eLabel}</span>
-      <span class="nse-vis">${vecStr}</span>
-    `;
-    row.style.setProperty('--row-accent', acc ? n.c : 'transparent');
-    row.querySelectorAll('.nse-row::before') // just trigger reflow
-    grid.appendChild(row);
-  });
-  // fix ::before via inline approach
-  grid.querySelectorAll('.nse-row').forEach(r => {
-    const acc = r.classList.contains('accessible');
-    if (acc) r.style.borderLeft = `3px solid ${r.style.getPropertyValue('--row-accent') || 'transparent'}`;
-    else r.style.paddingLeft = '19px';
-  });
-
-  // ── 3. REVENUE
-  const cubiertos = mesas * pax * dias * srv;
-  const cubiertosWeek = cubiertos;
-  const maxSem = cubiertosWeek * t;
-  const maxMes = maxSem * 4.33;
-  $('rCubiertos').textContent = cubiertosWeek.toLocaleString('es-MX');
-  $('rCubSub').textContent = `${mesas} mesas × ${pax} pax × ${dias} días × ${srv} serv.`;
-  $('rMaxSem').textContent = mxnK(maxSem);
-  $('rBarLabel').textContent = mxnK(maxMes) + ' al 100%';
-  $('r50').textContent = mxnK(maxMes * .5);
-  $('r70').textContent = mxnK(maxMes * .7);
-  $('r100').textContent = mxnK(maxMes);
-  setTimeout(() => $('rBarFill').style.width = '100%', 300);
-
-  // ── 4. MARKET
-  $('mktNote').textContent = `${city.n} · INEGI 2020 + AMAI NSE 2024`;
-  const fRows = $('funnelRows');
-  fRows.innerHTML = '';
-  let total = 0, maxP = 0;
-  const rows = NSE.map((n,i) => {
-    const mid = n.max?(n.min+n.max)/2:n.min*1.5;
-    const acc = (t/mid*100) <= 4;
-    const pop = Math.round(city.p*(n.pct/100)*city[FK[i]]);
-    if (pop > maxP) maxP = pop;
-    if (acc) total += pop;
-    return {n,pop,acc};
-  });
-  rows.forEach(({n,pop,acc}) => {
-    const w = (pop/maxP)*100;
-    const row = document.createElement('div');
-    row.className = 'fb-row';
-    row.innerHTML = `
-      <span class="fb-lbl" style="color:${acc?n.c:'#CCC'}">${n.label}</span>
-      <div class="fb-track"><div class="fb-fill" style="background:${acc?n.c:'#E8E7E4'}" data-w="${w}"></div></div>
-      <span class="fb-val" style="color:${acc?'#444':'#CCC'}">${fmt(pop)}</span>
-    `;
-    fRows.appendChild(row);
-  });
-  setTimeout(() => fRows.querySelectorAll('.fb-fill[data-w]').forEach(b => b.style.width = b.dataset.w+'%'), 300);
-
-  const pctTot = (total/city.p)*100;
-  $('mktTotal').textContent = fmt(total);
-
-  // THE NUMBER — what % of market needed
-  const cubiertosYear70 = Math.round(cubiertosWeek * 52 * 0.7);
-  $('mktNeed').textContent = cubiertosYear70.toLocaleString('es-MX');
-  const captureNeeded = total > 0 ? (cubiertosYear70 / total * 100) : 0;
-  const captureFmt = captureNeeded < 0.1 ? captureNeeded.toFixed(3)+'%' : captureNeeded < 1 ? captureNeeded.toFixed(2)+'%' : captureNeeded.toFixed(1)+'%';
-  $('tnPct').textContent = captureFmt;
-  $('tnPctInline').textContent = captureFmt;
-  $('scCapture').textContent = captureFmt;
-  $('scCaptureInline').textContent = captureFmt;
-
-  // Donut
-  const circ = 2*Math.PI*46;
-  setTimeout(() => {
-    $('dArc').setAttribute('stroke-dasharray', `${(pctTot/100)*circ} ${circ}`);
-  }, 400);
-  $('dPct').textContent = pctTot.toFixed(1)+'%';
-  $('dTotal').textContent = fmt(total);
-
-  // Gasto por NSE
-  const gastoDiv = $('gastoNse');
-  gastoDiv.innerHTML = '';
-  [NSE[0],NSE[1],NSE[2],NSE[3]].forEach(n => {
-    const mid = n.max?(n.min+n.max)/2:n.min*1.5;
-    const g = Math.round(mid*n.gr);
-    const veces = (g/t).toFixed(1);
-    gastoDiv.innerHTML += `
-      <div style="display:flex;justify-content:space-between;font-size:11.5px;padding:4px 0;border-bottom:1px solid var(--border);">
-        <span style="color:${n.c};font-weight:700;">${n.label}</span>
-        <span style="color:var(--t2);">${mxn(g)}/mes → <strong>${veces}× tu ticket</strong></span>
-      </div>`;
-  });
-
-  // ── 5. DECISIONS
-  const decisions = generateDecisions(t, c, pctTot, captureNeeded, diffFromAvg, cubiertosWeek, maxMes);
-  const dc = $('decisionsCard');
-  dc.innerHTML = '';
-  decisions.forEach(d => {
-    dc.innerHTML += `
-      <div class="decision-item">
-        <div class="decision-icon" style="background:${d.bg}">${d.icon}</div>
-        <div class="decision-content">
-          <div class="decision-title">${d.title}</div>
-          <div class="decision-body">${d.body}</div>
-        </div>
-      </div>`;
-  });
-
-  // Share card
-  $('scName').textContent = rn || 'Mi restaurante';
-  $('scCity').textContent = `${city.n} · ${c.name}`;
-  $('scTicket').textContent = mxn(t);
-  $('scSub').textContent = `Ticket promedio · ${verdictText}`;
-  $('scMercado').textContent = fmt(total);
-  $('scRev').textContent = mxnK(maxMes * .7);
-}
-
-// ── DECISIONS GENERATOR ───────────────────────────────────────────────────
-function generateDecisions(t, c, pctMercado, captureNeeded, diffAvg, cubiertosWeek, maxMes) {
-  const decisions = [];
-
-  // Decisión 1 — posicionamiento de precio
-  if (diffAvg > 25) {
-    decisions.push({icon:'💡', bg:'#FBF0E9', title:'Justifica el premium con claridad',
-      body:`Tu ticket está <strong>${Math.abs(diffAvg).toFixed(0)}% sobre el promedio</strong> de tu categoría. Eso es válido — pero solo funciona si el cliente entiende por qué. Revisa si tu comunicación (menú, redes, descripción) articula explícitamente el diferenciador: ingrediente, técnica, experiencia o chef.`});
-  } else if (diffAvg < -20) {
-    decisions.push({icon:'📈', bg:'#E8F5EE', title:'Tienes espacio para subir precio',
-      body:`Tu ticket está <strong>${Math.abs(diffAvg).toFixed(0)}% bajo el promedio</strong> de tu categoría. Si la experiencia lo justifica, un aumento gradual del 10–15% puede mejorar significativamente tu margen sin perder clientes — y puede mejorar la percepción de valor.`});
-  } else {
-    decisions.push({icon:'✅', bg:'#E8F5EE', title:'Estás en zona competitiva de precio',
-      body:`Tu ticket está alineado con el mercado de ${c.name}. La diferenciación no tiene que ser de precio — puede ser de experiencia, atención al cliente, producto de temporada o identidad de marca. Enfócate en la recurrencia: convertir visita única en cliente habitual.`});
-  }
-
-  // Decisión 2 — mercado potencial vs operación
-  if (captureNeeded < 0.1) {
-    decisions.push({icon:'🎯', bg:'#E8F5EE', title:'Tu mercado es masivo vs tu capacidad',
-      body:`Solo necesitas capturar el <strong>${captureNeeded < 0.01 ? captureNeeded.toFixed(3) : captureNeeded.toFixed(2)}%</strong> de tu mercado potencial. El cuello de botella no es la demanda — es la visibilidad y la conversión. Invertir en presencia digital y reputación tiene ROI directo inmediato.`});
-  } else if (captureNeeded < 1) {
-    decisions.push({icon:'🎯', bg:'#FBF0E9', title:'Mercado suficiente, visibilidad es clave',
-      body:`Necesitas menos del <strong>1% de tu mercado</strong> para operar al 70%. La demanda existe — el reto es ser encontrado. Prioriza Google Maps optimizado, reseñas activas y presencia en redes con contenido de producto y experiencia.`});
-  } else {
-    decisions.push({icon:'⚡', bg:'#FDECEA', title:'Tu mercado potencial es acotado',
-      body:`Con <strong>${captureNeeded.toFixed(1)}% del mercado</strong> necesario para llenar al 70%, estás en un segmento de alta concentración. La fidelización de clientes existentes es más rentable que la adquisición. Considera programa de lealtad o comunicación directa (WhatsApp, newsletter).`});
-  }
-
-  // Decisión 3 — basada en NSE accesible
-  if (pctMercado < 10) {
-    decisions.push({icon:'💎', bg:'#FBF0E9', title:'Mercado de nicho — experiencia es todo',
-      body:`Solo el <strong>${pctMercado.toFixed(1)}% de tu ciudad</strong> puede visitarte con comodidad. En mercados de nicho, la reputación lo es todo: cada reseña, cada recomendación y cada visita de influencer o prensa vale mucho más que en restaurantes masivos. PR y relaciones públicas son inversión, no gasto.`});
-  } else if (pctMercado < 30) {
-    decisions.push({icon:'🔄', bg:'#FDF7EB', title:'Aumenta la frecuencia de visita',
-      body:`Tu mercado accesible es el <strong>${pctMercado.toFixed(1)}% de la ciudad</strong> — un segmento definido. La estrategia más rentable no es atraer nuevos clientes continuamente, sino lograr que los que ya te conocen regresen más seguido. Considera menú de temporada, eventos mensuales o algún mecanismo de recurrencia.`});
-  } else {
-    decisions.push({icon:'📣', bg:'#E8F5EE', title:'Mercado amplio — diferenciación de marca',
-      body:`El <strong>${pctMercado.toFixed(1)}% de tu ciudad</strong> puede visitarte económicamente — tienes acceso a un mercado grande. El riesgo en mercados amplios es la comoditización. Invierte en construir una identidad de marca clara: un plato icónico, una historia, un ángulo que te haga memorable y referible.`});
-  }
-
-  return decisions;
-}
-
-// ── SHARE / COPY ──────────────────────────────────────────────────────────
-function doShare() {
-  $('shareCard').classList.add('show');
-  showModal('Tarjeta generada ✓',
-    'La tarjeta aparece justo abajo.<br><br>' +
-    '<strong>En móvil:</strong> mantén presionada la tarjeta para guardar o compartir.<br><br>' +
-    '<strong>En computadora:</strong> clic derecho → Guardar imagen como.<br><br>' +
-    'Texto sugerido para compartir: <em>"¿Sabes qué porcentaje de tu ciudad necesitas capturar para llenar tu restaurante? Calcula aquí →"</em>');
-  setTimeout(() => $('shareCard').scrollIntoView({behavior:'smooth'}), 300);
-}
-function doCopy() {
-  const url = window.location.href;
-  navigator.clipboard.writeText(url)
-    .then(() => showModal('Link copiado ✓', 'Pégalo en WhatsApp, Instagram o donde quieras compartirlo.'))
-    .catch(() => showModal('Copia este link', `<code style="word-break:break-all;color:#C4520A;font-size:12px">${url}</code>`));
-}
-function showModal(t,b){$('mTitle').textContent=t;$('mBody').innerHTML=b;$('modal').classList.add('on');}
-function closeModal(){$('modal').classList.remove('on');}
-
-// ── INIT ─────────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  refreshSliderUI();
-  // pre-select mariscos
-  setCuisine(document.querySelector('[data-id="mariscos"]'));
-});
-document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+document.querySelectorAll('.tab-panel:not(.active)').forEach(p => p.hidden = true);
 </script>
 </body>
 </html>
