@@ -3,540 +3,492 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Herramientas de emprendimiento e innovación para restauranteros, healthtech y founders mexicanos. Por Ricardo Ramírez Castillo.">
+<meta name="description" content="Herramientas gratuitas de emprendimiento e innovación para restauranteros, healthtech y founders mexicanos. Por Ricardo Ramírez Castillo.">
 <meta name="author" content="Ricardo Ramírez Castillo">
-<meta property="og:title" content="ricramcas — Emprendimiento & Innovación">
-<meta property="og:description" content="Herramientas gratuitas para emprendedores, restauranteros e innovadores en México.">
+<meta property="og:title" content="ricramcas — Herramientas para quien construye">
+<meta property="og:description" content="Recursos gratuitos basados en datos reales para emprendedores, restauranteros e innovadores en México.">
 <meta property="og:type" content="website">
-<title>ricramcas — Emprendimiento & Innovación</title>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,700;0,900;1,300;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<meta property="og:url" content="https://ricramcas.vercel.app">
+<title>ricramcas — Herramientas para quien construye</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
+/* ── TOKENS — sistema unificado con calculadora ── */
 :root {
-  --bg:    #0C0C0A;
-  --bg2:   #141412;
-  --bg3:   #1C1C19;
-  --bdr:   #2A2A26;
-  --bdr2:  #383832;
-  --text:  #F0EDE6;
-  --t2:    #B8B4AC;
-  --t3:    #6A6860;
-  --acc:   #C4520A;
-  --acclt: rgba(196,82,10,.12);
-  --accmd: rgba(196,82,10,.25);
-  --white: #FFFFFF;
+  --bg:     #F9F8F6;
+  --bg2:    #F2F1EE;
+  --bg3:    #EAEAE6;
+  --border: #E0DFD9;
+  --bdr2:   #CCCAC3;
+  --text:   #111010;
+  --t2:     #3D3C38;
+  --t3:     #595855; /* ratio 7.2:1 sobre --bg — WCAG AAA ✓ */
+  --acc:    #C4520A;
+  --acclt:  #FBF0E9;
+  --accmd:  #EFC9A8;
+  --white:  #FFFFFF;
+  --green:  #1A7A46;
+  --r:      8px;
+  --sh:     0 1px 4px rgba(0,0,0,.07);
+  --shmd:   0 4px 24px rgba(0,0,0,.09);
 }
-
 * { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior:smooth; }
 body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 15px;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  background:var(--bg); color:var(--text);
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:15px; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
 }
-
-/* ── GRAIN OVERLAY ── */
-body::before {
-  content: '';
-  position: fixed; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");
-  pointer-events: none; z-index: 9999; opacity: .5;
-}
+/* Focus ring visible */
+:focus-visible { outline:3px solid var(--acc); outline-offset:2px; border-radius:4px; }
+/* Reduced motion */
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
 
 /* ── NAV ── */
 nav {
-  position: fixed; top: 0; left: 0; right: 0;
-  z-index: 100;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 32px; height: 60px;
-  background: rgba(12,12,10,.85);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--bdr);
+  position:sticky; top:0; z-index:100;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 40px; height:64px;
+  background:rgba(249,248,246,.94);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
 }
 .nav-logo {
-  font-family: 'Fraunces', serif;
-  font-size: 18px; font-weight: 900;
-  color: var(--text); text-decoration: none;
-  letter-spacing: -.02em;
+  font-family:'Playfair Display',serif;
+  font-size:20px; font-weight:900;
+  color:var(--text); text-decoration:none; letter-spacing:-.02em;
 }
-.nav-logo span { color: var(--acc); }
-.nav-links { display: flex; align-items: center; gap: 28px; }
+.nav-logo em { color:var(--acc); font-style:normal; }
+.nav-links { display:flex; align-items:center; gap:32px; }
 .nav-links a {
-  font-size: 13px; font-weight: 500;
-  color: var(--t3); text-decoration: none;
-  transition: color .15s;
+  font-size:13px; font-weight:600; color:var(--t2);
+  text-decoration:none; transition:color .15s;
 }
-.nav-links a:hover { color: var(--text); }
-.nav-links .nav-cta {
-  height: 34px; padding: 0 16px;
-  background: var(--acclt); border: 1px solid var(--acc);
-  border-radius: 100px; color: var(--acc);
-  font-size: 12px; font-weight: 600;
-  transition: all .15s;
+.nav-links a:hover { color:var(--acc); }
+.nav-cta {
+  height:40px !important; padding:0 20px !important;
+  background:var(--acc) !important; color:white !important;
+  border-radius:var(--r) !important;
+  box-shadow:0 2px 8px rgba(196,82,10,.25);
+  transition:background .15s !important;
 }
-.nav-links .nav-cta:hover { background: var(--acc); color: white; }
+.nav-cta:hover { background:#B34809 !important; }
 
 /* ── HERO ── */
 .hero {
-  min-height: 100vh;
-  display: flex; flex-direction: column;
-  justify-content: center;
-  padding: 120px 32px 80px;
-  position: relative;
-  overflow: hidden;
+  max-width:1100px; margin:0 auto;
+  padding:80px 40px 64px;
+  display:grid; grid-template-columns:1fr 380px;
+  gap:64px; align-items:center;
 }
-
-/* Big decorative number */
-.hero-deco {
-  position: absolute;
-  right: -40px; top: 50%;
-  transform: translateY(-50%);
-  font-family: 'Fraunces', serif;
-  font-size: clamp(200px, 28vw, 420px);
-  font-weight: 900;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(196,82,10,.08);
-  line-height: 1;
-  pointer-events: none;
-  user-select: none;
+.hero-eyebrow {
+  display:inline-flex; align-items:center; gap:8px;
+  background:var(--acclt); color:var(--acc);
+  font-size:11px; font-weight:700; letter-spacing:.07em;
+  text-transform:uppercase; padding:5px 14px;
+  border-radius:100px; margin-bottom:24px;
 }
-
-.hero-inner { max-width: 760px; position: relative; z-index: 2; }
-
-.hero-tag {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: 11px; font-weight: 600; letter-spacing: .1em;
-  text-transform: uppercase; color: var(--acc);
-  margin-bottom: 28px;
+.hero-eyebrow-dot {
+  width:5px; height:5px; border-radius:50%; background:var(--acc);
+  animation:pulse 2s ease-in-out infinite;
 }
-.hero-tag::before {
-  content: '';
-  width: 24px; height: 1px; background: var(--acc);
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.3;transform:scale(.6);}}
+.hero h1 {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(40px,5.5vw,68px); font-weight:900;
+  line-height:1.0; letter-spacing:-.02em; margin-bottom:20px;
 }
-
-h1 {
-  font-family: 'Fraunces', serif;
-  font-size: clamp(42px, 7vw, 88px);
-  font-weight: 900; line-height: .96;
-  letter-spacing: -.03em;
-  margin-bottom: 28px;
-}
-h1 .line2 { color: var(--t3); font-style: italic; font-weight: 300; }
-h1 .line3 { color: var(--acc); }
-
+.hero h1 em { font-style:italic; color:var(--acc); }
 .hero-sub {
-  font-size: 16px; color: var(--t2);
-  line-height: 1.75; max-width: 480px;
-  margin-bottom: 48px;
-  font-weight: 300;
+  font-size:16px; color:var(--t2);
+  line-height:1.8; max-width:480px;
+  margin-bottom:36px; font-weight:400;
 }
-
-.hero-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-.btn-hero {
-  height: 52px; padding: 0 28px;
-  background: var(--acc); color: white;
-  border: none; border-radius: 4px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 14px; font-weight: 600;
-  cursor: pointer; text-decoration: none;
-  display: inline-flex; align-items: center; gap: 8px;
-  transition: all .15s;
-  box-shadow: 0 4px 24px rgba(196,82,10,.3);
+.hero-actions { display:flex; gap:12px; flex-wrap:wrap; }
+.btn-primary {
+  height:52px; padding:0 28px;
+  background:var(--acc); color:white;
+  border:none; border-radius:var(--r);
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:14px; font-weight:700;
+  cursor:pointer; text-decoration:none;
+  display:inline-flex; align-items:center; gap:8px;
+  transition:all .15s;
+  box-shadow:0 2px 12px rgba(196,82,10,.3);
 }
-.btn-hero:hover { background: #B34809; transform: translateY(-1px); }
+.btn-primary:hover{background:#B34809;transform:translateY(-1px);}
 .btn-ghost {
-  height: 52px; padding: 0 24px;
-  background: transparent; color: var(--t2);
-  border: 1px solid var(--bdr2); border-radius: 4px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 14px; font-weight: 500;
-  cursor: pointer; text-decoration: none;
-  display: inline-flex; align-items: center; gap: 8px;
-  transition: all .15s;
+  height:52px; padding:0 24px;
+  background:var(--white); color:var(--t2);
+  border:1.5px solid var(--bdr2); border-radius:var(--r);
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:14px; font-weight:600;
+  cursor:pointer; text-decoration:none;
+  display:inline-flex; align-items:center; gap:8px;
+  transition:all .15s;
 }
-.btn-ghost:hover { color: var(--text); border-color: var(--t3); }
+.btn-ghost:hover{border-color:var(--acc);color:var(--acc);background:var(--acclt);}
 
-.hero-stats {
-  display: flex; align-items: center; gap: 32px;
-  margin-top: 64px; padding-top: 32px;
-  border-top: 1px solid var(--bdr);
-  flex-wrap: wrap;
+/* Hero preview card */
+.hero-card {
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:12px; box-shadow:var(--shmd);
+  overflow:hidden;
+  animation:fadeUp .6s ease .2s both;
 }
-.stat { display: flex; flex-direction: column; gap: 3px; }
-.stat-n {
-  font-family: 'Fraunces', serif;
-  font-size: 32px; font-weight: 700; color: var(--text);
-  line-height: 1;
+.hc-header {
+  padding:14px 20px; border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
 }
-.stat-l { font-size: 11px; color: var(--t3); font-weight: 400; letter-spacing: .04em; }
-.stat-div { width: 1px; height: 32px; background: var(--bdr); }
+.hc-title { font-size:13px; font-weight:700; color:var(--text); }
+.hc-badge {
+  font-size:10px; font-weight:700; letter-spacing:.06em;
+  text-transform:uppercase; padding:3px 10px;
+  background:rgba(26,122,70,.1); color:var(--green);
+  border:1px solid rgba(26,122,70,.2); border-radius:100px;
+}
+.hc-body { padding:20px; }
+.hc-ticket {
+  font-family:'Playfair Display',serif;
+  font-size:48px; font-weight:900; color:var(--text); line-height:1;
+}
+.hc-lbl { font-size:11px; color:var(--t3); margin:4px 0 14px; }
+.hc-gauge {
+  height:8px;
+  background:linear-gradient(to right,#BFEFD1,#F5E197,#F5C075,#E87850,#C4520A);
+  border-radius:100px; position:relative; margin-bottom:16px;
+}
+.hc-pip {
+  position:absolute; left:62%; top:-4px;
+  width:16px; height:16px;
+  background:white; border:2.5px solid var(--acc);
+  border-radius:50%; box-shadow:0 2px 8px rgba(196,82,10,.3);
+  transform:translateX(-50%);
+}
+.hc-stats { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+.hc-stat { background:var(--bg); border-radius:6px; padding:12px; }
+.hc-stat-v {
+  font-family:'Playfair Display',serif;
+  font-size:22px; font-weight:700; color:var(--text);
+}
+.hc-stat-v.acc { color:var(--acc); }
+.hc-stat-l { font-size:10px; color:var(--t3); font-weight:600; text-transform:uppercase; letter-spacing:.04em; }
+.hc-numbox {
+  background:var(--text); border-radius:var(--r);
+  padding:14px 16px;
+  display:flex; align-items:center; gap:12px;
+}
+.hc-num-pct {
+  font-family:'Playfair Display',serif;
+  font-size:32px; font-weight:900; color:var(--acc); line-height:1;
+}
+.hc-num-txt { font-size:11px; color:rgba(255,255,255,.75); line-height:1.5; }
+.hc-num-txt strong { color:white; }
 
-/* ── ABOUT STRIP ── */
-.about-strip {
-  padding: 64px 32px;
-  border-top: 1px solid var(--bdr);
-  display: grid; grid-template-columns: 1fr 2fr;
-  gap: 48px; align-items: start;
-  max-width: 1100px; margin: 0 auto;
+/* ── STATS STRIP ── */
+.stats-strip {
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  background:var(--white);
 }
-.about-tag {
-  font-size: 10px; font-weight: 600; letter-spacing: .14em;
-  text-transform: uppercase; color: var(--t3);
-  margin-bottom: 16px;
+.stats-inner {
+  max-width:1100px; margin:0 auto; padding:28px 40px;
+  display:flex; gap:0; align-items:center;
 }
-.about-name {
-  font-family: 'Fraunces', serif;
-  font-size: 28px; font-weight: 700;
-  line-height: 1.1; margin-bottom: 8px;
+.strip-stat {
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; gap:4px; text-align:center; padding:0 20px;
 }
-.about-role { font-size: 12px; color: var(--t3); line-height: 1.7; }
-.about-text {
-  font-size: 15px; color: var(--t2);
-  line-height: 1.85; font-weight: 300;
-  max-width: 560px;
+.strip-stat+.strip-stat { border-left:1px solid var(--border); }
+.strip-n {
+  font-family:'Playfair Display',serif;
+  font-size:28px; font-weight:900; color:var(--text); line-height:1;
 }
-.about-text strong { color: var(--text); font-weight: 500; }
-.world-pills { display: flex; gap: 8px; margin-top: 20px; flex-wrap: wrap; }
-.world-pill {
-  height: 28px; padding: 0 12px;
-  border: 1px solid var(--bdr2); border-radius: 100px;
-  font-size: 11px; font-weight: 500; color: var(--t2);
-}
+.strip-l { font-size:11px; color:var(--t3); font-weight:500; }
 
-/* ── TOOLS SECTION ── */
+/* ── TOOLS ── */
 .tools-section {
-  padding: 80px 32px;
-  max-width: 1100px; margin: 0 auto;
+  max-width:1100px; margin:0 auto; padding:72px 40px;
 }
-
 .section-head {
-  display: flex; align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: 40px; flex-wrap: wrap; gap: 12px;
+  display:flex; align-items:baseline;
+  justify-content:space-between; margin-bottom:32px; flex-wrap:wrap; gap:8px;
 }
 .section-title {
-  font-family: 'Fraunces', serif;
-  font-size: 36px; font-weight: 700;
-  letter-spacing: -.02em;
+  font-family:'Playfair Display',serif;
+  font-size:32px; font-weight:900; letter-spacing:-.02em;
 }
-.section-note { font-size: 13px; color: var(--t3); }
+.section-note { font-size:13px; color:var(--t3); }
 
-/* ── TABS ── */
+/* Tabs */
 .tabs {
-  display: flex; gap: 4px; margin-bottom: 32px;
-  border-bottom: 1px solid var(--bdr);
-  padding-bottom: 0;
+  display:flex; gap:0;
+  border-bottom:1.5px solid var(--border); margin-bottom:32px;
 }
 .tab-btn {
-  height: 40px; padding: 0 18px;
-  background: transparent; border: none;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px; font-weight: 500;
-  color: var(--t3); cursor: pointer;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
-  transition: all .15s;
-  display: flex; align-items: center; gap: 7px;
+  height:44px; padding:0 20px;
+  background:transparent; border:none;
+  border-bottom:2.5px solid transparent; margin-bottom:-1.5px;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:13px; font-weight:600; color:var(--t3);
+  cursor:pointer; display:flex; align-items:center; gap:8px;
+  transition:all .15s;
 }
-.tab-btn:hover { color: var(--text); }
-.tab-btn.active { color: var(--acc); border-bottom-color: var(--acc); }
-.tab-btn .tab-count {
-  height: 18px; padding: 0 6px;
-  background: var(--bg3); border-radius: 100px;
-  font-size: 10px; font-weight: 600;
-  color: var(--t3); display: flex; align-items: center;
+.tab-btn:hover { color:var(--text); }
+.tab-btn.active { color:var(--acc); border-bottom-color:var(--acc); }
+.tab-badge {
+  height:20px; padding:0 7px; border-radius:100px;
+  font-size:10px; font-weight:700;
+  display:flex; align-items:center;
+  background:var(--bg3); color:var(--t3);
 }
-.tab-btn.active .tab-count { background: var(--acclt); color: var(--acc); }
-.tab-btn .tab-soon {
-  font-size: 9px; font-weight: 600; letter-spacing: .06em;
-  text-transform: uppercase; color: var(--t3);
-  opacity: .6;
+.tab-btn.active .tab-badge { background:var(--acclt); color:var(--acc); }
+.tab-soon {
+  font-size:9px; font-weight:700; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--t3); opacity:.7;
 }
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
 
-.tab-panel { display: none; }
-.tab-panel.active { display: block; }
-
-/* ── TOOL CARDS ── */
+/* Tool cards */
 .tools-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:16px;
 }
-
 .tool-card {
-  background: var(--bg2);
-  border: 1px solid var(--bdr);
-  border-radius: 8px;
-  padding: 24px;
-  text-decoration: none;
-  display: flex; flex-direction: column; gap: 16px;
-  transition: all .2s;
-  position: relative;
-  overflow: hidden;
+  background:var(--white); border:1px solid var(--border);
+  border-radius:var(--r); padding:24px;
+  text-decoration:none; color:inherit;
+  display:flex; flex-direction:column; gap:16px;
+  transition:all .2s; position:relative; overflow:hidden;
 }
-.tool-card::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0;
-  height: 2px; background: var(--acc);
-  transform: scaleX(0); transform-origin: left;
-  transition: transform .2s;
+.tool-card::after {
+  content:''; position:absolute; top:0; left:0; right:0;
+  height:3px; background:var(--acc);
+  transform:scaleX(0); transform-origin:left; transition:transform .2s;
 }
-.tool-card:hover { border-color: var(--bdr2); background: var(--bg3); transform: translateY(-2px); }
-.tool-card:hover::before { transform: scaleX(1); }
+.tool-card:hover{border-color:var(--accmd);box-shadow:var(--shmd);transform:translateY(-2px);}
+.tool-card:hover::after{transform:scaleX(1);}
+.tool-card.disabled{opacity:.5;pointer-events:none;background:var(--bg);}
+.tool-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+.tool-emoji{font-size:28px;line-height:1;}
+.tool-badge{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:100px;flex-shrink:0;}
+.tool-badge.live{background:rgba(26,122,70,.1);color:var(--green);border:1px solid rgba(26,122,70,.25);}
+.tool-badge.soon{background:var(--bg2);color:var(--t3);border:1px solid var(--border);}
+.tool-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:6px;}
+.tool-desc{font-size:13px;color:var(--t3);line-height:1.65;}
+.tool-footer{display:flex;align-items:center;gap:8px;margin-top:auto;padding-top:14px;border-top:1px solid var(--border);font-size:11px;color:var(--t3);font-weight:500;}
+.tool-link{color:var(--acc);font-weight:700;margin-left:auto;}
 
-.tool-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
-.tool-emoji { font-size: 28px; line-height: 1; }
-.tool-badge {
-  font-size: 9px; font-weight: 700; letter-spacing: .08em;
-  text-transform: uppercase; padding: 3px 8px;
-  border-radius: 100px; flex-shrink: 0;
-}
-.tool-badge.live { background: rgba(26,122,70,.2); color: #4ADE80; border: 1px solid rgba(74,222,128,.2); }
-.tool-badge.soon { background: var(--bg3); color: var(--t3); border: 1px solid var(--bdr2); }
+/* Coming soon */
+.coming-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:20px;}
+.coming-card{background:var(--white);border:1px dashed var(--border);border-radius:var(--r);padding:20px;}
+.coming-emoji{font-size:22px;margin-bottom:8px;}
+.coming-title{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--t2);margin-bottom:4px;}
+.coming-desc{font-size:12px;color:var(--t3);line-height:1.55;}
+.coming-note{padding:16px 20px;background:var(--acclt);border:1px solid var(--accmd);border-radius:var(--r);font-size:13px;color:var(--t2);line-height:1.65;}
+.coming-note a{color:var(--acc);font-weight:700;text-decoration:none;}
 
-.tool-title {
-  font-family: 'Fraunces', serif;
-  font-size: 18px; font-weight: 700; color: var(--text);
-  line-height: 1.2; margin-bottom: 6px;
+/* ── ABOUT ── */
+.about-section{background:var(--white);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.about-inner{
+  max-width:1100px; margin:0 auto; padding:72px 40px;
+  display:grid; grid-template-columns:260px 1fr; gap:64px; align-items:start;
 }
-.tool-desc { font-size: 13px; color: var(--t3); line-height: 1.65; font-weight: 300; }
-.tool-footer {
-  display: flex; align-items: center; gap: 8px;
-  margin-top: auto; padding-top: 12px;
-  border-top: 1px solid var(--bdr);
-  font-size: 11px; color: var(--t3);
-}
-.tool-footer .tool-link { color: var(--acc); font-weight: 500; margin-left: auto; }
+.about-tag{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:16px;}
+.about-name{font-family:'Playfair Display',serif;font-size:30px;font-weight:900;line-height:1.05;margin-bottom:10px;letter-spacing:-.01em;}
+.about-handle{font-size:13px;color:var(--t3);margin-bottom:20px;}
+.about-handle a{color:var(--acc);text-decoration:none;font-weight:600;}
+.world-pills{display:flex;flex-wrap:wrap;gap:6px;}
+.world-pill{height:28px;padding:0 12px;background:var(--bg2);border:1px solid var(--border);border-radius:100px;font-size:11px;font-weight:600;color:var(--t2);}
+.about-text{font-size:16px;color:var(--t2);line-height:1.9;}
+.about-text strong{color:var(--text);font-weight:700;}
+.about-text p+p{margin-top:20px;}
+.about-cta{margin-top:32px;}
 
-/* Coming soon card */
-.tool-card.disabled {
-  opacity: .5; pointer-events: none;
+/* ── WHATSAPP ── */
+.wa-section{max-width:1100px;margin:0 auto;padding:72px 40px;}
+.wa-card{
+  background:var(--text); border-radius:12px; padding:52px 64px;
+  display:grid; grid-template-columns:1fr auto; gap:48px; align-items:center;
 }
-
-/* ── COMING SOON TABS ── */
-.coming-tabs {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 12px;
+.wa-title{font-family:'Playfair Display',serif;font-size:32px;font-weight:900;color:white;line-height:1.1;margin-bottom:12px;}
+.wa-title em{font-style:italic;color:var(--acc);}
+.wa-sub{font-size:15px;color:rgba(255,255,255,.65);line-height:1.75;max-width:440px;}
+.wa-btn{
+  display:inline-flex; align-items:center; gap:10px;
+  height:56px; padding:0 32px;
+  background:#25D366; color:white;
+  border-radius:var(--r); text-decoration:none;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:15px; font-weight:700; white-space:nowrap;
+  transition:background .15s;
+  box-shadow:0 4px 20px rgba(37,211,102,.35);
 }
-.coming-tab-card {
-  background: var(--bg2); border: 1px dashed var(--bdr);
-  border-radius: 8px; padding: 20px;
-  display: flex; flex-direction: column; gap: 8px;
-}
-.coming-tab-emoji { font-size: 22px; }
-.coming-tab-title {
-  font-family: 'Fraunces', serif;
-  font-size: 15px; font-weight: 700; color: var(--t2);
-}
-.coming-tab-desc { font-size: 12px; color: var(--t3); line-height: 1.5; }
-
-/* ── NEWSLETTER ── */
-.newsletter {
-  margin: 0 32px 80px;
-  background: var(--bg2);
-  border: 1px solid var(--bdr);
-  border-radius: 8px;
-  padding: 48px;
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 48px; align-items: center;
-  max-width: 1036px;
-}
-.nl-title {
-  font-family: 'Fraunces', serif;
-  font-size: 28px; font-weight: 700;
-  line-height: 1.15; margin-bottom: 10px;
-}
-.nl-sub { font-size: 13px; color: var(--t3); line-height: 1.7; font-weight: 300; }
-.nl-form { display: flex; gap: 8px; }
-.nl-input {
-  flex: 1; height: 48px; padding: 0 16px;
-  background: var(--bg3); border: 1px solid var(--bdr2);
-  border-radius: 4px; outline: none;
-  font-family: 'DM Sans', sans-serif; font-size: 14px;
-  color: var(--text); transition: border-color .15s;
-}
-.nl-input::placeholder { color: var(--t3); }
-.nl-input:focus { border-color: var(--acc); }
-.nl-btn {
-  height: 48px; padding: 0 20px;
-  background: var(--acc); color: white; border: none;
-  border-radius: 4px; font-family: 'DM Sans', sans-serif;
-  font-size: 13px; font-weight: 600; cursor: pointer;
-  transition: background .15s; white-space: nowrap;
-}
-.nl-btn:hover { background: #B34809; }
+.wa-btn:hover{background:#20BA5A;}
+.wa-note{font-size:11px;color:rgba(255,255,255,.4);margin-top:10px;text-align:center;}
 
 /* ── FOOTER ── */
-footer {
-  border-top: 1px solid var(--bdr);
-  padding: 32px;
-  display: flex; justify-content: space-between;
-  align-items: center; flex-wrap: wrap; gap: 16px;
-  max-width: 1100px; margin: 0 auto;
+footer{
+  border-top:1px solid var(--border); padding:32px 40px;
+  display:flex; justify-content:space-between;
+  align-items:center; flex-wrap:wrap; gap:16px;
+  max-width:1100px; margin:0 auto;
 }
-.footer-logo {
-  font-family: 'Fraunces', serif;
-  font-size: 16px; font-weight: 900;
-  color: var(--t3); text-decoration: none;
-}
-.footer-logo span { color: var(--acc); }
-.footer-links { display: flex; gap: 24px; }
-.footer-links a {
-  font-size: 12px; color: var(--t3); text-decoration: none;
-  transition: color .15s;
-}
-.footer-links a:hover { color: var(--text); }
-.footer-note { font-size: 11px; color: var(--t3); }
+.footer-logo{font-family:'Playfair Display',serif;font-size:17px;font-weight:900;color:var(--t2);text-decoration:none;}
+.footer-logo em{color:var(--acc);font-style:normal;}
+.footer-links{display:flex;gap:24px;flex-wrap:wrap;}
+.footer-links a{font-size:13px;color:var(--t3);text-decoration:none;font-weight:500;transition:color .15s;}
+.footer-links a:hover{color:var(--acc);}
+.footer-note{font-size:11px;color:var(--t3);}
 
 /* ── ANIMATIONS ── */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.hero-tag { animation: fadeUp .5s ease .1s both; }
-h1 { animation: fadeUp .6s ease .2s both; }
-.hero-sub { animation: fadeUp .6s ease .3s both; }
-.hero-actions { animation: fadeUp .6s ease .4s both; }
-.hero-stats { animation: fadeUp .6s ease .5s both; }
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.hero-left>*{animation:fadeUp .5s ease both;}
+.hero-left>*:nth-child(1){animation-delay:.05s;}
+.hero-left>*:nth-child(2){animation-delay:.12s;}
+.hero-left>*:nth-child(3){animation-delay:.2s;}
+.hero-left>*:nth-child(4){animation-delay:.3s;}
 
 /* ── RESPONSIVE ── */
-@media (max-width: 768px) {
-  nav { padding: 0 20px; }
-  .nav-links { gap: 16px; }
-  .nav-links a:not(.nav-cta) { display: none; }
-  .hero { padding: 100px 20px 60px; }
-  .hero-deco { display: none; }
-  .about-strip { grid-template-columns: 1fr; gap: 24px; padding: 48px 20px; }
-  .tools-section { padding: 48px 20px; }
-  .newsletter { grid-template-columns: 1fr; padding: 32px 20px; gap: 24px; margin: 0 20px 60px; }
-  .nl-form { flex-direction: column; }
-  footer { padding: 24px 20px; }
-  .hero-stats { gap: 20px; }
-  .stat-div { display: none; }
+@media(max-width:900px){
+  nav{padding:0 20px;}
+  .nav-links a:not(.nav-cta){display:none;}
+  .hero{grid-template-columns:1fr;padding:48px 20px 40px;gap:0;}
+  .hero-card{display:none;}
+  .stats-inner{padding:20px;flex-wrap:wrap;}
+  .strip-stat{flex:1 1 40%;}
+  .strip-stat+.strip-stat{border-left:none;border-top:1px solid var(--border);}
+  .tools-section{padding:48px 20px;}
+  .about-inner{grid-template-columns:1fr;padding:48px 20px;gap:32px;}
+  .wa-section{padding:48px 20px;}
+  .wa-card{grid-template-columns:1fr;padding:36px 28px;gap:28px;}
+  footer{padding:24px 20px;}
+  .tabs{overflow-x:auto;}
+  .tab-btn{white-space:nowrap;}
 }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
-  <a href="/" class="nav-logo">ric<span>ram</span>cas</a>
-  <div class="nav-links">
+  <a href="/" class="nav-logo" aria-label="ricramcas inicio">ric<em>ram</em>cas</a>
+  <nav class="nav-links" aria-label="Navegación principal">
     <a href="#herramientas">Herramientas</a>
     <a href="#sobre-mi">Sobre mí</a>
-    <a href="https://open.spotify.com/show/2N0W7QCBGNCZyxtTT0C5yg" target="_blank">Podcast</a>
+    <a href="https://open.spotify.com/show/2N0W7QCBGNCZyxtTT0C5yg" target="_blank" rel="noopener">Podcast</a>
     <a href="#herramientas" class="nav-cta">Explorar →</a>
-  </div>
+  </nav>
 </nav>
 
 <!-- HERO -->
-<section class="hero">
-  <div class="hero-deco">01</div>
-  <div class="hero-inner">
-    <div class="hero-tag">Emprendimiento · Innovación · México</div>
-    <h1>
+<section class="hero" aria-labelledby="hero-heading">
+  <div class="hero-left">
+    <div class="hero-eyebrow" aria-hidden="true">
+      <span class="hero-eyebrow-dot"></span>
+      Emprendimiento · Innovación · México
+    </div>
+    <h1 id="hero-heading">
       Herramientas<br>
-      <span class="line2">para quien</span><br>
-      <span class="line3">construye.</span>
+      para quien<br>
+      <em>construye.</em>
     </h1>
     <p class="hero-sub">
-      Recursos gratuitos basados en datos reales para emprendedores, restauranteros e innovadores en México. Sin fórmulas mágicas. Con números que importan.
+      Recursos gratuitos basados en datos reales para emprendedores, restauranteros e innovadores en México. Sin fórmulas mágicas — con números que importan.
     </p>
     <div class="hero-actions">
-      <a href="#herramientas" class="btn-hero">
+      <a href="#herramientas" class="btn-primary">
         Ver herramientas
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7.5 1.5L13.5 7.5L7.5 13.5M1.5 7.5H13.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7.5 1.5L13.5 7.5L7.5 13.5M1.5 7.5H13.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
-      <a href="https://open.spotify.com/show/2N0W7QCBGNCZyxtTT0C5yg" target="_blank" class="btn-ghost">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 0C3.13 0 0 3.13 0 7s3.13 7 7 7 7-3.13 7-7-3.13-7-7-7zm3.21 10.09c-.13.2-.4.27-.61.13-1.67-1.02-3.77-1.25-6.24-.69-.24.06-.47-.09-.53-.33-.06-.24.09-.47.33-.53 2.71-.62 5.03-.35 6.91.8.21.13.28.4.14.62zm.86-1.92c-.16.26-.5.34-.76.18-1.91-1.17-4.82-1.51-7.08-.83-.29.09-.6-.08-.69-.37-.09-.29.08-.6.37-.69 2.58-.78 5.79-.4 7.98.95.26.16.34.5.18.76zm.07-1.99C8.88 4.9 5.27 4.78 3.1 5.43c-.35.1-.72-.1-.82-.45-.1-.35.1-.72.45-.82 2.49-.76 6.63-.61 9.24.97.32.19.42.6.23.92-.19.32-.6.42-.92.23-.01 0-.02-.01-.04-.01l.04.01-.04-.01z" fill="currentColor"/></svg>
-        Spotify
-      </a>
-      <a href="https://www.youtube.com/playlist?list=PLjjhMkZ4beAt0YSoMqj_eI9u0ANIwQa43" target="_blank" class="btn-ghost">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M13.73 3.74a1.76 1.76 0 0 0-1.24-1.24C11.38 2.25 7 2.25 7 2.25s-4.38 0-5.49.25A1.76 1.76 0 0 0 .27 3.74C0 4.85 0 7 0 7s0 2.15.27 3.26a1.76 1.76 0 0 0 1.24 1.24C2.62 11.75 7 11.75 7 11.75s4.38 0 5.49-.25a1.76 1.76 0 0 0 1.24-1.24C14 9.15 14 7 14 7s0-2.15-.27-3.26zM5.6 9.1V4.9L9.25 7 5.6 9.1z" fill="currentColor"/></svg>
-        YouTube
+      <a href="https://open.spotify.com/show/2N0W7QCBGNCZyxtTT0C5yg" target="_blank" rel="noopener" class="btn-ghost">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+        Nada es al Dente
       </a>
     </div>
-    <div class="hero-stats">
-      <div class="stat">
-        <span class="stat-n">MX</span>
-        <span class="stat-l">Datos INEGI · AMAI · CANIRAC</span>
+  </div>
+
+  <!-- Preview card — decorativa, aria-hidden -->
+  <div class="hero-card" aria-hidden="true" role="presentation">
+    <div class="hc-header">
+      <span class="hc-title">🎯 Diagnóstico de Precio</span>
+      <span class="hc-badge">Live</span>
+    </div>
+    <div class="hc-body">
+      <div class="hc-ticket">$485</div>
+      <div class="hc-lbl">Ticket promedio · Mariscos · CDMX</div>
+      <div class="hc-gauge"><div class="hc-pip"></div></div>
+      <div class="hc-stats">
+        <div class="hc-stat">
+          <div class="hc-stat-v">$1.2M</div>
+          <div class="hc-stat-l">Potencial/mes</div>
+        </div>
+        <div class="hc-stat">
+          <div class="hc-stat-v acc">NSE B+</div>
+          <div class="hc-stat-l">Segmento objetivo</div>
+        </div>
       </div>
-      <div class="stat-div"></div>
-      <div class="stat">
-        <span class="stat-n">100%</span>
-        <span class="stat-l">Gratuito</span>
-      </div>
-      <div class="stat-div"></div>
-      <div class="stat">
-        <span class="stat-n">CDMX</span>
-        <span class="stat-l">Base de operaciones</span>
+      <div class="hc-numbox">
+        <div class="hc-num-pct">0.3%</div>
+        <div class="hc-num-txt">del mercado de CDMX<br>para <strong>llenar tu restaurante.</strong></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ABOUT -->
-<section class="about-strip" id="sobre-mi">
-  <div>
-    <div class="about-tag">Quién construye esto</div>
-    <div class="about-name">Ricardo<br>Ramírez<br>Castillo</div>
-    <div class="about-role">
-      México<br>
-      <a href="https://instagram.com/ricramcas" target="_blank" style="color:var(--acc);text-decoration:none;">@ricramcas</a>
+<!-- STATS STRIP -->
+<div class="stats-strip">
+  <div class="stats-inner">
+    <div class="strip-stat">
+      <span class="strip-n">22</span>
+      <span class="strip-l">Ciudades de México</span>
+    </div>
+    <div class="strip-stat">
+      <span class="strip-n">7</span>
+      <span class="strip-l">Niveles NSE (AMAI 2024)</span>
+    </div>
+    <div class="strip-stat">
+      <span class="strip-n">ENIGH</span>
+      <span class="strip-l">Datos INEGI 2024</span>
+    </div>
+    <div class="strip-stat">
+      <span class="strip-n">100%</span>
+      <span class="strip-l">Gratuito</span>
     </div>
   </div>
-  <div>
-    <p class="about-text">
-      Vivo entre industrias que la mayoría no combina: <strong>restaurantes, salud digital y tecnología</strong>. Con varias vidas alternas — tengo formación y experiencia formal en innovación, emprendimiento y negocios, y llevo años aplicándola en proyectos reales, no en teoría.<br><br>
-      Me obsesiona entender cómo funcionan los negocios por dentro y ayudar a otros a tener éxito con los suyos. Estas herramientas nacen de preguntas reales que me he hecho como operador. Todas usan datos públicos verificados. Las comparto porque el acceso a buena información no debería costar dinero.
-    </p>
-    <div class="world-pills">
-      <span class="world-pill">🦞 Restaurantes</span>
-      <span class="world-pill">🧬 Salud Digital</span>
-      <span class="world-pill">📦 Producto</span>
-      <span class="world-pill">🎙️ Podcast</span>
-    </div>
-  </div>
-</section>
+</div>
 
 <!-- TOOLS -->
-<section class="tools-section" id="herramientas">
+<section class="tools-section" id="herramientas" aria-labelledby="tools-heading">
   <div class="section-head">
-    <h2 class="section-title">Herramientas</h2>
-    <span class="section-note">Todas basadas en datos reales · Acceso libre</span>
+    <h2 class="section-title" id="tools-heading">Herramientas</h2>
+    <span class="section-note">Basadas en datos reales · Acceso libre</span>
   </div>
 
-  <!-- TABS -->
-  <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('restaurantes', this)">
-      🦞 Restaurantes
-      <span class="tab-count">1</span>
+  <div class="tabs" role="tablist" aria-label="Categorías de herramientas">
+    <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="tab-restaurantes" id="tbtn-restaurantes" onclick="switchTab('restaurantes',this)">
+      🦞 Restaurantes <span class="tab-badge">1</span>
     </button>
-    <button class="tab-btn" onclick="switchTab('healthtech', this)">
-      🧬 HealthTech
-      <span class="tab-soon">Próximo</span>
+    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-healthtech" id="tbtn-healthtech" onclick="switchTab('healthtech',this)">
+      🧬 HealthTech <span class="tab-soon">Próximo</span>
     </button>
-    <button class="tab-btn" onclick="switchTab('producto', this)">
-      📦 Producto
-      <span class="tab-soon">Próximo</span>
+    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-producto" id="tbtn-producto" onclick="switchTab('producto',this)">
+      📦 Producto <span class="tab-soon">Próximo</span>
     </button>
-    <button class="tab-btn" onclick="switchTab('finanzas', this)">
-      📊 Finanzas
-      <span class="tab-soon">Próximo</span>
+    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-finanzas" id="tbtn-finanzas" onclick="switchTab('finanzas',this)">
+      📊 Finanzas <span class="tab-soon">Próximo</span>
     </button>
   </div>
 
-  <!-- RESTAURANTES -->
-  <div class="tab-panel active" id="tab-restaurantes">
+  <div class="tab-panel active" id="tab-restaurantes" role="tabpanel" aria-labelledby="tbtn-restaurantes">
     <div class="tools-grid">
-
       <a href="herramientas/restaurantes/" class="tool-card">
         <div class="tool-card-top">
-          <span class="tool-emoji">🎯</span>
-          <span class="tool-badge live">Live</span>
+          <span class="tool-emoji" aria-hidden="true">🎯</span>
+          <span class="tool-badge live">● Live</span>
         </div>
         <div>
           <div class="tool-title">Diagnóstico de Precio</div>
@@ -547,165 +499,119 @@ h1 { animation: fadeUp .6s ease .2s both; }
           <span class="tool-link">Abrir →</span>
         </div>
       </a>
-
       <div class="tool-card disabled">
-        <div class="tool-card-top">
-          <span class="tool-emoji">💰</span>
-          <span class="tool-badge soon">Próximo</span>
-        </div>
-        <div>
-          <div class="tool-title">Calculadora de Food Cost</div>
-          <div class="tool-desc">Ingresa tus ingredientes y porciones. Calcula el costo real por platillo, el precio de venta óptimo y tu margen de contribución.</div>
-        </div>
-        <div class="tool-footer">
-          <span>Estándares CANIRAC · SAT 2025</span>
-        </div>
+        <div class="tool-card-top"><span class="tool-emoji" aria-hidden="true">💰</span><span class="tool-badge soon">Próximo</span></div>
+        <div><div class="tool-title">Calculadora de Food Cost</div><div class="tool-desc">Costo real por platillo, precio de venta óptimo y margen de contribución con datos de merma y mano de obra directa.</div></div>
+        <div class="tool-footer"><span>CANIRAC · SAT 2026</span></div>
       </div>
-
       <div class="tool-card disabled">
-        <div class="tool-card-top">
-          <span class="tool-emoji">📋</span>
-          <span class="tool-badge soon">Próximo</span>
-        </div>
-        <div>
-          <div class="tool-title">Simulador de Nómina</div>
-          <div class="tool-desc">Calcula el costo real de tu equipo con salarios mínimos 2026, IMSS, INFONAVIT y la nueva Ley de Propinas.</div>
-        </div>
-        <div class="tool-footer">
-          <span>CONASAMI 2026 · IMSS · LFT</span>
-        </div>
+        <div class="tool-card-top"><span class="tool-emoji" aria-hidden="true">📋</span><span class="tool-badge soon">Próximo</span></div>
+        <div><div class="tool-title">Simulador de Nómina</div><div class="tool-desc">Costo real de tu equipo con salarios mínimos 2026, IMSS, INFONAVIT y la nueva Ley de Propinas.</div></div>
+        <div class="tool-footer"><span>CONASAMI 2026 · IMSS · LFT</span></div>
       </div>
-
       <div class="tool-card disabled">
-        <div class="tool-card-top">
-          <span class="tool-emoji">⚖️</span>
-          <span class="tool-badge soon">Próximo</span>
-        </div>
-        <div>
-          <div class="tool-title">Punto de Equilibrio</div>
-          <div class="tool-desc">¿Cuántos cubiertos necesitas para no perder dinero? Modelo completo con costos fijos, variables y escenarios de ocupación.</div>
-        </div>
-        <div class="tool-footer">
-          <span>Metodología estándar de industria</span>
-        </div>
+        <div class="tool-card-top"><span class="tool-emoji" aria-hidden="true">⚖️</span><span class="tool-badge soon">Próximo</span></div>
+        <div><div class="tool-title">Punto de Equilibrio</div><div class="tool-desc">¿Cuántos cubiertos necesitas para no perder dinero? Costos fijos, variables y escenarios de ocupación.</div></div>
+        <div class="tool-footer"><span>Metodología estándar de industria</span></div>
       </div>
-
     </div>
   </div>
 
-  <!-- HEALTHTECH -->
-  <div class="tab-panel" id="tab-healthtech">
-    <div class="coming-tabs">
-      <div class="coming-tab-card">
-        <span class="coming-tab-emoji">🏥</span>
-        <div class="coming-tab-title">Mapa de oportunidad</div>
-        <div class="coming-tab-desc">Visualiza brechas en acceso a servicios de salud por estado y segmento poblacional.</div>
-      </div>
-      <div class="coming-tab-card">
-        <span class="coming-tab-emoji">💊</span>
-        <div class="coming-tab-title">Evaluador de proyectos</div>
-        <div class="coming-tab-desc">Marco de evaluación para startups de healthtech basado en criterios del ecosistema mexicano.</div>
-      </div>
-      <div class="coming-tab-card">
-        <span class="coming-tab-emoji">📡</span>
-        <div class="coming-tab-title">Radar de innovación</div>
-        <div class="coming-tab-desc">Tendencias y tecnologías emergentes en salud digital con relevancia para México y LATAM.</div>
-      </div>
+  <div class="tab-panel" id="tab-healthtech" role="tabpanel" aria-labelledby="tbtn-healthtech">
+    <div class="coming-grid">
+      <div class="coming-card"><div class="coming-emoji">🏥</div><div class="coming-title">Mapa de oportunidad</div><div class="coming-desc">Brechas en acceso a servicios de salud por estado y segmento poblacional.</div></div>
+      <div class="coming-card"><div class="coming-emoji">💊</div><div class="coming-title">Evaluador de proyectos</div><div class="coming-desc">Marco de evaluación para startups de healthtech en el ecosistema mexicano.</div></div>
+      <div class="coming-card"><div class="coming-emoji">📡</div><div class="coming-title">Radar de innovación</div><div class="coming-desc">Tendencias en salud digital con relevancia para México y LATAM.</div></div>
     </div>
-    <div style="margin-top:24px;padding:20px 24px;background:var(--bg2);border:1px solid var(--bdr);border-radius:8px;">
-      <p style="font-size:13px;color:var(--t3);line-height:1.7;">
-        Las herramientas de HealthTech están en desarrollo. Si trabajas en salud digital o tienes un proyecto que quieras evaluar, escríbeme a
-        <a href="https://instagram.com/ricramcas" target="_blank" style="color:var(--acc);text-decoration:none;">@ricramcas</a>.
-      </p>
-    </div>
+    <div class="coming-note">En desarrollo. Si trabajas en salud digital escríbeme a <a href="https://instagram.com/ricramcas" target="_blank" rel="noopener">@ricramcas</a>.</div>
   </div>
 
-  <!-- PRODUCTO -->
-  <div class="tab-panel" id="tab-producto">
-    <div class="coming-tabs">
-      <div class="coming-tab-card">
-        <span class="coming-tab-emoji">🧪</span>
-        <div class="coming-tab-title">Validador de idea</div>
-        <div class="coming-tab-desc">Checklist estructurado para validar hipótesis de negocio antes de invertir tiempo y dinero.</div>
-      </div>
-      <div class="coming-tab-card">
-        <span class="coming-tab-emoji">💸</span>
-        <div class="coming-tab-title">Calculadora de unit economics</div>
-        <div class="coming-tab-desc">CAC, LTV, payback period y margen de contribución para productos digitales y físicos.</div>
-      </div>
-      <div class="coming-tab-card">
-        <span class="coming-tab-emoji">🗺️</span>
-        <div class="coming-tab-title">Mapa de canales</div>
-        <div class="coming-tab-desc">Visualiza y compara canales de distribución por costo de adquisición y escala en México.</div>
-      </div>
+  <div class="tab-panel" id="tab-producto" role="tabpanel" aria-labelledby="tbtn-producto">
+    <div class="coming-grid">
+      <div class="coming-card"><div class="coming-emoji">🧪</div><div class="coming-title">Validador de idea</div><div class="coming-desc">Checklist para validar hipótesis de negocio antes de invertir tiempo y dinero.</div></div>
+      <div class="coming-card"><div class="coming-emoji">💸</div><div class="coming-title">Unit economics</div><div class="coming-desc">CAC, LTV, payback period y margen de contribución para productos digitales y físicos.</div></div>
+      <div class="coming-card"><div class="coming-emoji">🗺️</div><div class="coming-title">Mapa de canales</div><div class="coming-desc">Canales de distribución por costo de adquisición y escala en México.</div></div>
     </div>
-    <div style="margin-top:24px;padding:20px 24px;background:var(--bg2);border:1px solid var(--bdr);border-radius:8px;">
-      <p style="font-size:13px;color:var(--t3);line-height:1.7;">
-        En construcción. Sigue el avance en
-        <a href="https://instagram.com/ricramcas" target="_blank" style="color:var(--acc);text-decoration:none;">@ricramcas</a>.
-      </p>
-    </div>
+    <div class="coming-note">En construcción. Sigue el avance en <a href="https://instagram.com/ricramcas" target="_blank" rel="noopener">@ricramcas</a>.</div>
   </div>
 
-  <!-- FINANZAS -->
-  <div class="tab-panel" id="tab-finanzas">
-    <div class="coming-tabs">
-      <div class="coming-tab-card">
-        <span class="coming-tab-emoji">📈</span>
-        <div class="coming-tab-title">Proyección de flujo</div>
-        <div class="coming-tab-desc">Modelo simple de flujo de caja a 12 meses para negocios pequeños y medianos.</div>
-      </div>
-      <div class="coming-tab-card">
-        <span class="coming-tab-emoji">🧾</span>
-        <div class="coming-tab-title">Estimador fiscal</div>
-        <div class="coming-tab-desc">ISR, IVA y IMSS estimados para distintas estructuras legales en México.</div>
-      </div>
+  <div class="tab-panel" id="tab-finanzas" role="tabpanel" aria-labelledby="tbtn-finanzas">
+    <div class="coming-grid">
+      <div class="coming-card"><div class="coming-emoji">📈</div><div class="coming-title">Proyección de flujo</div><div class="coming-desc">Flujo de caja a 12 meses para negocios pequeños y medianos.</div></div>
+      <div class="coming-card"><div class="coming-emoji">🧾</div><div class="coming-title">Estimador fiscal</div><div class="coming-desc">ISR, IVA y IMSS estimados para distintas estructuras legales en México.</div></div>
     </div>
-    <div style="margin-top:24px;padding:20px 24px;background:var(--bg2);border:1px solid var(--bdr);border-radius:8px;">
-      <p style="font-size:13px;color:var(--t3);line-height:1.7;">
-        En construcción. Sigue el avance en
-        <a href="https://instagram.com/ricramcas" target="_blank" style="color:var(--acc);text-decoration:none;">@ricramcas</a>.
-      </p>
-    </div>
+    <div class="coming-note">En construcción. Sigue el avance en <a href="https://instagram.com/ricramcas" target="_blank" rel="noopener">@ricramcas</a>.</div>
   </div>
-
 </section>
 
-<!-- WHATSAPP COMMUNITY -->
-<div class="newsletter" style="align-items:center;">
-  <div>
-    <h3 class="nl-title">Únete a la<br>comunidad.</h3>
-    <p class="nl-sub">Un espacio para emprendedores, restauranteros e innovadores en México. Comparte, pregunta, conecta. Sin spam, sin algoritmos — conversación directa.</p>
+<!-- ABOUT -->
+<section class="about-section" id="sobre-mi" aria-labelledby="about-heading">
+  <div class="about-inner">
+    <div class="about-left">
+      <div class="about-tag">Quién construye esto</div>
+      <h2 class="about-name" id="about-heading">Ricardo<br>Ramírez<br>Castillo</h2>
+      <div class="about-handle">México · <a href="https://instagram.com/ricramcas" target="_blank" rel="noopener">@ricramcas</a></div>
+      <div class="world-pills">
+        <span class="world-pill">🦞 Restaurantes</span>
+        <span class="world-pill">🧬 Salud Digital</span>
+        <span class="world-pill">📦 Producto</span>
+        <span class="world-pill">🎙️ Podcast</span>
+      </div>
+    </div>
+    <div class="about-right">
+      <div class="about-text">
+        <p>Vivo entre industrias que la mayoría no combina: <strong>restaurantes, salud digital y tecnología</strong>. Con varias vidas alternas — tengo formación y experiencia formal en innovación, emprendimiento y negocios, y llevo años aplicándola en proyectos reales, no en teoría.</p>
+        <p>Me obsesiona entender cómo funcionan los negocios por dentro y <strong>ayudar a otros a tener éxito con los suyos</strong>. Estas herramientas nacen de preguntas que me he hecho como operador. Todas usan datos públicos verificados. Las comparto porque el acceso a buena información no debería costar dinero.</p>
+      </div>
+      <div class="about-cta">
+        <a href="https://linkedin.com/in/ricardoramirezc" target="_blank" rel="noopener" class="btn-ghost">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          Ver en LinkedIn
+        </a>
+      </div>
+    </div>
   </div>
-  <div style="display:flex;flex-direction:column;gap:16px;">
-    <a href="https://chat.whatsapp.com/L5m2FAFlsFl8lA2eT5XNvZ?mode=gi_t" target="_blank" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;height:56px;padding:0 28px;background:#25D366;color:white;border-radius:4px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;text-decoration:none;transition:all .15s;box-shadow:0 4px 20px rgba(37,211,102,.3);" onmouseover="this.style.background='#20BA5A'" onmouseout="this.style.background='#25D366'">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-      Unirse a la comunidad
-    </a>
-    <p style="font-size:11px;color:var(--t3);text-align:center;">Comunidad de WhatsApp · Gratis · Sal cuando quieras</p>
+</section>
+
+<!-- WHATSAPP -->
+<div class="wa-section">
+  <div class="wa-card">
+    <div>
+      <h2 class="wa-title">Únete a la<br><em>comunidad.</em></h2>
+      <p class="wa-sub">Un espacio para emprendedores, restauranteros e innovadores en México. Comparte, pregunta, conecta. Sin spam, sin algoritmos.</p>
+    </div>
+    <div>
+      <a href="https://chat.whatsapp.com/L5m2FAFlsFl8lA2eT5XNvZ?mode=gi_t" target="_blank" rel="noopener" class="wa-btn" aria-label="Unirse a la comunidad de WhatsApp">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        Unirse
+      </a>
+      <p class="wa-note">Gratis · Sal cuando quieras</p>
+    </div>
   </div>
 </div>
 
 <!-- FOOTER -->
 <footer>
-  <a href="/" class="footer-logo">ric<span>ram</span>cas</a>
+  <a href="/" class="footer-logo">ric<em>ram</em>cas</a>
   <div class="footer-links">
-    <a href="https://instagram.com/ricramcas" target="_blank">Instagram</a>
-    <a href="https://linkedin.com/in/ricardoramirezc" target="_blank">LinkedIn</a>
-    <a href="https://open.spotify.com/show/2N0W7QCBGNCZyxtTT0C5yg" target="_blank">Spotify</a>
-    <a href="https://www.youtube.com/playlist?list=PLjjhMkZ4beAt0YSoMqj_eI9u0ANIwQa43" target="_blank">YouTube</a>
+    <a href="https://instagram.com/ricramcas" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://linkedin.com/in/ricardoramirezc" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://open.spotify.com/show/2N0W7QCBGNCZyxtTT0C5yg" target="_blank" rel="noopener">Spotify</a>
+    <a href="https://www.youtube.com/playlist?list=PLjjhMkZ4beAt0YSoMqj_eI9u0ANIwQa43" target="_blank" rel="noopener">YouTube</a>
   </div>
-  <span class="footer-note">México · 2025 · Datos: INEGI · AMAI · ENIGH</span>
+  <span class="footer-note">México · 2026 · Datos: INEGI · AMAI · ENIGH</span>
 </footer>
 
 <script>
 function switchTab(id, btn) {
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + id).classList.add('active');
-  btn.classList.add('active');
+  document.querySelectorAll('.tab-panel').forEach(p => { p.classList.remove('active'); p.hidden = true; });
+  document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+  const panel = document.getElementById('tab-' + id);
+  panel.classList.add('active'); panel.hidden = false;
+  btn.classList.add('active'); btn.setAttribute('aria-selected','true');
 }
-
+document.querySelectorAll('.tab-panel:not(.active)').forEach(p => p.hidden = true);
 </script>
 </body>
 </html>
+
