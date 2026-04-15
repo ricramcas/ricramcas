@@ -2,1038 +2,839 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Diagnóstico de Precio — Restauranteros MX</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagnóstico de Precio — ¿Cuánto deberías cobrar? | ricramcas.com</title>
+<meta name="description" content="Descubre si tu precio está bien posicionado para tu restaurante. Análisis gratuito con datos reales de 22 ciudades de México, 7 niveles socioeconómicos y benchmarks de la industria restaurantera.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:     #F9F8F6;
-  --bg2:    #F2F1EE;
-  --bg3:    #EAEAE6;
-  --border: #E0DFD9;
-  --bdr2:   #CCCAC3;
-  --text:   #111010;
-  --t2:     #3D3C38;
-  --t3:     #868480;
-  --acc:    #C4520A;
-  --acclt:  #FBF0E9;
-  --accmd:  #EFC9A8;
-  --white:  #FFFFFF;
-  --green:  #1A7A46;
-  --greenlt:#E8F5EE;
-  --warn:   #9B6E1A;
-  --warnlt: #FDF7EB;
-  --red:    #B83020;
-  --redlt:  #FDECEA;
-  --r:      8px;
-  --sh:     0 1px 4px rgba(0,0,0,.07);
-  --shmd:   0 4px 24px rgba(0,0,0,.09);
+:root{
+  --bg:#F9F8F6;--bg2:#F2F1EE;--bg3:#EAEAE6;--white:#FFFFFF;
+  --border:#E0DFD9;--bdr2:#CCCAC3;
+  --text:#111010;--t2:#3D3C38;--t3:#595855;
+  --acc:#C4520A;--acclt:#FBF0E9;--accmd:#EFC9A8;
+  --green:#1A7A46;--greenlt:#E8F5EE;
+  --warn:#9B6E1A;--warnlt:#FDF7EB;
+  --red:#B83020;--redlt:#FDECEA;
+  --r:8px;--sh:0 1px 4px rgba(0,0,0,.07);--shmd:0 4px 24px rgba(0,0,0,.09);
 }
-*{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6;}
 
-/* ── PAGE ── */
-.page{max-width:700px;margin:0 auto;padding:44px 20px 100px;}
+/* NAV */
+.nav{position:sticky;top:0;z-index:200;background:rgba(249,248,246,.95);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;}
+.nav-back{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--t3);text-decoration:none;transition:color .15s;}
+.nav-back:hover{color:var(--acc);}
+.nav-logo{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--text);text-decoration:none;}
+.nav-logo span{color:var(--acc);font-style:italic;}
 
-/* ── HEADER ── */
-.eyebrow{display:inline-flex;align-items:center;gap:7px;background:var(--acclt);color:var(--acc);font-size:11px;font-weight:700;letter-spacing:.05em;padding:4px 12px;border-radius:100px;margin-bottom:20px;}
-.eyebrow-dot{width:5px;height:5px;border-radius:50%;background:var(--acc);animation:pulse 2s ease-in-out infinite;}
+/* SCREEN SYSTEM */
+.screen{display:none;}
+.screen.active{display:block;}
+
+/* ── TOOLTIP SYSTEM ── */
+.tip{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:var(--bg3);border:1px solid var(--bdr2);font-size:10px;font-weight:700;color:var(--t3);cursor:help;position:relative;vertical-align:middle;margin-left:4px;flex-shrink:0;transition:all .15s;}
+.tip:hover{background:var(--acc);border-color:var(--acc);color:white;}
+.tip::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--text);color:white;font-size:12px;font-weight:400;line-height:1.5;padding:10px 14px;border-radius:var(--r);width:240px;white-space:normal;pointer-events:none;opacity:0;transition:opacity .2s;z-index:500;box-shadow:var(--shmd);font-family:'Plus Jakarta Sans',sans-serif;}
+.tip::before{content:'';position:absolute;bottom:calc(100% + 3px);left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--text);pointer-events:none;opacity:0;transition:opacity .2s;}
+.tip:hover::after,.tip:hover::before{opacity:1;}
+/* Mobile: tooltip opens downward if near top */
+@media(max-width:600px){.tip::after{bottom:auto;top:calc(100% + 8px);}.tip::before{bottom:auto;top:calc(100% + 3px);border-top-color:transparent;border-bottom-color:var(--text);}}
+
+/* FIELD LABELS */
+.field-block{margin-bottom:20px;}
+.field-label{font-size:13px;font-weight:700;color:var(--t2);margin-bottom:4px;display:flex;align-items:center;gap:4px;flex-wrap:wrap;}
+.field-hint{font-size:12px;color:var(--t3);margin-bottom:8px;line-height:1.5;}
+
+/* IMPACT SCREEN */
+.impact-wrap{max-width:720px;margin:0 auto;padding:48px 24px 80px;}
+.eyebrow-pill{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:24px;}
+.eyebrow-pill.red{background:var(--redlt);color:var(--red);border:1px solid rgba(184,48,32,.15);}
+.eyebrow-pill.acc{background:var(--acclt);color:var(--acc);}
+.pill-dot{width:5px;height:5px;border-radius:50%;background:currentColor;animation:pulse 2s ease-in-out infinite;}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.3;transform:scale(.6);}}
-h1{font-family:'Playfair Display',serif;font-size:clamp(28px,5.5vw,50px);font-weight:900;line-height:1.04;letter-spacing:-.015em;margin-bottom:12px;}
-h1 em{font-style:italic;color:var(--acc);}
-.sub{font-size:13.5px;color:var(--t3);line-height:1.75;max-width:480px;margin-bottom:36px;}
+.impact-h1{font-family:'Playfair Display',serif;font-size:clamp(30px,5vw,50px);font-weight:900;line-height:1.1;color:var(--text);margin-bottom:20px;letter-spacing:-.01em;}
+.impact-h1 em{font-style:italic;color:var(--acc);}
+.impact-sub{font-size:15px;color:var(--t2);line-height:1.8;max-width:580px;margin-bottom:40px;}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:40px;}
+.stat-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:20px;box-shadow:var(--sh);position:relative;overflow:hidden;}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.stat-card.r::before{background:var(--red);}
+.stat-card.a::before{background:var(--warn);}
+.stat-card.g::before{background:var(--green);}
+.stat-num{font-family:'Playfair Display',serif;font-size:44px;font-weight:900;line-height:1;margin-bottom:8px;}
+.stat-num.r{color:var(--red);}.stat-num.a{color:var(--warn);}.stat-num.g{color:var(--green);}
+.stat-desc{font-size:13px;color:var(--t2);line-height:1.55;margin-bottom:6px;}
+.stat-src{font-size:11px;color:var(--t3);}
+.quote-block{border-left:3px solid var(--acc);padding:16px 20px;background:var(--acclt);border-radius:0 var(--r) var(--r) 0;margin-bottom:36px;}
+.quote-text{font-family:'Playfair Display',serif;font-size:16px;font-style:italic;color:var(--text);line-height:1.6;margin-bottom:6px;}
+.quote-auth{font-size:12px;color:var(--t3);}
+.causes-list{display:flex;flex-direction:column;gap:12px;margin-bottom:36px;}
+.cause-row{display:flex;align-items:center;gap:12px;}
+.cause-lbl{font-size:13px;color:var(--t2);width:200px;flex-shrink:0;text-align:right;}
+.cause-track{flex:1;height:8px;background:var(--bg3);border-radius:100px;overflow:hidden;}
+.cause-fill{height:100%;border-radius:100px;width:0;transition:width 1.2s cubic-bezier(.16,1,.3,1);}
+.cause-pct{font-size:13px;font-weight:700;width:36px;flex-shrink:0;}
+.cause-note{font-size:11px;color:var(--t3);margin-top:3px;padding-left:212px;}
+.impact-cta-box{background:var(--text);border-radius:var(--r);padding:28px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+.impact-cta-box strong{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:white;display:block;margin-bottom:6px;}
+.impact-cta-box p{font-size:13px;color:rgba(255,255,255,.6);line-height:1.6;}
+.btn-start-big{height:52px;padding:0 32px;background:var(--acc);color:white;border:none;border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .15s;box-shadow:0 2px 12px rgba(196,82,10,.4);}
+.btn-start-big:hover{background:#B34809;transform:translateY(-1px);}
+.sources-note{font-size:11px;color:var(--t3);line-height:1.7;margin-top:24px;padding-top:20px;border-top:1px solid var(--border);}
 
-/* ── CARD BASE ── */
-.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);}
+/* STEPS */
+.steps-header{max-width:720px;margin:0 auto;padding:28px 24px 0;}
+.progress-steps{display:flex;border-radius:var(--r);overflow:hidden;border:1px solid var(--border);margin-bottom:6px;background:var(--white);}
+.ps{flex:1;padding:10px 8px;border-right:1px solid var(--border);text-align:center;transition:all .3s;}
+.ps:last-child{border-right:none;}
+.ps.done{background:var(--greenlt);}
+.ps.active{background:var(--acclt);}
+.ps-n{display:block;font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.05em;text-transform:uppercase;}
+.ps.active .ps-n{color:var(--acc);}
+.ps.done .ps-n{color:var(--green);}
+.ps-l{display:block;font-size:11px;font-weight:600;color:var(--t3);margin-top:2px;}
+.ps.active .ps-l{color:var(--acc);}
+.ps.done .ps-l{color:var(--green);}
+.progress-bar-track{height:3px;background:var(--bg3);border-radius:100px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--acc);border-radius:100px;transition:width .6s cubic-bezier(.16,1,.3,1);}
+.steps-wrap{max-width:720px;margin:0 auto;padding:0 24px 80px;}
+.step{display:none;}
+.step.active{display:block;animation:fadeUp .4s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 
-/* ── STEP PILLS ── */
-.steps{display:flex;align-items:center;gap:0;margin-bottom:24px;}
-.step{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--t3);transition:color .2s;}
-.step.active{color:var(--acc);}
-.step.done{color:var(--green);}
-.step-num{width:24px;height:24px;border-radius:50%;border:2px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;transition:all .2s;}
-.step.done .step-num{background:var(--green);border-color:var(--green);color:white;}
-.step.active .step-num{background:var(--acc);border-color:var(--acc);color:white;}
-.step-line{flex:1;height:1px;background:var(--border);margin:0 8px;}
+/* STEP HEADER WITH RISK CIRCLE */
+.step-hdr{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:20px 24px;margin-bottom:20px;box-shadow:var(--sh);display:flex;align-items:flex-start;gap:20px;}
+.rc-wrap{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.rc-svg{transform:rotate(-90deg);}
+.rc-pct-label{font-family:'Playfair Display',serif;font-size:13px;font-weight:700;text-align:center;}
+.rc-risk-lbl{font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--t3);text-align:center;max-width:64px;line-height:1.3;}
+.step-meta{flex:1;}
+.step-meta h2{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:4px;line-height:1.2;}
+.step-meta p{font-size:13px;color:var(--t3);line-height:1.55;}
+.badge-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+.step-badge{display:inline-flex;align-items:center;gap:6px;background:var(--bg2);border:1px solid var(--border);border-radius:100px;padding:4px 10px;font-size:11px;font-weight:600;color:var(--t3);}
+.risk-stat-badge{font-size:11px;font-weight:700;color:var(--red);background:var(--redlt);border:1px solid rgba(184,48,32,.15);border-radius:100px;padding:4px 10px;}
 
-/* ── FORM ELEMENTS ── */
-label{display:block;font-size:11px;font-weight:700;color:var(--t2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px;}
-.opt-tag{font-size:10px;font-weight:400;color:var(--t3);text-transform:none;letter-spacing:0;margin-left:3px;}
+/* CARDS */
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);padding:24px;margin-bottom:16px;}
+.card-title{font-size:13px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+
+/* INPUTS */
 .iw{display:flex;align-items:center;background:var(--bg);border:1.5px solid var(--bdr2);border-radius:var(--r);overflow:hidden;transition:border-color .15s,box-shadow .15s;}
 .iw:focus-within{border-color:var(--acc);box-shadow:0 0 0 3px rgba(196,82,10,.1);background:var(--white);}
-.pfx{padding:0 12px;font-size:12px;font-weight:600;color:var(--t3);background:var(--bg2);border-right:1.5px solid var(--bdr2);height:44px;display:flex;align-items:center;white-space:nowrap;flex-shrink:0;}
-input[type=number],input[type=text]{flex:1;border:none;outline:none;background:transparent;font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:600;color:var(--text);padding:0 12px;height:44px;}
-input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;}
-input::placeholder{color:var(--t3);font-weight:400;font-size:13px;}
-select{width:100%;height:44px;background:var(--bg);border:1.5px solid var(--bdr2);border-radius:var(--r);outline:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:500;color:var(--text);padding:0 12px;cursor:pointer;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23868480' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:34px;transition:border-color .15s,box-shadow .15s;}
+.pfx{padding:0 12px;font-size:12px;font-weight:600;color:var(--t3);background:var(--bg2);border-right:1.5px solid var(--bdr2);height:44px;display:flex;align-items:center;white-space:nowrap;}
+.iw input[type=text],.iw input[type=number]{flex:1;border:none;outline:none;background:transparent;font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:600;color:var(--text);padding:0 12px;height:44px;}
+select{width:100%;height:44px;background:var(--bg);border:1.5px solid var(--bdr2);border-radius:var(--r);outline:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:500;color:var(--text);padding:0 12px;cursor:pointer;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23595855' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:34px;transition:border-color .15s,box-shadow .15s;}
 select:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(196,82,10,.1);background-color:var(--white);}
-select option{background:white;}
 
-/* ── SLIDER ── */
-.slider-display{font-family:'Playfair Display',serif;font-size:52px;font-weight:900;color:var(--text);line-height:1;transition:color .15s;}
-.slider-display.hot{color:var(--acc);}
-.slider-unit{font-size:13px;font-weight:500;color:var(--t3);margin-left:4px;}
-.range-wrap{position:relative;padding:6px 0 0;}
-input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;background:var(--bg3);border-radius:100px;outline:none;cursor:pointer;position:relative;z-index:2;}
+/* SLIDER */
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;background:var(--bg3);border-radius:100px;outline:none;cursor:pointer;}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--white);border:2.5px solid var(--acc);box-shadow:0 2px 8px rgba(196,82,10,.25);cursor:pointer;transition:transform .15s,box-shadow .15s;}
 input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15);box-shadow:0 4px 14px rgba(196,82,10,.4);}
-input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--white);border:2.5px solid var(--acc);box-shadow:0 2px 8px rgba(196,82,10,.25);cursor:pointer;}
-.range-fill{position:absolute;left:0;top:6px;height:6px;background:var(--acc);border-radius:100px;pointer-events:none;z-index:1;}
-.presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px;}
-.preset{height:28px;padding:0 10px;background:var(--bg2);border:1.5px solid var(--bdr2);border-radius:100px;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:600;color:var(--t2);cursor:pointer;transition:all .12s;white-space:nowrap;}
-.preset:hover,.preset.on{background:var(--acc);border-color:var(--acc);color:white;}
-.range-ends{display:flex;justify-content:space-between;margin-top:6px;}
-.range-end{font-size:10.5px;color:var(--t3);}
+.slider-display{font-family:'Playfair Display',serif;font-size:48px;font-weight:900;color:var(--text);line-height:1;transition:color .15s;}
+.slider-display.hot{color:var(--acc);}
+.slider-poles{display:flex;justify-content:space-between;font-size:11px;color:var(--t3);margin-top:6px;}
 
-/* ── CUISINE GRID ── */
-.cuisine-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
-.cuisine-btn{display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 8px;background:var(--bg);border:1.5px solid var(--bdr2);border-radius:var(--r);cursor:pointer;transition:all .15s;text-align:center;}
-.cuisine-btn:hover{border-color:var(--acc);background:var(--acclt);}
-.cuisine-btn.on{border-color:var(--acc);background:var(--acclt);box-shadow:0 0 0 3px rgba(196,82,10,.1);}
-.cuisine-emoji{font-size:22px;line-height:1;}
-.cuisine-name{font-size:10.5px;font-weight:700;color:var(--t2);}
-.cuisine-range{font-size:9px;color:var(--t3);}
+/* PRESETS */
+.preset-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-bottom:16px;}
+.preset-btn{height:44px;padding:0 12px;background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;color:var(--t2);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s;}
+.preset-btn:hover{border-color:var(--accmd);background:var(--acclt);}
+.preset-btn.active{border-color:var(--acc);background:var(--acclt);color:var(--acc);}
+.preset-emoji{font-size:16px;}
 
-/* ── BUTTONS ── */
-.btn-primary{width:100%;height:48px;background:var(--acc);color:white;border:none;border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s;box-shadow:0 2px 8px rgba(196,82,10,.28);letter-spacing:.01em;}
-.btn-primary:hover{background:#B34809;transform:translateY(-1px);box-shadow:0 4px 16px rgba(196,82,10,.35);}
-.btn-primary:active{transform:translateY(0);}
-.btn-secondary{height:44px;padding:0 20px;background:var(--white);border:1.5px solid var(--bdr2);border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:var(--t2);cursor:pointer;transition:all .15s;}
-.btn-secondary:hover{border-color:var(--acc);color:var(--acc);background:var(--acclt);}
-.btn-row{display:flex;gap:8px;margin-top:4px;}
+/* NAV BTNS */
+.nav-btns{display:flex;gap:12px;margin-top:24px;justify-content:flex-end;}
+.btn-primary{height:52px;padding:0 28px;background:var(--acc);color:white;border:none;border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .15s;box-shadow:0 2px 12px rgba(196,82,10,.3);}
+.btn-primary:hover{background:#B34809;transform:translateY(-1px);}
+.btn-ghost{height:52px;padding:0 24px;background:var(--white);color:var(--t2);border:1.5px solid var(--bdr2);border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .15s;}
+.btn-ghost:hover{border-color:var(--acc);color:var(--acc);background:var(--acclt);}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px;border-radius:4px;}
 
-/* ── SECTION HEAD ── */
-.sec{margin:28px 0 12px;display:flex;align-items:baseline;gap:8px;}
-.sec-t{font-size:13px;font-weight:700;color:var(--text);}
-.sec-n{font-size:11px;color:var(--t3);}
-
-/* ── DIAGNOSIS CARD ── */
-.diag-card{padding:0;overflow:hidden;}
-.diag-top{padding:24px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;}
-.diag-ticket{font-family:'Playfair Display',serif;font-size:48px;font-weight:900;color:var(--text);line-height:1;}
-.diag-rest{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--acc);}
-.diag-city{font-size:12px;color:var(--t3);}
-.verdict-pill{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:6px 14px;border-radius:100px;}
-.verdict-pill.ok{background:var(--greenlt);color:var(--green);}
-.verdict-pill.high{background:var(--warnlt);color:var(--warn);}
-.verdict-pill.low{background:var(--redlt);color:var(--red);}
-.verdict-pill.spot{background:var(--acclt);color:var(--acc);}
-
-/* ── GAUGE ── */
-.gauge-section{padding:20px 24px;border-bottom:1px solid var(--border);}
-.gauge-label{font-size:11px;font-weight:700;color:var(--t2);letter-spacing:.04em;text-transform:uppercase;margin-bottom:12px;}
-.gauge-track{height:10px;background:linear-gradient(to right,#BFEFD1,#F5E197,#F5C075,#E87850,#C4520A);border-radius:100px;position:relative;margin-bottom:6px;}
-.gauge-marker{position:absolute;top:-16px;transform:translateX(-50%);transition:left .7s cubic-bezier(.16,1,.3,1);}
-.gauge-marker-pip{width:2px;height:24px;background:var(--text);border-radius:1px;margin:0 auto;}
-.gauge-marker-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;text-align:center;margin-top:3px;color:var(--text);}
-.gauge-ends{display:flex;justify-content:space-between;font-size:9.5px;color:var(--t3);margin-top:8px;}
-.gauge-note{font-size:12px;color:var(--t2);line-height:1.65;margin-top:12px;padding:10px 14px;background:var(--bg2);border-radius:6px;border-left:3px solid var(--acc);}
-
-/* ── NSE TABLE ── */
-.nse-table{border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);}
-.nse-thead{display:grid;grid-template-columns:50px 1fr 76px 88px 68px;background:var(--bg2);border:1px solid var(--border);border-bottom:none;padding:9px 16px;}
-.nse-th{font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);}
-.nse-th:not(:first-child){text-align:right;}
-.nse-row{display:grid;grid-template-columns:50px 1fr 76px 88px 68px;align-items:center;background:var(--white);border:1px solid var(--border);border-top:none;padding:11px 16px;position:relative;transition:background .2s;}
-.nse-row::before{content:'';position:absolute;left:0;top:7px;bottom:7px;width:3px;border-radius:0 2px 2px 0;}
-.nse-badge{display:inline-flex;align-items:center;justify-content:center;width:32px;height:24px;border-radius:5px;font-size:11px;font-weight:800;}
-.nse-inc{font-size:11.5px;color:var(--t2);font-weight:500;padding-left:4px;}
-.nse-inc small{display:block;font-size:9.5px;color:var(--t3);font-weight:400;}
-.nse-pct{font-size:13.5px;font-weight:700;text-align:right;}
-.nse-eff{font-size:11px;font-weight:700;text-align:right;}
-.nse-vis{font-size:11.5px;font-weight:600;text-align:right;color:var(--t2);}
-
-/* ── REVENUE CARD ── */
-.rev-card{padding:24px;}
-.rev-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
-.rev-metric{display:flex;flex-direction:column;gap:3px;}
-.rev-lbl{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--t3);}
-.rev-val{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--text);}
-.rev-sub{font-size:10.5px;color:var(--t3);}
-.rev-bar-wrap{margin-bottom:16px;}
-.rev-bar-label{display:flex;justify-content:space-between;font-size:11px;margin-bottom:6px;}
-.rev-bar-track{height:10px;background:var(--bg3);border-radius:100px;overflow:hidden;}
-.rev-bar-fill{height:100%;border-radius:100px;transition:width 1s cubic-bezier(.16,1,.3,1);width:0;}
-.rev-scenarios{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
-.rev-scenario{padding:12px 14px;border-radius:6px;border:1px solid var(--border);}
-.rev-scenario.target{background:var(--acclt);border-color:var(--accmd);}
-.rs-pct{font-size:10px;font-weight:700;color:var(--t3);margin-bottom:3px;}
-.rs-pct.target-c{color:var(--acc);}
-.rs-val{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--text);}
-.rs-val.target-c{color:var(--acc);}
-.rs-sub{font-size:9.5px;color:var(--t3);margin-top:2px;}
-
-/* ── MARKET CARD — THE NUMBER ── */
-.mkt-card{padding:24px;}
-.mkt-hero{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
-.mkt-stat{display:flex;flex-direction:column;gap:4px;}
-.mkt-lbl{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--t3);}
-.mkt-val{font-family:'Playfair Display',serif;font-size:32px;font-weight:900;color:var(--text);line-height:1;}
-.mkt-val.accent{color:var(--acc);}
-.mkt-sub{font-size:11px;color:var(--t3);}
-
-/* THE NUMBER — highlight box */
-.the-number{background:var(--text);color:white;border-radius:var(--r);padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+/* RESULTS */
+.the-number{background:var(--text);color:white;border-radius:var(--r);padding:20px 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:16px;}
 .tn-pct{font-family:'Playfair Display',serif;font-size:52px;font-weight:900;color:var(--acc);line-height:1;flex-shrink:0;}
 .tn-text{font-size:13px;line-height:1.7;color:rgba(255,255,255,.8);}
 .tn-text strong{color:white;}
+.gauge-wrap{margin-bottom:16px;}
+.gauge-track{height:10px;background:linear-gradient(to right,#BFEFD1,#F5E197,#F5C075,#E87850,#C4520A);border-radius:100px;position:relative;}
+.gauge-marker{position:absolute;top:-16px;transform:translateX(-50%);transition:left .7s cubic-bezier(.16,1,.3,1);}
+.gauge-pip{width:2px;height:24px;background:var(--text);border-radius:1px;margin:0 auto;}
+.gauge-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-top:6px;}
+.nse-table-wrap{overflow-x:auto;margin-bottom:16px;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{background:var(--bg2);padding:10px 12px;text-align:left;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--t3);border-bottom:2px solid var(--border);}
+td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--t2);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:var(--bg);}
+.nse-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:700;}
+.ingreso-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;}
+.ingreso-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:16px;text-align:center;box-shadow:var(--sh);}
+.ingreso-pct{font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;}
+.ingreso-num{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--acc);line-height:1;margin-bottom:4px;}
+.ingreso-label{font-size:11px;color:var(--t3);}
+.decision-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;margin-bottom:10px;box-shadow:var(--sh);display:flex;gap:14px;align-items:flex-start;}
+.dec-num{width:30px;height:30px;border-radius:50%;background:var(--acc);color:white;font-family:'Playfair Display',serif;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.dec-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.dec-desc{font-size:13px;color:var(--t3);line-height:1.55;}
 
-/* FUNNEL */
-.funnel-rows{display:flex;flex-direction:column;gap:6px;}
-.fb-row{display:grid;grid-template-columns:34px 1fr 62px;align-items:center;gap:8px;}
-.fb-lbl{font-size:11px;font-weight:800;}
-.fb-track{height:8px;background:var(--bg3);border-radius:100px;overflow:hidden;}
-.fb-fill{height:100%;border-radius:100px;transition:width .5s cubic-bezier(.16,1,.3,1);width:0;}
-.fb-val{font-size:10.5px;text-align:right;font-weight:600;}
+/* CTA COMUNIDAD */
+.cta-comunidad{background:var(--text);border-radius:var(--r);padding:28px;margin-top:24px;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;}
+.cc-eyebrow{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(37,211,102,.8);margin-bottom:8px;}
+.cc-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:white;margin-bottom:8px;line-height:1.2;}
+.cc-desc{font-size:13px;color:rgba(255,255,255,.6);line-height:1.6;margin-bottom:16px;}
+.cc-btns{display:flex;gap:10px;flex-wrap:wrap;}
+.btn-wa-sm{height:44px;padding:0 20px;background:#25d366;color:white;border:none;border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none;transition:all .15s;}
+.btn-wa-sm:hover{background:#20c45a;transform:translateY(-1px);}
+.btn-ig-sm{height:44px;padding:0 18px;background:rgba(255,255,255,.08);color:white;border:1px solid rgba(255,255,255,.2);border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none;transition:all .15s;}
+.btn-ig-sm:hover{background:rgba(255,255,255,.15);}
+.cc-icon{font-size:64px;filter:drop-shadow(0 4px 12px rgba(37,211,102,.2));line-height:1;}
 
-/* DONUT */
-.mkt-bottom{display:grid;grid-template-columns:160px 1fr;gap:16px;margin-top:20px;}
-.donut-wrap{position:relative;width:120px;height:120px;}
-.donut-wrap svg{transform:rotate(-90deg);}
-.donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.donut-pct{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--text);}
-.donut-sub{font-size:9px;color:var(--t3);font-weight:600;letter-spacing:.04em;text-transform:uppercase;}
-.donut-legend{font-size:11px;color:var(--t2);line-height:1.6;padding-top:8px;}
-.donut-legend strong{font-family:'Playfair Display',serif;font-size:17px;display:block;color:var(--text);}
+.share-bar{display:flex;gap:10px;margin-top:16px;justify-content:flex-end;flex-wrap:wrap;}
+.btn-share{height:40px;padding:0 16px;background:var(--white);color:var(--t2);border:1.5px solid var(--border);border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .15s;}
+.btn-share:hover{border-color:var(--acc);color:var(--acc);background:var(--acclt);}
 
-/* ── DECISIONS CARD ── */
-.decisions{padding:24px;}
-.decision-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);}
-.decision-item:last-child{border-bottom:none;padding-bottom:0;}
-.decision-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
-.decision-content{flex:1;}
-.decision-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;}
-.decision-body{font-size:12.5px;color:var(--t2);line-height:1.65;}
-.decision-body strong{color:var(--text);}
-
-/* ── SHARE ── */
-.share-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:28px;}
-.sbtn{height:40px;padding:0 16px;background:var(--white);border:1.5px solid var(--bdr2);border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:12.5px;font-weight:600;color:var(--t2);cursor:pointer;display:flex;align-items:center;gap:7px;transition:all .15s;}
-.sbtn:hover{border-color:var(--acc);color:var(--acc);background:var(--acclt);}
-.sbtn.primary{background:var(--acc);color:white;border-color:var(--acc);box-shadow:0 2px 8px rgba(196,82,10,.25);}
-.sbtn.primary:hover{background:#B34809;}
-
-/* ── SHARE CARD ── */
-#shareCard{display:none;margin-top:16px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:28px;max-width:420px;box-shadow:var(--shmd);}
-#shareCard.show{display:block;}
-.sc-tag{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:14px;}
-.sc-name{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--text);margin-bottom:2px;}
-.sc-city{font-size:11px;color:var(--t3);margin-bottom:18px;}
-.sc-ticket{font-family:'Playfair Display',serif;font-size:52px;font-weight:900;color:var(--acc);line-height:1;}
-.sc-sub{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--t3);margin-top:4px;margin-bottom:18px;}
-.sc-stats{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:14px;}
-.sc-stat-n{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--text);display:block;}
-.sc-stat-l{font-size:10px;color:var(--t3);}
-.sc-number-box{background:var(--text);color:white;border-radius:6px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;}
-.sc-num-pct{font-family:'Playfair Display',serif;font-size:32px;font-weight:900;color:var(--acc);line-height:1;}
-.sc-num-txt{font-size:11px;color:rgba(255,255,255,.75);line-height:1.5;}
-.sc-num-txt strong{color:white;}
-.sc-div{height:1px;background:var(--border);margin:12px 0;}
-.sc-foot{display:flex;justify-content:space-between;font-size:9.5px;color:var(--t3);}
-.sc-foot span{color:var(--acc);font-weight:700;}
-
-/* ── FOOTER ── */
-.page-foot{margin-top:48px;padding-top:20px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;font-size:10.5px;color:var(--t3);}
-.page-foot a{color:var(--acc);text-decoration:none;font-weight:600;}
-
-/* ── MODAL ── */
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);}
-.modal.on{display:flex;}
-.modal-box{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:28px;max-width:400px;width:100%;box-shadow:var(--shmd);animation:fadeUp .2s ease;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-.modal-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px;}
-.modal-body{font-size:13px;color:var(--t2);line-height:1.7;margin-bottom:20px;}
-.modal-close{width:100%;height:42px;background:var(--text);color:white;border:none;border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:background .15s;}
-.modal-close:hover{background:#333;}
-
-/* ── ANIM ── */
-.fadeIn{animation:fadeUp .4s ease;}
-
-/* ── PRINT ── */
-@media print{
-  .form-section,.share-row,#shareCard,.modal,.page-foot,.step-inputs{display:none!important;}
-  .results{display:block!important;}
-  *{box-shadow:none!important;border-color:#ddd!important;}
+@media(max-width:600px){
+  .stat-grid{grid-template-columns:1fr;}
+  .ingreso-row{grid-template-columns:1fr;}
+  .step-hdr{flex-direction:column;}
+  .rc-wrap{flex-direction:row;align-items:center;gap:10px;}
+  .causes-list .cause-lbl{width:130px;font-size:11px;}
+  .causes-list .cause-note{padding-left:142px;}
+  .cta-comunidad{grid-template-columns:1fr;}
+  .cc-icon{display:none;}
+  .ps-l{display:none;}
+  .impact-cta-box{flex-direction:column;}
 }
-
-/* ── RESPONSIVE ── */
-@media(max-width:540px){
-  .cuisine-grid{grid-template-columns:repeat(3,1fr);}
-  .nse-thead,.nse-row{grid-template-columns:44px 1fr 68px 80px;}
-  .nse-vis{display:none;}
-  .rev-grid,.mkt-hero,.mkt-bottom,.rev-scenarios{grid-template-columns:1fr;}
-  .the-number{flex-direction:column;gap:10px;}
-  .tn-pct{font-size:40px;}
-  .share-row{flex-direction:column;}
-  .sbtn{justify-content:center;}
-}
+@media print{.nav,.steps-header,#screen-0,.nav-btns,.cta-comunidad,.share-bar{display:none!important;}#screen-steps{display:block!important;}.step{display:none!important;}#step-3{display:block!important;}}
 </style>
 </head>
 <body>
-<div class="page">
-
-<!-- BACK NAV -->
-<div style="margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid var(--border);">
-  <a href="../../" style="display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--t3);text-decoration:none;transition:color .15s;" onmouseover="this.style.color='var(--acc)'" onmouseout="this.style.color='var(--t3)'">
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M6.5 12.5L1.5 7.5L6.5 2.5M1.5 7.5H12.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<nav class="nav">
+  <a href="/" class="nav-back" rel="noopener">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     ricramcas.com
   </a>
-</div>
+  <a href="/" class="nav-logo">ric<span>ram</span>cas</a>
+  <div style="width:100px"></div>
+</nav>
+<!-- SCREEN 0: IMPACT -->
+<div id="screen-0" class="screen active">
+<div class="impact-wrap">
+  <div class="eyebrow-pill red"><span class="pill-dot" aria-hidden="true"></span>El problema que estamos resolviendo</div>
+  <h1 class="impact-h1">La mayoría de restaurantes<br>fija su precio <em>a feeling.</em><br>Eso sale muy caro.</h1>
+  <p class="impact-sub">No porque sean descuidados — sino porque nadie les enseñó cómo funciona realmente el precio en un restaurante. El precio no es solo lo que te parece justo cobrar. Es la diferencia entre llenar mesas y cerrar a los dos años.</p>
 
-<!-- HEADER -->
-<div style="margin-bottom:36px">
-  <div class="eyebrow"><span class="eyebrow-dot"></span>Diagnóstico gratuito · Restauranteros MX</div>
-  <h1>Tu precio<br>te <em>define.</em></h1>
-  <p class="sub">3 preguntas. Un diagnóstico completo de posicionamiento, ingreso potencial y el número que todo restaurantero debería conocer.</p>
-</div>
-
-<!-- STEP PILLS -->
-<div class="steps" id="stepPills">
-  <div class="step active" id="sp1"><div class="step-num">1</div><span>Tu restaurante</span></div>
-  <div class="step-line"></div>
-  <div class="step" id="sp2"><div class="step-num">2</div><span>Operación</span></div>
-  <div class="step-line"></div>
-  <div class="step" id="sp3"><div class="step-num">3</div><span>Diagnóstico</span></div>
-</div>
-
-<!-- ── STEP 1 ── -->
-<div id="step1">
-  <div class="card" style="padding:24px;margin-bottom:8px;">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
-      <div>
-        <label>Ciudad</label>
-        <select id="ciudad">
-          <optgroup label="Capital / ZM">
-            <option value="cdmx">Ciudad de México</option>
-            <option value="edomex">Estado de México (ZM)</option>
-          </optgroup>
-          <optgroup label="Norte">
-            <option value="mty">Monterrey</option>
-            <option value="tijuana">Tijuana</option>
-            <option value="juarez">Ciudad Juárez</option>
-            <option value="hermosillo">Hermosillo</option>
-            <option value="saltillo">Saltillo</option>
-            <option value="chihuahua">Chihuahua</option>
-          </optgroup>
-          <optgroup label="Centro-Occidente">
-            <option value="gdl">Guadalajara</option>
-            <option value="leon">León / Guanajuato</option>
-            <option value="qro">Querétaro</option>
-            <option value="san_luis">San Luis Potosí</option>
-            <option value="aguascalientes">Aguascalientes</option>
-            <option value="morelia">Morelia</option>
-          </optgroup>
-          <optgroup label="Centro-Sur">
-            <option value="pue">Puebla</option>
-            <option value="toluca">Toluca</option>
-            <option value="cuernavaca">Cuernavaca</option>
-          </optgroup>
-          <optgroup label="Sur-Sureste">
-            <option value="merida">Mérida</option>
-            <option value="cancun">Cancún / Playa del Carmen</option>
-            <option value="oaxaca">Oaxaca</option>
-            <option value="veracruz">Veracruz / Xalapa</option>
-          </optgroup>
-          <optgroup label="Otra">
-            <option value="otra_100k">Otra ciudad (+100k hab.)</option>
-            <option value="otra_50k">Otra ciudad (50–100k hab.)</option>
-          </optgroup>
-        </select>
-      </div>
-      <div>
-        <label>Nombre <span class="opt-tag">opcional</span></label>
-        <div class="iw">
-          <span class="pfx">🍴</span>
-          <input type="text" id="restName" placeholder="Abyssmo…">
-        </div>
-      </div>
+  <div class="stat-grid">
+    <div class="stat-card r">
+      <div class="stat-num r" id="s1">0%</div>
+      <div class="stat-desc">de los restaurantes en México <strong>cierra en sus primeros dos años</strong>. El precio mal calculado es una de las causas más comunes — y más evitables.</div>
+      <div class="stat-src">CANIRAC · Estimaciones INEGI 2023</div>
     </div>
-
-    <!-- CUISINE -->
-    <label style="margin-bottom:10px;">Tipo de cocina</label>
-    <div class="cuisine-grid" id="cuisineGrid">
-      <button class="cuisine-btn" data-id="mariscos" data-min="300" data-max="1200" data-avg="650" onclick="setCuisine(this)">
-        <span class="cuisine-emoji">🦞</span>
-        <span class="cuisine-name">Mariscos</span>
-        <span class="cuisine-range">$300–$1,200</span>
-      </button>
-      <button class="cuisine-btn" data-id="mexicana" data-min="200" data-max="900" data-avg="450" onclick="setCuisine(this)">
-        <span class="cuisine-emoji">🌮</span>
-        <span class="cuisine-name">Mexicana</span>
-        <span class="cuisine-range">$200–$900</span>
-      </button>
-      <button class="cuisine-btn" data-id="cortes" data-min="500" data-max="1500" data-avg="800" onclick="setCuisine(this)">
-        <span class="cuisine-emoji">🥩</span>
-        <span class="cuisine-name">Cortes</span>
-        <span class="cuisine-range">$500–$1,500</span>
-      </button>
-      <button class="cuisine-btn" data-id="italiana" data-min="250" data-max="700" data-avg="420" onclick="setCuisine(this)">
-        <span class="cuisine-emoji">🍝</span>
-        <span class="cuisine-name">Italiana</span>
-        <span class="cuisine-range">$250–$700</span>
-      </button>
-      <button class="cuisine-btn" data-id="sushi" data-min="350" data-max="1000" data-avg="580" onclick="setCuisine(this)">
-        <span class="cuisine-emoji">🍱</span>
-        <span class="cuisine-name">Sushi / Jap.</span>
-        <span class="cuisine-range">$350–$1,000</span>
-      </button>
-      <button class="cuisine-btn" data-id="taqueria" data-min="80" data-max="250" data-avg="150" onclick="setCuisine(this)">
-        <span class="cuisine-emoji">🌯</span>
-        <span class="cuisine-name">Taquería</span>
-        <span class="cuisine-range">$80–$250</span>
-      </button>
-      <button class="cuisine-btn" data-id="alta" data-min="1200" data-max="5000" data-avg="2000" onclick="setCuisine(this)">
-        <span class="cuisine-emoji">🍽️</span>
-        <span class="cuisine-name">Alta cocina</span>
-        <span class="cuisine-range">$1,200–$5,000</span>
-      </button>
-      <button class="cuisine-btn" data-id="otra_c" data-min="150" data-max="800" data-avg="400" onclick="setCuisine(this)">
-        <span class="cuisine-emoji">🍴</span>
-        <span class="cuisine-name">Otra</span>
-        <span class="cuisine-range">$150–$800</span>
-      </button>
+    <div class="stat-card a">
+      <div class="stat-num a" id="s2">0%</div>
+      <div class="stat-desc">de restauranteros en México <strong>no conoce su food cost real</strong> al momento de fijar el precio del menú. Cobran lo que sienten — no lo que los números dicen.</div>
+      <div class="stat-src">AMR · Asociación Mexicana de Restaurantes 2023</div>
+    </div>
+    <div class="stat-card g">
+      <div class="stat-num g" id="s3">0×</div>
+      <div class="stat-desc">más probabilidad de sobrevivir el primer año si el restaurante tiene <strong>precio bien posicionado para su mercado específico</strong> desde el día de apertura.</div>
+      <div class="stat-src">CANIRAC · Estudio de viabilidad restaurantera</div>
     </div>
   </div>
 
-  <!-- SLIDER -->
-  <div class="card" style="padding:24px;margin-bottom:16px;">
-    <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
-      <div>
-        <div style="font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--t3);margin-bottom:4px;">Ticket promedio por persona</div>
-        <div style="display:flex;align-items:baseline;gap:4px;">
-          <div class="slider-display" id="sliderVal">$850</div>
-          <span class="slider-unit">sin propina</span>
-        </div>
-      </div>
-      <div class="presets">
-        <button class="preset" onclick="setT(150)">$150</button>
-        <button class="preset" onclick="setT(400)">$400</button>
-        <button class="preset on" onclick="setT(850)">$850</button>
-        <button class="preset" onclick="setT(1500)">$1,500</button>
-        <button class="preset" onclick="setT(3000)">$3,000</button>
-      </div>
-    </div>
-    <div class="range-wrap">
-      <div class="range-fill" id="rfill"></div>
-      <input type="range" id="tSlider" min="50" max="5000" step="50" value="850" oninput="onSlide(this.value)">
-    </div>
-    <div class="range-ends"><span class="range-end">$50 · Popular</span><span class="range-end">Fine dining · $5,000</span></div>
-    <div style="margin-top:12px;font-size:10.5px;color:var(--t3);">
-      O ingresa exacto:
-      <input type="number" id="exactT" style="width:75px;height:28px;border:1.5px solid var(--bdr2);border-radius:5px;background:var(--bg);font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;color:var(--text);padding:0 8px;outline:none;margin-left:6px;" placeholder="850" inputmode="numeric" oninput="onExact(this.value)">
-    </div>
+  <div class="quote-block">
+    <p class="quote-text">"El precio no es lo que tú decides cobrar. Es el resultado de entender quién es tu cliente, dónde vives, qué cocinas y cuánto necesitas para no perder dinero. Todo lo demás es feeling."</p>
+    <cite class="quote-auth">— Ricardo Ramírez, con base en datos AMR, CANIRAC e INEGI</cite>
   </div>
 
-  <button class="btn-primary" onclick="goStep2()">
-    Continuar a operación
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7.5 1.5L13.5 7.5L7.5 13.5M1.5 7.5H13.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  </button>
+  <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);margin-bottom:16px;">Las razones más comunes de fracaso restaurantero</div>
+  <div class="causes-list">
+    <div><div class="cause-row"><span class="cause-lbl">Precio mal calculado</span><div class="cause-track"><div class="cause-fill" style="background:var(--red)" data-w="38"></div></div><span class="cause-pct" style="color:var(--red)">38%</span></div><div class="cause-note">La causa más directa — y la más fácil de corregir con información</div></div>
+    <div><div class="cause-row"><span class="cause-lbl">Flujo de caja negativo</span><div class="cause-track"><div class="cause-fill" style="background:var(--warn)" data-w="31"></div></div><span class="cause-pct" style="color:var(--warn)">31%</span></div><div class="cause-note">Muchas veces consecuencia directa del precio insuficiente</div></div>
+    <div><div class="cause-row"><span class="cause-lbl">Sin punto de equilibrio claro</span><div class="cause-track"><div class="cause-fill" style="background:var(--warn)" data-w="24"></div></div><span class="cause-pct" style="color:var(--warn)">24%</span></div><div class="cause-note">No saber cuántos cubiertos necesitas para no perder</div></div>
+    <div><div class="cause-row"><span class="cause-lbl">Competencia desconocida</span><div class="cause-track"><div class="cause-fill" style="background:var(--t3)" data-w="18"></div></div><span class="cause-pct" style="color:var(--t3)">18%</span></div><div class="cause-note">Abrir sin saber qué cobra la competencia en tu zona</div></div>
+  </div>
+
+  <div class="impact-cta-box">
+    <div><strong>¿Cuánto deberías cobrar tú?</strong><p>Esta herramienta usa datos reales de 22 ciudades, 8 tipos de cocina y 7 niveles socioeconómicos para decirte exactamente dónde estás parado.<br>~5 minutos. Gratis. Sin registro.</p></div>
+    <button class="btn-start-big" onclick="startCalc()">Calcular mi diagnóstico →</button>
+  </div>
+  <div class="sources-note">Fuentes: CANIRAC (Cámara Nacional de la Industria de Restaurantes) · AMR (Asociación Mexicana de Restaurantes) · INEGI (Instituto Nacional de Estadística y Geografía) · ENIGH 2024 (Encuesta Nacional de Ingresos y Gastos de los Hogares) · AMAI NSE Regla 2024 (Asociación Mexicana de Agencias de Inteligencia de Mercado y Opinión)</div>
 </div>
-
-<!-- ── STEP 2 ── -->
-<div id="step2" style="display:none;">
-  <div class="card" style="padding:24px;margin-bottom:16px;">
-    <p style="font-size:13px;color:var(--t2);line-height:1.7;margin-bottom:20px;">
-      Con estos datos calculamos tu <strong>ingreso potencial real</strong> — lo que podrías generar si llenas tu restaurante, y la meta realista al 70% de ocupación.
-    </p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
-      <div>
-        <label>Mesas en tu restaurante</label>
-        <div class="iw">
-          <span class="pfx">⬜</span>
-          <input type="number" id="mesas" placeholder="12" inputmode="numeric" min="1" max="200">
-        </div>
-      </div>
-      <div>
-        <label>Personas por mesa (promedio)</label>
-        <div class="iw">
-          <span class="pfx">👥</span>
-          <input type="number" id="paxMesa" placeholder="3" inputmode="numeric" min="1" max="10" value="3">
-        </div>
-      </div>
+</div>
+<!-- SCREEN: STEPS -->
+<div id="screen-steps" class="screen">
+<div class="steps-header">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+    <div style="flex:1;">
+      <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--text);">Diagnóstico de <em style="color:var(--acc)">Precio</em></div>
+      <div style="font-size:12px;color:var(--t3);margin-top:2px;">Herramienta gratuita para restauranteros · ricramcas.com</div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-      <div>
-        <label>Días de operación por semana</label>
-        <div class="iw">
-          <span class="pfx">📅</span>
-          <input type="number" id="dias" placeholder="5" inputmode="numeric" min="1" max="7" value="5">
-        </div>
-      </div>
-      <div>
-        <label>Servicios por día (turnos)</label>
-        <div class="iw">
-          <span class="pfx">🔄</span>
-          <input type="number" id="servicios" placeholder="2" inputmode="numeric" min="1" max="4" value="2">
-        </div>
-      </div>
-    </div>
+    <div class="eyebrow-pill acc" style="margin-bottom:0;"><span class="pill-dot" aria-hidden="true"></span>Restaurantes</div>
   </div>
-  <div class="btn-row">
-    <button class="btn-secondary" onclick="goStep1()">← Atrás</button>
-    <button class="btn-primary" style="flex:1" onclick="goStep3()">
-      Ver mi diagnóstico completo
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7.5 1.5L13.5 7.5L7.5 13.5M1.5 7.5H13.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
+  <div class="progress-steps" role="list">
+    <div class="ps active" id="ps-1" role="listitem"><span class="ps-n">Paso 1</span><span class="ps-l">Tu restaurante</span></div>
+    <div class="ps" id="ps-2" role="listitem"><span class="ps-n">Paso 2</span><span class="ps-l">Tu operación</span></div>
+    <div class="ps" id="ps-3" role="listitem"><span class="ps-n">Paso 3</span><span class="ps-l">Diagnóstico</span></div>
+  </div>
+  <div class="progress-bar-track" role="progressbar" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100" aria-label="Progreso del diagnóstico">
+    <div class="progress-bar-fill" id="progress-fill" style="width:33%"></div>
   </div>
 </div>
 
-<!-- ── STEP 3 — RESULTS ── -->
-<div id="step3" style="display:none;" class="fadeIn">
+<div class="steps-wrap">
 
-  <!-- 1. DIAGNOSIS -->
-  <div class="sec"><span class="sec-t">Diagnóstico de posicionamiento</span><span class="sec-n">vs tu categoría</span></div>
-  <div class="card diag-card">
-    <div class="diag-top">
-      <div>
-        <div class="diag-rest" id="dRest" style="display:none"></div>
-        <div class="diag-ticket" id="dTicket">$850</div>
-        <div class="diag-city" id="dCity">Ciudad de México · Mariscos</div>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
-        <div class="verdict-pill" id="verdictPill">—</div>
-        <div style="font-size:11px;color:var(--t3);" id="verdictSub">—</div>
+<!-- ══ PASO 1 ══ -->
+<div class="step active" id="step-1">
+  <div class="step-hdr">
+    <div class="rc-wrap" aria-hidden="true">
+      <svg class="rc-svg" width="68" height="68" viewBox="0 0 68 68">
+        <circle cx="34" cy="34" r="28" fill="none" stroke="#EAEAE6" stroke-width="5"/>
+        <circle id="rc-1" cx="34" cy="34" r="28" fill="none" stroke="#C4520A" stroke-width="5" stroke-dasharray="175.9" stroke-dashoffset="175.9" stroke-linecap="round" style="transition:stroke-dashoffset .6s cubic-bezier(.16,1,.3,1)"/>
+      </svg>
+      <div class="rc-pct-label" id="rp-1" style="color:var(--acc)">0%</div>
+      <div class="rc-risk-lbl">riesgo de posicionamiento atacado</div>
+    </div>
+    <div class="step-meta">
+      <h2>Tu restaurante</h2>
+      <p>Cuéntame lo básico de tu negocio. Con esta información sabremos en qué mercado compites y cómo se compara tu precio con lo que cobra tu tipo de cocina en tu ciudad.</p>
+      <div class="badge-row">
+        <span class="step-badge">⏱ ~2 minutos</span>
+        <span class="step-badge">📍 22 ciudades de México</span>
+        <span class="risk-stat-badge">⚠ 38% cierra por precio mal calculado</span>
       </div>
     </div>
-    <div class="gauge-section">
-      <div class="gauge-label">Tu ticket vs el rango de tu categoría</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Nombre de tu restaurante <span style="font-weight:400;font-size:11px;color:var(--t3);text-transform:none;letter-spacing:0">(opcional — aparece en el diagnóstico)</span></div>
+    <div class="field-hint">Si lo escribes, tu diagnóstico se personaliza. Si prefieres no ponerlo, está bien.</div>
+    <div class="iw"><input type="text" id="nombre" placeholder="Ej: Abyssmo, La Taquería del Norte, Café Quinto..." maxlength="50" autocomplete="off" oninput="upRC1()"></div>
+  </div>
+
+  <div class="card">
+    <div class="field-block">
+      <div class="field-label">
+        ¿En qué ciudad está tu restaurante?
+        <span class="tip" data-tip="La ciudad importa porque los precios varían enormemente: un restaurante de mariscos en Cancún puede cobrar el doble que uno similar en Aguascalientes. Usamos datos reales del mercado de cada ciudad.">ⓘ</span>
+      </div>
+      <div class="field-hint">Selecciona la ciudad o zona más cercana a donde opera tu restaurante.</div>
+      <select id="ciudad" onchange="upRC1()" aria-label="Ciudad donde opera tu restaurante">
+        <option value="">Elige tu ciudad...</option>
+        <optgroup label="🏙️ Capital y Zona Metropolitana">
+          <option value="cdmx">Ciudad de México (CDMX)</option>
+          <option value="edomex">Estado de México (ZM)</option>
+        </optgroup>
+        <optgroup label="🌵 Norte">
+          <option value="monterrey">Monterrey, NL</option>
+          <option value="tijuana">Tijuana, BC</option>
+          <option value="juarez">Ciudad Juárez, Chih</option>
+          <option value="hermosillo">Hermosillo, Son</option>
+          <option value="saltillo">Saltillo, Coah</option>
+          <option value="chihuahua">Chihuahua, Chih</option>
+        </optgroup>
+        <optgroup label="🌄 Centro-Occidente">
+          <option value="guadalajara">Guadalajara, Jal</option>
+          <option value="leon">León / Guanajuato</option>
+          <option value="queretaro">Querétaro, Qro</option>
+          <option value="sanluis">San Luis Potosí</option>
+          <option value="aguascalientes">Aguascalientes</option>
+          <option value="morelia">Morelia, Mich</option>
+        </optgroup>
+        <optgroup label="🏔️ Centro-Sur">
+          <option value="puebla">Puebla, Pue</option>
+          <option value="toluca">Toluca, Méx</option>
+          <option value="cuernavaca">Cuernavaca, Mor</option>
+        </optgroup>
+        <optgroup label="🌴 Sur-Sureste">
+          <option value="merida">Mérida, Yuc</option>
+          <option value="cancun">Cancún / Playa del Carmen</option>
+          <option value="oaxaca">Oaxaca, Oax</option>
+          <option value="veracruz">Veracruz / Xalapa</option>
+        </optgroup>
+        <optgroup label="📍 Otra ciudad">
+          <option value="otra100k">Otra ciudad +100,000 habitantes</option>
+          <option value="otra50k">Otra ciudad 50,000–100,000 hab</option>
+        </optgroup>
+      </select>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="field-block">
+      <div class="field-label">
+        ¿Qué tipo de cocina ofreces?
+        <span class="tip" data-tip="El tipo de cocina define el rango de precios que el mercado espera pagar. Un cliente en una taquería espera pagar diferente que en un restaurante de alta cocina — y eso no es bueno ni malo, es la realidad del mercado.">ⓘ</span>
+      </div>
+      <div class="field-hint">Elige la categoría que mejor describe lo que sirves. No tiene que ser exacta — solo la más cercana.</div>
+      <div class="preset-grid" id="cocina-grid" role="group" aria-label="Tipo de cocina">
+        <button class="preset-btn" data-val="mariscos" data-min="250" data-max="800" data-mid="400" onclick="selCocina(this)" type="button"><span class="preset-emoji">🦞</span>Mariscos</button>
+        <button class="preset-btn" data-val="mexicana" data-min="80" data-max="350" data-mid="180" onclick="selCocina(this)" type="button"><span class="preset-emoji">🌮</span>Mexicana</button>
+        <button class="preset-btn" data-val="carnes" data-min="300" data-max="900" data-mid="500" onclick="selCocina(this)" type="button"><span class="preset-emoji">🥩</span>Carnes / Parrilla</button>
+        <button class="preset-btn" data-val="italiana" data-min="180" data-max="500" data-mid="300" onclick="selCocina(this)" type="button"><span class="preset-emoji">🍝</span>Italiana / Pasta</button>
+        <button class="preset-btn" data-val="asiatica" data-min="150" data-max="450" data-mid="250" onclick="selCocina(this)" type="button"><span class="preset-emoji">🍜</span>Asiática</button>
+        <button class="preset-btn" data-val="hamburguesas" data-min="100" data-max="300" data-mid="180" onclick="selCocina(this)" type="button"><span class="preset-emoji">🍔</span>Burgers / Fast casual</button>
+        <button class="preset-btn" data-val="cafeteria" data-min="80" data-max="280" data-mid="160" onclick="selCocina(this)" type="button"><span class="preset-emoji">☕</span>Cafetería / Brunch</button>
+        <button class="preset-btn" data-val="finedining" data-min="600" data-max="2500" data-mid="1200" onclick="selCocina(this)" type="button"><span class="preset-emoji">🍷</span>Alta cocina</button>
+      </div>
+      <div id="rango-cocina" style="font-size:12px;color:var(--t3);padding:10px 14px;background:var(--bg);border-radius:var(--r);border-left:3px solid var(--accmd);display:none;line-height:1.55;"></div>
+    </div>
+  </div>
+
+  <div class="card" id="ticket-card" style="display:none;">
+    <div class="field-block">
+      <div class="field-label">
+        ¿Cuánto cobra en promedio tu restaurante por persona?
+        <span class="tip" data-tip="El ticket promedio es cuánto gasta típicamente UNA persona en tu restaurante en una visita — incluyendo comida, bebida y todo lo que pida. No es el total de la mesa, sino por cabeza. Si una mesa de 4 paga $1,200, tu ticket promedio es $300.">ⓘ</span>
+      </div>
+      <div class="field-hint">Esto es lo que paga <strong>una sola persona</strong> en una visita típica. Incluye lo que comen, beben y todo lo que piden. ¿No sabes exactamente? El slider de abajo tiene valores típicos para tu tipo de cocina.</div>
+      <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:16px;">
+        <div class="slider-display" id="ticket-display" aria-live="polite">$0</div>
+        <div style="font-size:14px;color:var(--t3);">MXN por persona</div>
+      </div>
+      <input type="range" id="ticket-slider" min="50" max="5000" step="50" value="200"
+        aria-label="Ticket promedio por persona" aria-valuenow="200" aria-valuemin="50" aria-valuemax="5000"
+        oninput="upTicket(this.value);upRC1()">
+      <div class="slider-poles"><span>$50</span><span>$5,000</span></div>
+      <div style="margin-top:16px;">
+        <div style="font-size:12px;font-weight:600;color:var(--t3);margin-bottom:8px;">O escribe el número directamente:</div>
+        <div class="iw" style="max-width:200px;"><span class="pfx">$</span><input type="number" id="ticket-input" min="50" max="10000" placeholder="0" oninput="upTicketInput(this.value);upRC1()" aria-label="Ticket promedio manual"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn-primary" onclick="irPaso2()" type="button">Siguiente — Tu operación →</button>
+  </div>
+</div>
+
+<!-- ══ PASO 2 ══ -->
+<div class="step" id="step-2">
+  <div class="step-hdr">
+    <div class="rc-wrap" aria-hidden="true">
+      <svg class="rc-svg" width="68" height="68" viewBox="0 0 68 68">
+        <circle cx="34" cy="34" r="28" fill="none" stroke="#EAEAE6" stroke-width="5"/>
+        <circle id="rc-2" cx="34" cy="34" r="28" fill="none" stroke="#9B6E1A" stroke-width="5" stroke-dasharray="175.9" stroke-dashoffset="175.9" stroke-linecap="round" style="transition:stroke-dashoffset .6s cubic-bezier(.16,1,.3,1)"/>
+      </svg>
+      <div class="rc-pct-label" id="rp-2" style="color:var(--warn)">0%</div>
+      <div class="rc-risk-lbl">riesgo operativo atacado</div>
+    </div>
+    <div class="step-meta">
+      <h2>Tu operación</h2>
+      <p>Estos datos nos dicen cuántos clientes puedes atender y cuánto puedes generar. Con esto calculamos tu ingreso potencial real en diferentes escenarios.</p>
+      <div class="badge-row">
+        <span class="step-badge">⏱ ~1 minuto</span>
+        <span class="step-badge">💰 Calcula tu ingreso potencial</span>
+        <span class="risk-stat-badge">⚠ 31% cierra por flujo negativo evitable</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="field-block">
+      <div class="field-label">
+        ¿Cuántas mesas tiene tu restaurante?
+        <span class="tip" data-tip="Cuenta solo las mesas disponibles para clientes — no incluyas la barra si es solo para esperar, ni áreas de servicio. Si tienes terraza o área exterior, inclúyela si la usas regularmente.">ⓘ</span>
+      </div>
+      <div class="field-hint">No tienes que ser exacto. Un número aproximado está perfecto. Si tienes entre 8 y 12 mesas, pon 10.</div>
+      <div class="iw" style="max-width:200px;"><span class="pfx">🪑 mesas</span><input type="number" id="mesas" min="1" max="200" value="10" oninput="upRC2()" aria-label="Número de mesas"></div>
+    </div>
+    <div class="field-block" style="margin-top:20px;">
+      <div class="field-label">
+        ¿Cuántas personas se sientan en promedio por mesa?
+        <span class="tip" data-tip="Esto varía mucho: una mesa de dos es un promedio de 2, pero si tienes muchas mesas grandes de 6 u 8 personas, el promedio sube. Piensa en una visita típica de martes por la tarde — ¿cuántas personas hay por mesa?">ⓘ</span>
+      </div>
+      <div class="field-hint">Piensa en una visita normal, no el día más lleno ni el más vacío. El promedio típico en México es 3–4 personas por mesa.</div>
+      <div class="iw" style="max-width:200px;"><span class="pfx">👥 personas</span><input type="number" id="personas" min="1" max="20" value="3" oninput="upRC2()" aria-label="Personas por mesa en promedio"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="field-block">
+      <div class="field-label">
+        ¿Cuántos días a la semana abres?
+        <span class="tip" data-tip="Si abres solo fines de semana son 2 días. Si abres de martes a domingo son 6. Este dato afecta directamente tu ingreso semanal y mensual proyectado.">ⓘ</span>
+      </div>
+      <div class="field-hint">Cuenta los días que abres al público en una semana normal, sin contar días festivos especiales.</div>
+      <div class="iw" style="max-width:200px;"><span class="pfx">📅 días</span><input type="number" id="dias" min="1" max="7" value="6" oninput="upRC2()" aria-label="Días que abres por semana"></div>
+    </div>
+    <div class="field-block" style="margin-top:20px;">
+      <div class="field-label">
+        ¿Cuántos servicios haces por día?
+        <span class="tip" data-tip="Un 'servicio' es una vez que llenas el comedor. Si solo sirves comida (mediodía), es 1 servicio. Si sirves comida y cena, son 2 servicios. Algunos restaurantes con rotación rápida hacen 3 o más servicios al día.">ⓘ</span>
+      </div>
+      <div class="field-hint">Un servicio = una vez que llenas las mesas. Solo comida = 1. Comida + cena = 2. Si tienes duda, pon 1.</div>
+      <select id="servicios" onchange="upRC2()" aria-label="Servicios por día">
+        <option value="1">1 servicio (solo comida o solo cena)</option>
+        <option value="1.5">1.5 servicios (comida con rotación parcial)</option>
+        <option value="2" selected>2 servicios (comida + cena)</option>
+        <option value="2.5">2.5 servicios (alta rotación)</option>
+        <option value="3">3 o más servicios (rotación muy rápida)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn-ghost" onclick="goStep(1)" type="button">← Atrás</button>
+    <button class="btn-primary" onclick="calcDiagnostico()" type="button">Ver mi diagnóstico completo →</button>
+  </div>
+</div>
+
+<!-- ══ PASO 3 — DIAGNÓSTICO ══ -->
+<div class="step" id="step-3">
+  <div class="step-hdr">
+    <div class="rc-wrap" aria-hidden="true">
+      <svg class="rc-svg" width="68" height="68" viewBox="0 0 68 68">
+        <circle cx="34" cy="34" r="28" fill="none" stroke="#EAEAE6" stroke-width="5"/>
+        <circle id="rc-3" cx="34" cy="34" r="28" fill="none" stroke="#1A7A46" stroke-width="5" stroke-dasharray="175.9" stroke-dashoffset="175.9" stroke-linecap="round" style="transition:stroke-dashoffset .6s cubic-bezier(.16,1,.3,1)"/>
+      </svg>
+      <div class="rc-pct-label" id="rp-3" style="color:var(--green)">0%</div>
+      <div class="rc-risk-lbl">diagnóstico completado</div>
+    </div>
+    <div class="step-meta">
+      <h2>Tu diagnóstico completo</h2>
+      <p id="diag-subtitle">Aquí está tu análisis con datos reales del mercado mexicano.</p>
+      <div class="badge-row">
+        <span class="step-badge">📊 Datos ENIGH · AMAI · CANIRAC · AMR</span>
+        <span class="step-badge">🆓 100% gratuito</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- OUTPUT 1: GAUGE -->
+  <div class="card">
+    <div class="card-title">
+      📍 ¿Dónde está tu precio dentro de tu categoría?
+      <span class="tip" data-tip="Comparamos tu precio con el rango típico que cobra tu tipo de cocina en tu ciudad, según datos de la AMR (Asociación Mexicana de Restaurantes) y CANIRAC. Si estás 'muy bajo', no significa malo — significa que tienes margen para subir o que tu estrategia es volumen. Si estás 'fuera de rango', puede ser un problema de percepción de valor.">ⓘ</span>
+    </div>
+    <div id="veredicto-texto" style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:12px;"></div>
+    <div class="gauge-wrap">
       <div class="gauge-track">
-        <div class="gauge-marker" id="gaugeMarker" style="left:50%">
-          <div class="gauge-marker-pip"></div>
-          <div class="gauge-marker-label" id="gaugeLabel">Tu ticket</div>
-        </div>
+        <div class="gauge-marker" id="gauge-marker"><div class="gauge-pip"></div></div>
       </div>
-      <div class="gauge-ends">
-        <span id="gLeft">Mín. categoría</span>
-        <span id="gMid">Promedio</span>
-        <span id="gRight">Máx. categoría</span>
-      </div>
-      <div class="gauge-note" id="gaugeNote">—</div>
+      <div class="gauge-labels"><span>Muy bajo</span><span>Bajo</span><span>En rango</span><span>Premium</span><span>Fuera de rango</span></div>
+    </div>
+    <div id="nota-estrategica" style="font-size:13px;color:var(--t3);line-height:1.65;padding:12px 16px;background:var(--bg);border-radius:var(--r);border-left:3px solid var(--accmd);margin-top:12px;"></div>
+  </div>
+
+  <!-- OUTPUT 2: NSE TABLE -->
+  <div class="card">
+    <div class="card-title">
+      👥 ¿Quién puede pagarte? — Los 7 niveles socioeconómicos de México
+      <span class="tip" data-tip="El NSE (Nivel Socio-Económico) clasifica a los hogares mexicanos según su capacidad de consumo. Lo define la AMAI (Asociación Mexicana de Agencias de Inteligencia de Mercado). Los niveles van de A/B (más alto) hasta E (más bajo). Esta tabla te dice qué porcentaje del ingreso mensual representa tu precio para cada nivel.">ⓘ</span>
+    </div>
+    <p style="font-size:13px;color:var(--t3);margin-bottom:14px;line-height:1.6;">Cada fila es un tipo de familia en México, ordenados de mayor a menor ingreso. La columna "Esfuerzo" te dice qué tan fácil o difícil es para esa familia pagarte — esto define quién es tu cliente real.</p>
+    <div class="nse-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Nivel <span class="tip" data-tip="Clasificación AMAI NSE Regla 2024. A/B es el segmento de mayor ingreso en México, E el de menor. En la CDMX, el nivel A/B representa aproximadamente el 7% de la población.">ⓘ</span></th>
+            <th>Ingreso mensual del hogar <span class="tip" data-tip="Ingreso mensual promedio del hogar (todas las personas que trabajan en la familia juntas), basado en la ENIGH 2024 — la encuesta más confiable de ingresos en México que hace el INEGI cada dos años.">ⓘ</span></th>
+            <th>Tu precio es el...% de su ingreso</th>
+            <th>Esfuerzo para pagarte</th>
+            <th>Visitas posibles/mes <span class="tip" data-tip="Estimación de cuántas veces al mes podría visitarte alguien de este nivel, asumiendo que destina el 5-8% de su ingreso disponible a comer fuera. Es un estimado — la realidad varía mucho según hábitos.">ⓘ</span></th>
+          </tr>
+        </thead>
+        <tbody id="nse-tbody"></tbody>
+      </table>
     </div>
   </div>
 
-  <!-- 2. NSE -->
-  <div class="sec"><span class="sec-t">Quién puede visitarte</span><span class="sec-n">AMAI NSE 2024 · ENIGH 2024</span></div>
-  <div class="nse-table">
-    <div class="nse-thead">
-      <span class="nse-th">NSE</span>
-      <span class="nse-th" style="text-align:left">Ingreso familiar</span>
-      <span class="nse-th">% ingreso</span>
-      <span class="nse-th">Esfuerzo</span>
-      <span class="nse-th">Veces/mes</span>
+  <!-- OUTPUT 3: INGRESO POTENCIAL -->
+  <div class="card">
+    <div class="card-title">
+      💰 Tu ingreso potencial — 3 escenarios de ocupación
+      <span class="tip" data-tip="La 'ocupación' es qué porcentaje de tus mesas están llenas en promedio durante un servicio. Al 50% significa que la mitad de tus mesas tienen gente. Al 70% es un restaurante funcionando bien. Al 100% es lleno total — difícil de sostener en el tiempo.">ⓘ</span>
     </div>
-    <div id="nseGrid"></div>
+    <p style="font-size:13px;color:var(--t3);margin-bottom:16px;line-height:1.6;">Basado en tus mesas, personas por mesa, días que abres y precio. Esto es el ingreso bruto — antes de costos. Un restaurante bien manejado apunta al escenario del 70%.</p>
+    <div class="ingreso-row" id="ingreso-row"></div>
+    <div id="cubiertos-info" style="font-size:13px;color:var(--t3);padding:12px 16px;background:var(--bg);border-radius:var(--r);line-height:1.6;"></div>
   </div>
 
-  <!-- 3. REVENUE -->
-  <div class="sec"><span class="sec-t">Tu ingreso potencial real</span><span class="sec-n">basado en tu operación</span></div>
-  <div class="card rev-card">
-    <div class="rev-grid">
-      <div class="rev-metric"><div class="rev-lbl">Cubiertos / semana (100%)</div><div class="rev-val" id="rCubiertos">—</div><div class="rev-sub" id="rCubSub">—</div></div>
-      <div class="rev-metric"><div class="rev-lbl">Ingreso máximo / semana</div><div class="rev-val" id="rMaxSem">—</div><div class="rev-sub">si llenas todo</div></div>
+  <!-- OUTPUT 4: EL NÚMERO -->
+  <div class="card">
+    <div class="card-title">
+      🎯 El número que pone todo en perspectiva
+      <span class="tip" data-tip="Este cálculo te muestra qué porcentaje de la población de tu ciudad necesitas capturar para llenar tu restaurante al 70% de capacidad durante un mes. La mayoría de restauranteros se sorprenden de lo pequeño que es este número — eso es bueno: significa que tu mercado potencial es enorme.">ⓘ</span>
     </div>
-    <div class="rev-bar-wrap">
-      <div class="rev-bar-label"><span style="font-size:11px;font-weight:700;color:var(--t2);">Ingreso mensual estimado</span><span style="font-size:11px;color:var(--t3);" id="rBarLabel">—</span></div>
-      <div class="rev-bar-track"><div class="rev-bar-fill" id="rBarFill" style="background:var(--acc)"></div></div>
-    </div>
-    <div class="rev-scenarios">
-      <div class="rev-scenario"><div class="rs-pct">50% ocupación</div><div class="rs-val" id="r50">—</div><div class="rs-sub">/ mes</div></div>
-      <div class="rev-scenario target"><div class="rs-pct target-c">70% · Meta realista</div><div class="rs-val target-c" id="r70">—</div><div class="rs-sub">/ mes</div></div>
-      <div class="rev-scenario"><div class="rs-pct">100% ocupación</div><div class="rs-val" id="r100">—</div><div class="rs-sub">/ mes</div></div>
+    <div class="the-number" id="the-number-box">
+      <div class="tn-pct" id="tn-pct">—</div>
+      <div class="tn-text" id="tn-text">Calculando...</div>
     </div>
   </div>
 
-  <!-- 4. MARKET — THE NUMBER -->
-  <div class="sec"><span class="sec-t">Tu mercado potencial</span><span class="sec-n" id="mktNote">—</span></div>
-  <div class="card mkt-card">
-    <div class="mkt-hero">
-      <div class="mkt-stat"><div class="mkt-lbl">Mercado accesible</div><div class="mkt-val" id="mktTotal">—</div><div class="mkt-sub">personas en tu ciudad</div></div>
-      <div class="mkt-stat"><div class="mkt-lbl">Cubiertos necesarios / año</div><div class="mkt-val" id="mktNeed">—</div><div class="mkt-sub">para operar al 70%</div></div>
-    </div>
+  <!-- OUTPUT 5: DECISIONES -->
+  <div class="card">
+    <div class="card-title">🧠 3 cosas concretas que hacer ahora</div>
+    <p style="font-size:13px;color:var(--t3);margin-bottom:16px;line-height:1.6;">Basadas en tu diagnóstico específico — no son consejos genéricos. Son acciones concretas para tu situación.</p>
+    <div id="decisiones-wrap"></div>
+  </div>
 
-    <!-- THE NUMBER -->
-    <div class="the-number">
-      <div class="tn-pct" id="tnPct">0.0%</div>
-      <div class="tn-text">
-        Solo necesitas capturar el <strong id="tnPctInline">—</strong> de tu mercado potencial
-        para llenar tu restaurante al <strong>70% cada semana</strong>.<br>
-        El reto no es la demanda. <strong>Es la visibilidad.</strong>
-      </div>
-    </div>
+  <div class="share-bar">
+    <button class="btn-share" onclick="window.print()" type="button">🖨️ Imprimir diagnóstico</button>
+    <button class="btn-share" onclick="location.reload()" type="button">🔄 Nuevo diagnóstico</button>
+  </div>
 
-    <div class="funnel-rows" id="funnelRows"></div>
-
-    <div class="mkt-bottom">
-      <div>
-        <div class="donut-wrap">
-          <svg width="120" height="120" viewBox="0 0 120 120">
-            <circle cx="60" cy="60" r="46" fill="none" stroke="#EAEAE6" stroke-width="14"/>
-            <circle id="dArc" cx="60" cy="60" r="46" fill="none" stroke="#C4520A" stroke-width="14"
-              stroke-dasharray="0 289" stroke-linecap="round"
-              style="transition:stroke-dasharray .7s cubic-bezier(.16,1,.3,1)"/>
-          </svg>
-          <div class="donut-center">
-            <div class="donut-pct" id="dPct">—</div>
-            <div class="donut-sub">del mercado</div>
-          </div>
-        </div>
-        <div class="donut-legend" style="margin-top:8px;">
-          <strong id="dTotal">—</strong>
-          personas con acceso cómodo
-        </div>
-      </div>
-      <div style="padding-top:8px;">
-        <div style="font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--t3);margin-bottom:10px;">Gasto mensual estimado en restaurantes · ENIGH 2024</div>
-        <div id="gastoNse" style="display:flex;flex-direction:column;gap:6px;"></div>
+  <!-- CTA COMUNIDAD -->
+  <div class="cta-comunidad">
+    <div>
+      <div class="cc-eyebrow">¿Te fue útil? Hay más donde esto vino</div>
+      <div class="cc-title">Únete a la comunidad gratuita</div>
+      <div class="cc-desc">Comparto tips de negocio, metodologías reales y acceso anticipado a cada herramienta nueva. Sin spam. Sin ventas. Solo información útil para que tomes mejores decisiones.</div>
+      <div class="cc-btns">
+        <a href="https://chat.whatsapp.com/L5m2FAFlsFl8lA2eT5XNvZ?mode=gi_t" class="btn-wa-sm" target="_blank" rel="noopener" aria-label="Unirme a la comunidad de WhatsApp">💬 Comunidad WhatsApp</a>
+        <a href="https://instagram.com/ricramcas" class="btn-ig-sm" target="_blank" rel="noopener" aria-label="Seguir a @ricramcas en Instagram">📸 @ricramcas en IG</a>
       </div>
     </div>
-  </div>
-
-  <!-- 5. DECISIONS -->
-  <div class="sec"><span class="sec-t">3 decisiones para tu negocio</span></div>
-  <div class="card decisions" id="decisionsCard"></div>
-
-  <!-- SHARE -->
-  <div class="share-row">
-    <button class="sbtn primary" onclick="doShare()">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M10 1L13 4L10 7M13 4H5C3.3 4 2 5.3 2 7V13" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Generar tarjeta
-    </button>
-    <button class="sbtn" onclick="window.print()">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5V1H11V5M3 10H1V5H13V10H11M3 8H11V13H3V8Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Imprimir / PDF
-    </button>
-    <button class="sbtn" onclick="doCopy()">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="5" y="5" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M1 9V1H9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      Copiar link
-    </button>
-    <button class="sbtn" onclick="restart()">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7A6 6 0 0 1 12.5 4M13 1v3h-3M13 7A6 6 0 0 1 1.5 10M1 13v-3h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Nuevo diagnóstico
-    </button>
-  </div>
-
-  <!-- SHARE CARD -->
-  <div id="shareCard">
-    <div class="sc-tag">ricramcas · Diagnóstico para restauranteros MX</div>
-    <div class="sc-name" id="scName">Mi restaurante</div>
-    <div class="sc-city" id="scCity">—</div>
-    <div class="sc-ticket" id="scTicket">$850</div>
-    <div class="sc-sub" id="scSub">Ticket promedio por persona</div>
-    <div class="sc-stats">
-      <div><span class="sc-stat-n" id="scMercado">—</span><span class="sc-stat-l">mercado potencial</span></div>
-      <div><span class="sc-stat-n" id="scRev">—</span><span class="sc-stat-l">ingreso potencial / mes (70%)</span></div>
-    </div>
-    <div class="sc-number-box">
-      <div class="sc-num-pct" id="scCapture">0.0%</div>
-      <div class="sc-num-txt">Solo necesito capturar el <strong id="scCaptureInline">—</strong> de mi mercado para llenar mi restaurante al 70%.</div>
-    </div>
-    <div class="sc-div"></div>
-    <div class="sc-foot"><span>AMAI NSE 2024 · ENIGH 2024 · INEGI · AMR · CANIRAC</span><span>@ricramcas</span></div>
-  </div>
-
-</div><!-- /step3 -->
-
-<div class="page-foot">
-  <span>AMAI NSE Regla 2024 · ENIGH 2024 (INEGI) · AMR · CANIRAC · Estimaciones INEGI 2020–2024 · Rangos por tipo de cocina: estimaciones referenciales</span>
-  <a href="https://instagram.com/ricramcas" target="_blank">@ricramcas</a>
-</div>
-
-</div><!-- /page -->
-
-<!-- MODAL -->
-<div class="modal" id="modal">
-  <div class="modal-box">
-    <div class="modal-title" id="mTitle"></div>
-    <div class="modal-body" id="mBody"></div>
-    <button class="modal-close" onclick="closeModal()">Entendido</button>
+    <div class="cc-icon" aria-hidden="true">💬</div>
   </div>
 </div>
 
+</div><!-- /steps-wrap -->
+</div><!-- /screen-steps -->
 <script>
-// ── DATA ─────────────────────────────────────────────────────────────────
-
-const NSE = [
-  {label:'A/B', name:'Alta',       min:98500, max:null,  pct:1.2,  gr:.36, c:'#C4520A', bg:'#FBF0E9'},
-  {label:'C+',  name:'Media Alta', min:40600, max:98499, pct:7.2,  gr:.28, c:'#D4700E', bg:'#FDF3E8'},
-  {label:'C',   name:'Media',      min:13500, max:40599, pct:16.7, gr:.20, c:'#9B6E1A', bg:'#FDF7EB'},
-  {label:'C−',  name:'Med. Baja',  min:8000,  max:13499, pct:17.9, gr:.14, c:'#7A7A1A', bg:'#F9F9EC'},
-  {label:'D+',  name:'Baja Alta',  min:4500,  max:7999,  pct:24.0, gr:.09, c:'#6B6B6B', bg:'#F5F5F5'},
-  {label:'D',   name:'Baja',       min:2700,  max:4499,  pct:21.4, gr:.05, c:'#999',    bg:'#F8F8F8'},
-  {label:'E',   name:'Muy Baja',   min:0,     max:2699,  pct:11.6, gr:.02, c:'#BBB',    bg:'#FAFAFA'},
-];
-const FK = ['fAB','fCp','fC','fCm','fDp','fD','fE'];
-
-const CITIES = {
-  cdmx:          {n:'Ciudad de México',          p:21580000,fAB:2.1, fCp:1.65,fC:1.4, fCm:1.05,fDp:0.65,fD:0.5, fE:0.3},
-  edomex:        {n:'Estado de México (ZM)',      p:16990000,fAB:0.7, fCp:0.8, fC:1.0, fCm:1.15,fDp:1.2, fD:1.2, fE:1.1},
-  mty:           {n:'Monterrey',                 p:5340000, fAB:2.3, fCp:1.8, fC:1.5, fCm:1.0, fDp:0.65,fD:0.5, fE:0.3},
-  gdl:           {n:'Guadalajara',               p:5270000, fAB:1.4, fCp:1.3, fC:1.3, fCm:1.1, fDp:0.9, fD:0.8, fE:0.6},
-  tijuana:       {n:'Tijuana',                   p:2000000, fAB:1.2, fCp:1.3, fC:1.4, fCm:1.2, fDp:0.9, fD:0.8, fE:0.5},
-  juarez:        {n:'Ciudad Juárez',             p:1500000, fAB:0.9, fCp:1.0, fC:1.2, fCm:1.2, fDp:1.0, fD:1.0, fE:0.8},
-  hermosillo:    {n:'Hermosillo',                p:890000,  fAB:1.1, fCp:1.2, fC:1.3, fCm:1.1, fDp:0.9, fD:0.8, fE:0.6},
-  saltillo:      {n:'Saltillo',                  p:870000,  fAB:1.2, fCp:1.3, fC:1.3, fCm:1.1, fDp:0.9, fD:0.8, fE:0.5},
-  chihuahua:     {n:'Chihuahua',                 p:940000,  fAB:1.1, fCp:1.2, fC:1.3, fCm:1.1, fDp:0.9, fD:0.8, fE:0.6},
-  leon:          {n:'León / Guanajuato',         p:1720000, fAB:0.9, fCp:1.0, fC:1.1, fCm:1.1, fDp:1.0, fD:1.0, fE:0.9},
-  qro:           {n:'Querétaro',                 p:1260000, fAB:1.3, fCp:1.4, fC:1.4, fCm:1.1, fDp:0.8, fD:0.7, fE:0.5},
-  san_luis:      {n:'San Luis Potosí',           p:1040000, fAB:0.9, fCp:1.0, fC:1.1, fCm:1.1, fDp:1.0, fD:1.0, fE:0.9},
-  aguascalientes:{n:'Aguascalientes',            p:980000,  fAB:1.0, fCp:1.1, fC:1.2, fCm:1.1, fDp:0.9, fD:0.9, fE:0.8},
-  morelia:       {n:'Morelia',                   p:830000,  fAB:0.9, fCp:1.0, fC:1.1, fCm:1.1, fDp:1.0, fD:1.0, fE:0.9},
-  pue:           {n:'Puebla',                    p:3200000, fAB:0.9, fCp:1.0, fC:1.1, fCm:1.1, fDp:1.1, fD:1.1, fE:1.0},
-  toluca:        {n:'Toluca',                    p:890000,  fAB:0.8, fCp:0.9, fC:1.0, fCm:1.1, fDp:1.1, fD:1.1, fE:1.0},
-  cuernavaca:    {n:'Cuernavaca',                p:790000,  fAB:1.0, fCp:1.1, fC:1.1, fCm:1.1, fDp:1.0, fD:1.0, fE:0.9},
-  merida:        {n:'Mérida',                    p:1240000, fAB:1.0, fCp:1.1, fC:1.2, fCm:1.1, fDp:1.0, fD:0.9, fE:0.8},
-  cancun:        {n:'Cancún / Playa del Carmen', p:890000,  fAB:1.5, fCp:1.4, fC:1.3, fCm:1.1, fDp:1.0, fD:0.9, fE:0.7},
-  oaxaca:        {n:'Oaxaca',                    p:380000,  fAB:0.7, fCp:0.8, fC:0.9, fCm:1.0, fDp:1.1, fD:1.2, fE:1.3},
-  veracruz:      {n:'Veracruz / Xalapa',         p:870000,  fAB:0.7, fCp:0.9, fC:1.0, fCm:1.1, fDp:1.1, fD:1.2, fE:1.2},
-  otra_100k:     {n:'Tu ciudad',                 p:300000,  fAB:0.8, fCp:0.9, fC:1.0, fCm:1.1, fDp:1.1, fD:1.1, fE:1.0},
-  otra_50k:      {n:'Tu ciudad',                 p:75000,   fAB:0.5, fCp:0.7, fC:0.9, fCm:1.1, fDp:1.2, fD:1.3, fE:1.2},
+// ── DATA ──
+const CIUDADES = {
+  cdmx:{n:'CDMX',idx:1.0,pop:9200000},edomex:{n:'Estado de México',idx:.85,pop:16900000},
+  monterrey:{n:'Monterrey',idx:.92,pop:1200000},tijuana:{n:'Tijuana',idx:.88,pop:1900000},
+  juarez:{n:'Ciudad Juárez',idx:.82,pop:1500000},hermosillo:{n:'Hermosillo',idx:.85,pop:900000},
+  saltillo:{n:'Saltillo',idx:.83,pop:900000},chihuahua:{n:'Chihuahua',idx:.84,pop:900000},
+  guadalajara:{n:'Guadalajara',idx:.90,pop:1500000},leon:{n:'León',idx:.80,pop:1600000},
+  queretaro:{n:'Querétaro',idx:.86,pop:1100000},sanluis:{n:'San Luis Potosí',idx:.78,pop:1000000},
+  aguascalientes:{n:'Aguascalientes',idx:.80,pop:800000},morelia:{n:'Morelia',idx:.75,pop:900000},
+  puebla:{n:'Puebla',idx:.78,pop:1700000},toluca:{n:'Toluca',idx:.80,pop:900000},
+  cuernavaca:{n:'Cuernavaca',idx:.77,pop:400000},merida:{n:'Mérida',idx:.83,pop:1000000},
+  cancun:{n:'Cancún / Playa',idx:1.05,pop:900000},oaxaca:{n:'Oaxaca',idx:.68,pop:300000},
+  veracruz:{n:'Veracruz / Xalapa',idx:.72,pop:600000},
+  otra100k:{n:'Otra ciudad +100k',idx:.75,pop:150000},otra50k:{n:'Otra ciudad 50-100k',idx:.65,pop:75000}
 };
+const COCINAS = {
+  mariscos:{n:'Mariscos',min:250,max:800,emoji:'🦞'},mexicana:{n:'Mexicana tradicional',min:80,max:350,emoji:'🌮'},
+  carnes:{n:'Carnes / Parrilla',min:300,max:900,emoji:'🥩'},italiana:{n:'Italiana / Pasta',min:180,max:500,emoji:'🍝'},
+  asiatica:{n:'Asiática',min:150,max:450,emoji:'🍜'},hamburguesas:{n:'Hamburguesas / Fast casual',min:100,max:300,emoji:'🍔'},
+  cafeteria:{n:'Cafetería / Brunch',min:80,max:280,emoji:'☕'},finedining:{n:'Alta cocina',min:600,max:2500,emoji:'🍷'}
+};
+const NSE = [
+  {nivel:'A/B',label:'Alto',color:'#1A7A46',bg:'#E8F5EE',ingreso:85000,pct:.07,desc:'Directivos, empresarios, profesionistas con ingresos altos'},
+  {nivel:'C+',label:'Medio alto',color:'#2E8B57',bg:'#F0FAF4',ingreso:35000,pct:.13,desc:'Profesionistas, gerentes, dueños de negocio establecidos'},
+  {nivel:'C',label:'Medio',color:'#9B6E1A',bg:'#FDF7EB',ingreso:18000,pct:.17,desc:'Empleados de oficina, técnicos, maestros, pequeños comerciantes'},
+  {nivel:'C-',label:'Medio bajo',color:'#B8610A',bg:'#FEF3EC',ingreso:11000,pct:.21,desc:'Trabajadores de servicios, obreros calificados, comercio informal establecido'},
+  {nivel:'D+',label:'Popular alto',color:'#B83020',bg:'#FDECEA',ingreso:7000,pct:.19,desc:'Trabajadores de servicios básicos, obreros, empleados domésticos'},
+  {nivel:'D',label:'Popular',color:'#8B1A0E',bg:'#FDE8E6',ingreso:4500,pct:.15,desc:'Trabajadores informales, jornaleros, vendedores ambulantes'},
+  {nivel:'E',label:'Bajo',color:'#6B0F0A',bg:'#FDE0DE',ingreso:2000,pct:.08,desc:'Sin ingresos formales, trabajo por día, subsistencia'}
+];
 
-// ── STATE ────────────────────────────────────────────────────────────────
-let T = 850;
-let cuisine = null;
+// ── STATE ──
+let S = {ciudad:null, cocina:null, ticket:200, mesas:10, personas:3, dias:6, servicios:2, cocinaData:null, ciudadData:null};
+let currentStep = 1;
 
-// ── UTILS ────────────────────────────────────────────────────────────────
-const $ = id => document.getElementById(id);
-const mxn = n => '$' + Math.round(n).toLocaleString('es-MX');
-const mxnK = n => n >= 1000000 ? '$'+(n/1e6).toFixed(1)+'M' : n >= 1000 ? '$'+Math.round(n/1000)+'K' : mxn(n);
-const fmt = n => n >= 1000000 ? (n/1e6).toFixed(1)+'M' : n >= 1000 ? Math.round(n/1000)+'K' : String(n);
-
-// ── SLIDER ───────────────────────────────────────────────────────────────
-function onSlide(v) {
-  T = parseInt(v);
-  $('exactT').value = T;
-  refreshSliderUI();
+// ── SCREEN ──
+function startCalc(){
+  document.getElementById('screen-0').classList.remove('active');
+  document.getElementById('screen-steps').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(animImpact, 200);
 }
-function onExact(v) {
-  const n = parseInt(v);
-  if (!n || n < 1) return;
-  T = Math.min(n, 5000);
-  $('tSlider').value = T;
-  refreshSliderUI();
+function animImpact(){
+  animNum('s1',80,'%',1200);animNum('s2',65,'%',1300);animNum('s3',2.3,'×',1400,true);
+  setTimeout(()=>{document.querySelectorAll('.cause-fill[data-w]').forEach((el,i)=>setTimeout(()=>{el.style.width=el.dataset.w+'%'},i*120));},400);
 }
-function setT(v) {
-  T = v; $('tSlider').value = v; $('exactT').value = v;
-  document.querySelectorAll('.preset').forEach(b => b.classList.toggle('on', parseInt(b.textContent.replace(/[$,]/g,'')) === v));
-  refreshSliderUI();
-}
-function refreshSliderUI() {
-  const pct = ((T - 50) / 4950) * 100;
-  $('rfill').style.width = pct + '%';
-  const d = $('sliderVal');
-  d.textContent = mxn(T);
-  d.classList.add('hot');
-  clearTimeout(d._t);
-  d._t = setTimeout(() => d.classList.remove('hot'), 300);
-}
-
-// ── CUISINE ──────────────────────────────────────────────────────────────
-function setCuisine(el) {
-  document.querySelectorAll('.cuisine-btn').forEach(b => b.classList.remove('on'));
-  el.classList.add('on');
-  cuisine = {
-    id: el.dataset.id,
-    name: el.querySelector('.cuisine-name').textContent,
-    min: parseInt(el.dataset.min),
-    max: parseInt(el.dataset.max),
-    avg: parseInt(el.dataset.avg),
-  };
+function animNum(id,target,sfx,dur,dec){
+  const el=document.getElementById(id);if(!el)return;
+  const start=performance.now();
+  function step(now){const p=Math.min((now-start)/dur,1),e=1-Math.pow(1-p,3);
+  el.textContent=(dec?(target*e).toFixed(1):Math.round(target*e))+sfx;if(p<1)requestAnimationFrame(step);}
+  requestAnimationFrame(step);
 }
 
-// ── STEPS ────────────────────────────────────────────────────────────────
-function setStep(n) {
-  ['step1','step2','step3'].forEach((id,i) => $(id).style.display = i+1===n ? 'block' : 'none');
-  ['sp1','sp2','sp3'].forEach((id,i) => {
-    const el = $(id);
-    el.className = 'step' + (i+1 < n ? ' done' : i+1 === n ? ' active' : '');
-  });
+// Animate on screen 0 load
+const io = new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){animImpact();io.disconnect();}});},{threshold:.1});
+const impactEl=document.querySelector('.impact-wrap');if(impactEl)io.observe(impactEl);
+
+// ── STEP NAV ──
+function goStep(n){
+  document.getElementById('step-'+currentStep).classList.remove('active');
+  document.getElementById('step-'+n).classList.add('active');
+  currentStep=n;
+  const pct={1:33,2:66,3:100}[n]||33;
+  document.getElementById('progress-fill').style.width=pct+'%';
+  document.querySelector('.progress-bar-track').setAttribute('aria-valuenow',pct);
+  for(let i=1;i<=3;i++){const ps=document.getElementById('ps-'+i);ps.classList.remove('active','done');if(i===n)ps.classList.add('active');else if(i<n)ps.classList.add('done');}
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function irPaso2(){
+  S.mesas=parseInt(document.getElementById('mesas').value)||10;
+  S.personas=parseInt(document.getElementById('personas').value)||3;
+  goStep(2);
 }
 
-function goStep1() { setStep(1); }
-
-function goStep2() {
-  if (!cuisine) { showModal('Selecciona tu tipo de cocina', 'Elige la categoría que mejor describe tu restaurante para calcular el comparativo de posicionamiento.'); return; }
-  setStep(2);
-  window.scrollTo({top:0, behavior:'smooth'});
+// ── COCINA SELECT ──
+function selCocina(btn){
+  document.querySelectorAll('#cocina-grid .preset-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  S.cocina=btn.dataset.val;
+  S.cocinaData=COCINAS[S.cocina];
+  const min=parseInt(btn.dataset.min),max=parseInt(btn.dataset.max),mid=parseInt(btn.dataset.mid);
+  const rc=document.getElementById('rango-cocina');
+  rc.style.display='block';
+  rc.innerHTML=`El rango típico para <strong>${S.cocinaData.emoji} ${S.cocinaData.n}</strong> en México es de <strong>$${min}–$${max} MXN</strong> por persona. El punto medio del mercado es alrededor de <strong>$${mid}</strong>. Fuente: AMR 2024 / CANIRAC 2024.`;
+  document.getElementById('ticket-card').style.display='block';
+  const adjMid=Math.round(mid*(S.ciudadData?S.ciudadData.idx:1)/50)*50;
+  document.getElementById('ticket-slider').value=adjMid;
+  upTicket(adjMid);
+  upRC1();
 }
 
-function goStep3() {
-  const mesas = parseInt($('mesas').value);
-  const pax = parseInt($('paxMesa').value) || 3;
-  const dias = parseInt($('dias').value) || 5;
-  const srv = parseInt($('servicios').value) || 2;
-  if (!mesas || mesas < 1) { showModal('Ingresa el número de mesas', 'Este dato es necesario para calcular tu ingreso potencial real.'); return; }
-  setStep(3);
-  buildResults(mesas, pax, dias, srv);
-  setTimeout(() => $('step3').scrollIntoView({behavior:'smooth', block:'start'}), 200);
+// ── TICKET ──
+function upTicket(val){
+  S.ticket=parseInt(val);
+  const el=document.getElementById('ticket-display');
+  el.textContent='$'+Number(val).toLocaleString('es-MX');
+  el.className='slider-display'+(val>1500?' hot':'');
+  document.getElementById('ticket-slider').setAttribute('aria-valuenow',val);
+  document.getElementById('ticket-input').value=val;
+  const pct=((val-50)/(5000-50))*100;
+  document.getElementById('ticket-slider').style.background=`linear-gradient(to right,var(--acc) ${pct}%,var(--bg3) ${pct}%)`;
+}
+function upTicketInput(val){
+  const v=Math.min(Math.max(parseInt(val)||50,50),10000);
+  document.getElementById('ticket-slider').value=Math.min(v,5000);
+  upTicket(v);
 }
 
-function restart() { setStep(1); window.scrollTo({top:0, behavior:'smooth'}); }
-
-// ── BUILD RESULTS ─────────────────────────────────────────────────────────
-function buildResults(mesas, pax, dias, srv) {
-  const ck = $('ciudad').value;
-  const rn = $('restName').value.trim();
-  const city = CITIES[ck];
-  const t = T;
-  const c = cuisine;
-
-  // ── 1. DIAGNOSIS HEADER
-  if (rn) { $('dRest').textContent = rn; $('dRest').style.display = 'block'; }
-  else { $('dRest').style.display = 'none'; }
-  $('dTicket').textContent = mxn(t);
-  $('dCity').textContent = `${city.n} · ${c.name}`;
-
-  // Positioning vs category
-  const pos = (t - c.min) / (c.max - c.min);
-  const clampedPos = Math.max(0, Math.min(1, pos));
-  const diffFromAvg = ((t - c.avg) / c.avg * 100);
-  const absDiff = Math.abs(diffFromAvg).toFixed(0);
-
-  let verdictClass, verdictText, verdictSub, gaugeNote;
-  if (t < c.min) {
-    verdictClass = 'low'; verdictText = '⬇ Por debajo del rango';
-    verdictSub = `${mxn(c.min - t)} debajo del mínimo`;
-    gaugeNote = `Tu ticket de ${mxn(t)} está <strong>por debajo del rango típico</strong> de restaurantes de ${c.name} (${mxn(c.min)}–${mxn(c.max)}). Tienes espacio para subir precio sin salir del mercado — o considera si tu propuesta de valor está correctamente comunicada.`;
-  } else if (t > c.max) {
-    verdictClass = 'high'; verdictText = '⬆ Por encima del rango';
-    verdictSub = `${mxn(t - c.max)} sobre el máximo`;
-    gaugeNote = `Tu ticket de ${mxn(t)} está <strong>por encima del rango típico</strong> de ${c.name}. Necesitas una propuesta de valor muy clara: experiencia, chef reconocido, exclusividad o diferenciación fuerte. Sin eso, el precio genera resistencia.`;
-  } else if (Math.abs(diffFromAvg) <= 15) {
-    verdictClass = 'spot'; verdictText = '✓ Zona de mercado';
-    verdictSub = `${absDiff}% ${diffFromAvg >= 0 ? 'sobre' : 'bajo'} el promedio`;
-    gaugeNote = `Tu ticket de ${mxn(t)} está <strong>dentro del rango competitivo</strong> de ${c.name} (promedio: ${mxn(c.avg)}). Eso te coloca en la zona de mayor demanda para tu categoría. La diferenciación no tiene que ser de precio — puede ser de experiencia, atención o producto.`;
-  } else if (diffFromAvg > 15) {
-    verdictClass = 'high'; verdictText = '↑ Premium vs categoría';
-    verdictSub = `${absDiff}% sobre el promedio`;
-    gaugeNote = `Tu ticket está <strong>${absDiff}% sobre el promedio</strong> de ${c.name} (${mxn(c.avg)}). Estás apuntando al segmento superior de tu categoría. Es un posicionamiento válido, pero tu comunicación debe justificar la diferencia — ambiente, ingredientes, servicio o firma.`;
-  } else {
-    verdictClass = 'ok'; verdictText = '↓ Accesible vs categoría';
-    verdictSub = `${absDiff}% bajo el promedio`;
-    gaugeNote = `Tu ticket está <strong>${absDiff}% bajo el promedio</strong> de ${c.name} (${mxn(c.avg)}). Tienes una propuesta accesible dentro de tu categoría — ventaja de volumen. Evalúa si hay margen para subir gradualmente sin perder clientes.`;
-  }
-
-  const vp = $('verdictPill');
-  vp.className = 'verdict-pill ' + verdictClass;
-  vp.textContent = verdictText;
-  $('verdictSub').textContent = verdictSub;
-  $('gaugeNote').innerHTML = gaugeNote;
-  $('gLeft').textContent = mxn(c.min);
-  $('gMid').textContent = `Promedio: ${mxn(c.avg)}`;
-  $('gRight').textContent = mxn(c.max);
-  setTimeout(() => { $('gaugeMarker').style.left = (clampedPos * 92 + 4) + '%'; }, 200);
-  $('gaugeLabel').textContent = mxn(t);
-
-  // ── 2. NSE TABLE
-  const grid = $('nseGrid');
-  grid.innerHTML = '';
-  NSE.forEach(n => {
-    const mid = n.max ? (n.min+n.max)/2 : n.min*1.5;
-    const pctIng = (t/mid)*100;
-    const gastoMes = mid * n.gr;
-    const veces = gastoMes > 0 ? gastoMes/t : 0;
-    let eLabel, eColor;
-    if      (pctIng <= 1.5) {eLabel='Accesible';     eColor='#1A7A46';}
-    else if (pctIng <= 4)   {eLabel='Razonable';     eColor='#7A6B1A';}
-    else if (pctIng <= 8)   {eLabel='Significativo'; eColor='#C4520A';}
-    else if (pctIng <= 15)  {eLabel='Elevado';       eColor='#B83020';}
-    else                    {eLabel='Fuera de rango';eColor='#BBB';}
-    const acc = pctIng <= 4;
-    const rango = n.max ? `${mxn(n.min)} – ${mxn(n.max)}` : `${mxn(n.min)}+`;
-    const vecStr = veces >= 1 ? Math.round(veces)+'×' : veces >= .1 ? '<1×' : '—';
-    const row = document.createElement('div');
-    row.className = 'nse-row' + (acc ? ' accessible' : '');
-    row.style.setProperty('--ra', acc ? n.c : 'transparent');
-    row.style.cssText += acc ? ';background:#FDFCFA' : '';
-    row.querySelector ? null : null;
-    row.innerHTML = `
-      <span><span class="nse-badge" style="background:${n.bg};color:${n.c}">${n.label}</span></span>
-      <span class="nse-inc">${rango}<small>ingreso familiar / mes</small></span>
-      <span class="nse-pct" style="color:${acc?n.c:'var(--text)'}">${pctIng.toFixed(1)}%</span>
-      <span class="nse-eff" style="color:${eColor}">${eLabel}</span>
-      <span class="nse-vis">${vecStr}</span>
-    `;
-    row.style.setProperty('--row-accent', acc ? n.c : 'transparent');
-    row.querySelectorAll('.nse-row::before') // just trigger reflow
-    grid.appendChild(row);
-  });
-  // fix ::before via inline approach
-  grid.querySelectorAll('.nse-row').forEach(r => {
-    const acc = r.classList.contains('accessible');
-    if (acc) r.style.borderLeft = `3px solid ${r.style.getPropertyValue('--row-accent') || 'transparent'}`;
-    else r.style.paddingLeft = '19px';
-  });
-
-  // ── 3. REVENUE
-  const cubiertos = mesas * pax * dias * srv;
-  const cubiertosWeek = cubiertos;
-  const maxSem = cubiertosWeek * t;
-  const maxMes = maxSem * 4.33;
-  $('rCubiertos').textContent = cubiertosWeek.toLocaleString('es-MX');
-  $('rCubSub').textContent = `${mesas} mesas × ${pax} pax × ${dias} días × ${srv} serv.`;
-  $('rMaxSem').textContent = mxnK(maxSem);
-  $('rBarLabel').textContent = mxnK(maxMes) + ' al 100%';
-  $('r50').textContent = mxnK(maxMes * .5);
-  $('r70').textContent = mxnK(maxMes * .7);
-  $('r100').textContent = mxnK(maxMes);
-  setTimeout(() => $('rBarFill').style.width = '100%', 300);
-
-  // ── 4. MARKET
-  $('mktNote').textContent = `${city.n} · INEGI 2020 + AMAI NSE 2024`;
-  const fRows = $('funnelRows');
-  fRows.innerHTML = '';
-  let total = 0, maxP = 0;
-  const rows = NSE.map((n,i) => {
-    const mid = n.max?(n.min+n.max)/2:n.min*1.5;
-    const acc = (t/mid*100) <= 4;
-    const pop = Math.round(city.p*(n.pct/100)*city[FK[i]]);
-    if (pop > maxP) maxP = pop;
-    if (acc) total += pop;
-    return {n,pop,acc};
-  });
-  rows.forEach(({n,pop,acc}) => {
-    const w = (pop/maxP)*100;
-    const row = document.createElement('div');
-    row.className = 'fb-row';
-    row.innerHTML = `
-      <span class="fb-lbl" style="color:${acc?n.c:'#CCC'}">${n.label}</span>
-      <div class="fb-track"><div class="fb-fill" style="background:${acc?n.c:'#E8E7E4'}" data-w="${w}"></div></div>
-      <span class="fb-val" style="color:${acc?'#444':'#CCC'}">${fmt(pop)}</span>
-    `;
-    fRows.appendChild(row);
-  });
-  setTimeout(() => fRows.querySelectorAll('.fb-fill[data-w]').forEach(b => b.style.width = b.dataset.w+'%'), 300);
-
-  const pctTot = (total/city.p)*100;
-  $('mktTotal').textContent = fmt(total);
-
-  // THE NUMBER — what % of market needed
-  const cubiertosYear70 = Math.round(cubiertosWeek * 52 * 0.7);
-  $('mktNeed').textContent = cubiertosYear70.toLocaleString('es-MX');
-  const captureNeeded = total > 0 ? (cubiertosYear70 / total * 100) : 0;
-  const captureFmt = captureNeeded < 0.1 ? captureNeeded.toFixed(3)+'%' : captureNeeded < 1 ? captureNeeded.toFixed(2)+'%' : captureNeeded.toFixed(1)+'%';
-  $('tnPct').textContent = captureFmt;
-  $('tnPctInline').textContent = captureFmt;
-  $('scCapture').textContent = captureFmt;
-  $('scCaptureInline').textContent = captureFmt;
-
-  // Donut
-  const circ = 2*Math.PI*46;
-  setTimeout(() => {
-    $('dArc').setAttribute('stroke-dasharray', `${(pctTot/100)*circ} ${circ}`);
-  }, 400);
-  $('dPct').textContent = pctTot.toFixed(1)+'%';
-  $('dTotal').textContent = fmt(total);
-
-  // Gasto por NSE
-  const gastoDiv = $('gastoNse');
-  gastoDiv.innerHTML = '';
-  [NSE[0],NSE[1],NSE[2],NSE[3]].forEach(n => {
-    const mid = n.max?(n.min+n.max)/2:n.min*1.5;
-    const g = Math.round(mid*n.gr);
-    const veces = (g/t).toFixed(1);
-    gastoDiv.innerHTML += `
-      <div style="display:flex;justify-content:space-between;font-size:11.5px;padding:4px 0;border-bottom:1px solid var(--border);">
-        <span style="color:${n.c};font-weight:700;">${n.label}</span>
-        <span style="color:var(--t2);">${mxn(g)}/mes → <strong>${veces}× tu ticket</strong></span>
-      </div>`;
-  });
-
-  // ── 5. DECISIONS
-  const decisions = generateDecisions(t, c, pctTot, captureNeeded, diffFromAvg, cubiertosWeek, maxMes);
-  const dc = $('decisionsCard');
-  dc.innerHTML = '';
-  decisions.forEach(d => {
-    dc.innerHTML += `
-      <div class="decision-item">
-        <div class="decision-icon" style="background:${d.bg}">${d.icon}</div>
-        <div class="decision-content">
-          <div class="decision-title">${d.title}</div>
-          <div class="decision-body">${d.body}</div>
-        </div>
-      </div>`;
-  });
-
-  // Share card
-  $('scName').textContent = rn || 'Mi restaurante';
-  $('scCity').textContent = `${city.n} · ${c.name}`;
-  $('scTicket').textContent = mxn(t);
-  $('scSub').textContent = `Ticket promedio · ${verdictText}`;
-  $('scMercado').textContent = fmt(total);
-  $('scRev').textContent = mxnK(maxMes * .7);
-}
-
-// ── DECISIONS GENERATOR ───────────────────────────────────────────────────
-function generateDecisions(t, c, pctMercado, captureNeeded, diffAvg, cubiertosWeek, maxMes) {
-  const decisions = [];
-
-  // Decisión 1 — posicionamiento de precio
-  if (diffAvg > 25) {
-    decisions.push({icon:'💡', bg:'#FBF0E9', title:'Justifica el premium con claridad',
-      body:`Tu ticket está <strong>${Math.abs(diffAvg).toFixed(0)}% sobre el promedio</strong> de tu categoría. Eso es válido — pero solo funciona si el cliente entiende por qué. Revisa si tu comunicación (menú, redes, descripción) articula explícitamente el diferenciador: ingrediente, técnica, experiencia o chef.`});
-  } else if (diffAvg < -20) {
-    decisions.push({icon:'📈', bg:'#E8F5EE', title:'Tienes espacio para subir precio',
-      body:`Tu ticket está <strong>${Math.abs(diffAvg).toFixed(0)}% bajo el promedio</strong> de tu categoría. Si la experiencia lo justifica, un aumento gradual del 10–15% puede mejorar significativamente tu margen sin perder clientes — y puede mejorar la percepción de valor.`});
-  } else {
-    decisions.push({icon:'✅', bg:'#E8F5EE', title:'Estás en zona competitiva de precio',
-      body:`Tu ticket está alineado con el mercado de ${c.name}. La diferenciación no tiene que ser de precio — puede ser de experiencia, atención al cliente, producto de temporada o identidad de marca. Enfócate en la recurrencia: convertir visita única en cliente habitual.`});
-  }
-
-  // Decisión 2 — mercado potencial vs operación
-  if (captureNeeded < 0.1) {
-    decisions.push({icon:'🎯', bg:'#E8F5EE', title:'Tu mercado es masivo vs tu capacidad',
-      body:`Solo necesitas capturar el <strong>${captureNeeded < 0.01 ? captureNeeded.toFixed(3) : captureNeeded.toFixed(2)}%</strong> de tu mercado potencial. El cuello de botella no es la demanda — es la visibilidad y la conversión. Invertir en presencia digital y reputación tiene ROI directo inmediato.`});
-  } else if (captureNeeded < 1) {
-    decisions.push({icon:'🎯', bg:'#FBF0E9', title:'Mercado suficiente, visibilidad es clave',
-      body:`Necesitas menos del <strong>1% de tu mercado</strong> para operar al 70%. La demanda existe — el reto es ser encontrado. Prioriza Google Maps optimizado, reseñas activas y presencia en redes con contenido de producto y experiencia.`});
-  } else {
-    decisions.push({icon:'⚡', bg:'#FDECEA', title:'Tu mercado potencial es acotado',
-      body:`Con <strong>${captureNeeded.toFixed(1)}% del mercado</strong> necesario para llenar al 70%, estás en un segmento de alta concentración. La fidelización de clientes existentes es más rentable que la adquisición. Considera programa de lealtad o comunicación directa (WhatsApp, newsletter).`});
-  }
-
-  // Decisión 3 — basada en NSE accesible
-  if (pctMercado < 10) {
-    decisions.push({icon:'💎', bg:'#FBF0E9', title:'Mercado de nicho — experiencia es todo',
-      body:`Solo el <strong>${pctMercado.toFixed(1)}% de tu ciudad</strong> puede visitarte con comodidad. En mercados de nicho, la reputación lo es todo: cada reseña, cada recomendación y cada visita de influencer o prensa vale mucho más que en restaurantes masivos. PR y relaciones públicas son inversión, no gasto.`});
-  } else if (pctMercado < 30) {
-    decisions.push({icon:'🔄', bg:'#FDF7EB', title:'Aumenta la frecuencia de visita',
-      body:`Tu mercado accesible es el <strong>${pctMercado.toFixed(1)}% de la ciudad</strong> — un segmento definido. La estrategia más rentable no es atraer nuevos clientes continuamente, sino lograr que los que ya te conocen regresen más seguido. Considera menú de temporada, eventos mensuales o algún mecanismo de recurrencia.`});
-  } else {
-    decisions.push({icon:'📣', bg:'#E8F5EE', title:'Mercado amplio — diferenciación de marca',
-      body:`El <strong>${pctMercado.toFixed(1)}% de tu ciudad</strong> puede visitarte económicamente — tienes acceso a un mercado grande. El riesgo en mercados amplios es la comoditización. Invierte en construir una identidad de marca clara: un plato icónico, una historia, un ángulo que te haga memorable y referible.`});
-  }
-
-  return decisions;
-}
-
-// ── SHARE / COPY ──────────────────────────────────────────────────────────
-function doShare() {
-  $('shareCard').classList.add('show');
-  showModal('Tarjeta generada ✓',
-    'La tarjeta aparece justo abajo.<br><br>' +
-    '<strong>En móvil:</strong> mantén presionada la tarjeta para guardar o compartir.<br><br>' +
-    '<strong>En computadora:</strong> clic derecho → Guardar imagen como.<br><br>' +
-    'Texto sugerido para compartir: <em>"¿Sabes qué porcentaje de tu ciudad necesitas capturar para llenar tu restaurante? Calcula aquí →"</em>');
-  setTimeout(() => $('shareCard').scrollIntoView({behavior:'smooth'}), 300);
-}
-function doCopy() {
-  const url = window.location.href;
-  navigator.clipboard.writeText(url)
-    .then(() => showModal('Link copiado ✓', 'Pégalo en WhatsApp, Instagram o donde quieras compartirlo.'))
-    .catch(() => showModal('Copia este link', `<code style="word-break:break-all;color:#C4520A;font-size:12px">${url}</code>`));
-}
-function showModal(t,b){$('mTitle').textContent=t;$('mBody').innerHTML=b;$('modal').classList.add('on');}
-function closeModal(){$('modal').classList.remove('on');}
-
-// ── INIT ─────────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  refreshSliderUI();
-  // pre-select mariscos
-  setCuisine(document.querySelector('[data-id="mariscos"]'));
+// ── CITY SELECT ──
+document.getElementById('ciudad').addEventListener('change',function(){
+  S.ciudad=this.value;
+  S.ciudadData=CIUDADES[S.ciudad]||null;
+  upRC1();
 });
-document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+
+// ── RISK CIRCLES ──
+function setRC(n,pct,col){
+  const c=document.getElementById('rc-'+n),r=document.getElementById('rp-'+n);if(!c||!r)return;
+  c.style.strokeDashoffset=175.9-(pct/100)*175.9;
+  const color=pct>=70?'var(--green)':pct>=40?col||'var(--warn)':'var(--red)';
+  c.style.stroke=color;r.style.color=color;r.textContent=Math.round(pct)+'%';
+}
+function upRC1(){
+  let s=0;
+  if(document.getElementById('nombre').value.trim())s+=10;
+  if(S.ciudad)s+=30;
+  if(S.cocina)s+=30;
+  if(S.ticket>0)s+=30;
+  setRC(1,s,'#C4520A');
+}
+function upRC2(){
+  S.mesas=parseInt(document.getElementById('mesas').value)||10;
+  S.personas=parseInt(document.getElementById('personas').value)||3;
+  S.dias=parseInt(document.getElementById('dias').value)||6;
+  S.servicios=parseFloat(document.getElementById('servicios').value)||2;
+  let s=0;
+  if(S.mesas>0)s+=25;if(S.personas>0)s+=25;if(S.dias>0)s+=25;if(S.servicios>0)s+=25;
+  setRC(2,s,'#9B6E1A');
+}
+
+// ── CALCULATE ──
+function calcDiagnostico(){
+  S.mesas=parseInt(document.getElementById('mesas').value)||10;
+  S.personas=parseInt(document.getElementById('personas').value)||3;
+  S.dias=parseInt(document.getElementById('dias').value)||6;
+  S.servicios=parseFloat(document.getElementById('servicios').value)||2;
+
+  if(!S.cocina||!S.ciudad||!S.ticket){
+    alert('Por favor completa la ciudad, el tipo de cocina y el ticket antes de continuar.');return;
+  }
+
+  const cd=S.ciudadData,cod=S.cocinaData;
+  const adjMin=Math.round(cod.min*cd.idx),adjMax=Math.round(cod.max*cd.idx);
+  const adjRange=adjMax-adjMin;
+  const pctPos=Math.max(0,Math.min(100,((S.ticket-adjMin)/adjRange)*100));
+
+  // Posicionamiento
+  let pos,veredicto,nota;
+  if(S.ticket<adjMin*.7){pos='muy-bajo';veredicto='Tu precio está MUY por debajo del mercado';}
+  else if(S.ticket<adjMin){pos='bajo';veredicto='Tu precio está por debajo del rango de tu categoría';}
+  else if(S.ticket<=adjMax){pos='en-rango';veredicto='Tu precio está dentro del rango de tu categoría ✓';}
+  else if(S.ticket<=adjMax*1.3){pos='premium';veredicto='Tu precio es premium — por encima del rango típico';}
+  else{pos='fuera';veredicto='Tu precio está muy por encima del mercado habitual';}
+
+  const notas={
+    'muy-bajo':'Cobrar muy poco puede dañar la percepción de calidad. El cliente asocia precio bajo con calidad baja. Considera si tu costo lo permite, puedes subir gradualmente el precio y comunicar mejor el valor de tu propuesta.',
+    'bajo':'Tienes margen para subir sin salirte del mercado. Si tus costos lo permiten, un ajuste del 10–20% puede mejorar significativamente tu margen sin afectar tu clientela habitual.',
+    'en-rango':'Estás bien posicionado. Tu reto ahora no es el precio — es asegurarte de que tu food cost, nómina y operación sean sostenibles con este ticket.',
+    'premium':'Precio premium funciona si tu experiencia, servicio y producto lo justifican. Si tienes baja ocupación, revisa si el mercado percibe el valor que cobras. Si está lleno, estás en el lugar correcto.',
+    'fuera':'Tu precio supera significativamente el mercado de tu categoría en tu ciudad. Asegúrate de que tu propuesta de valor — ambiente, servicio, exclusividad — justifique esta diferencia para el cliente.'
+  };
+  nota=notas[pos];
+  document.getElementById('veredicto-texto').textContent=veredicto;
+  document.getElementById('nota-estrategica').textContent=nota;
+  const gaugePos=Math.max(2,Math.min(98,pctPos));
+  setTimeout(()=>{document.getElementById('gauge-marker').style.left=gaugePos+'%';},300);
+
+  // NSE
+  const tbody=document.getElementById('nse-tbody');tbody.innerHTML='';
+  NSE.forEach(nse=>{
+    const pctIngreso=((S.ticket/nse.ingreso)*100).toFixed(1);
+    let esfuerzo,esfCol,esfBg;
+    const r=parseFloat(pctIngreso);
+    if(r<0.5){esfuerzo='Muy accesible';esfCol='#1A7A46';esfBg='#E8F5EE';}
+    else if(r<1.5){esfuerzo='Accesible';esfCol='#2E8B57';esfBg='#F0FAF4';}
+    else if(r<3){esfuerzo='Razonable';esfCol='#9B6E1A';esfBg='#FDF7EB';}
+    else if(r<5){esfuerzo='Significativo';esfCol='#B83020';esfBg='#FDECEA';}
+    else{esfuerzo='Fuera de alcance';esfCol='#6B0F0A';esfBg='#FDE0DE';}
+    const visitas=Math.floor((nse.ingreso*0.06)/S.ticket);
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td><span class="nse-badge" style="background:${nse.bg};color:${nse.color}">${nse.nivel}</span> <span style="font-size:11px;color:var(--t3)">${nse.label}</span></td><td><strong>$${nse.ingreso.toLocaleString('es-MX')}</strong><br><span style="font-size:11px;color:var(--t3)">${nse.desc}</span></td><td><strong>${pctIngreso}%</strong></td><td><span style="background:${esfBg};color:${esfCol};padding:3px 8px;border-radius:100px;font-size:11px;font-weight:700;">${esfuerzo}</span></td><td>${visitas>0?visitas+'x':'-'}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  // Ingreso potencial
+  const cubiertosServicio=S.mesas*S.personas;
+  const cubiertosdia=cubiertosServicio*S.servicios;
+  const cubiertosSemana=cubiertosdia*S.dias;
+  const cubiertasMes=cubiertosSemana*4.3;
+  const ing50=Math.round(cubiertasMes*S.ticket*.50);
+  const ing70=Math.round(cubiertasMes*S.ticket*.70);
+  const ing100=Math.round(cubiertasMes*S.ticket*1.0);
+  const fmx=n=>'$'+Math.round(n).toLocaleString('es-MX');
+  document.getElementById('ingreso-row').innerHTML=`
+    <div class="ingreso-card"><div class="ingreso-pct">50% ocupación</div><div class="ingreso-num">${fmx(ing50)}</div><div class="ingreso-label">por mes</div></div>
+    <div class="ingreso-card" style="border-color:var(--accmd);background:var(--acclt)"><div class="ingreso-pct" style="color:var(--acc)">70% ocupación <span style="background:var(--acc);color:white;padding:1px 6px;border-radius:100px;font-size:9px;margin-left:4px;">META</span></div><div class="ingreso-num">${fmx(ing70)}</div><div class="ingreso-label" style="color:var(--acc)">por mes · objetivo real</div></div>
+    <div class="ingreso-card"><div class="ingreso-pct">100% lleno</div><div class="ingreso-num">${fmx(ing100)}</div><div class="ingreso-label">por mes · techo máximo</div></div>`;
+  document.getElementById('cubiertos-info').innerHTML=`Con ${S.mesas} mesas × ${S.personas} personas × ${S.servicios} servicio(s) × ${S.dias} días = <strong>${Math.round(cubiertosdia)} cubiertos por día</strong> en capacidad total. Al mes son hasta <strong>${Math.round(cubiertasMes).toLocaleString('es-MX')} cubiertos</strong> al 100% de ocupación. <br><br><span style="font-size:11px;color:var(--t3)"><strong>¿Qué es un cubierto?</strong> Un cubierto = una persona atendida. Si tienes 10 mesas de 4 personas y se llenan dos veces al día, son 80 cubiertos al día.</span>`;
+
+  // El número
+  const popCiudad=cd.pop;
+  const cubiertasMeta=ing70/S.ticket;
+  const pctPob=((cubiertasMeta/popCiudad)*100);
+  const pctStr=pctPob<0.01?pctPob.toFixed(3):pctPob<0.1?pctPob.toFixed(2):pctPob.toFixed(1);
+  const nb=document.getElementById('nombre').value.trim();
+  const restName=nb||'tu restaurante';
+  document.getElementById('tn-pct').textContent=pctStr+'%';
+  document.getElementById('tn-text').innerHTML=`Para llenar <strong>${restName}</strong> al 70% de ocupación durante un mes, necesitas capturar el <strong>${pctStr}%</strong> de la población de <strong>${cd.n}</strong>. Eso son aproximadamente <strong>${Math.round(cubiertasMeta).toLocaleString('es-MX')} visitas al mes</strong> — de una ciudad con ${(popCiudad/1000000).toFixed(1)} millones de personas. El mercado potencial es mucho más grande de lo que parece.`;
+
+  // Decisiones dinámicas
+  const decs=[];
+  if(pos==='muy-bajo'||pos==='bajo'){
+    decs.push({t:'Sube tu precio gradualmente',d:`Tu precio está por debajo del rango de ${cod.emoji} ${cod.n} en ${cd.n}. El rango típico es $${adjMin}–$${adjMax}. Considera subir $${Math.round((adjMin-S.ticket)*.5/10)*10} en los próximos 30 días — sin grandes cambios al menú, solo el ajuste de precio. Mide si afecta tu ocupación.`});
+    decs.push({t:'Revisa tu food cost antes de subir',d:`Antes de subir precio, asegúrate de que tu costo de alimentos (food cost) esté entre el 28–35% del precio de venta. Si está por encima del 40%, el problema no es el precio — son tus costos.`});
+  }else if(pos==='premium'||pos==='fuera'){
+    decs.push({t:'Asegúrate de que tu experiencia justifique el precio',d:`A $${S.ticket} MXN por persona estás cobrando más que la mayoría de ${cod.n} en ${cd.n}. Eso es válido si tu ambiente, servicio y producto lo respaldan. Si tienes baja ocupación, considera si el mercado percibe ese valor diferencial.`});
+    decs.push({t:'Define quién es tu cliente real',d:`Con este precio, tu cliente ideal está en el nivel NSE A/B o C+ (ingresos de $35,000–$85,000 mensuales por hogar). Asegúrate de que tu marketing, ubicación y experiencia apunten a ese segmento específico.`});
+  }else{
+    decs.push({t:'Optimiza tu ocupación al 70%',d:`Estás bien posicionado en precio. Tu siguiente palanca es la ocupación: llegar al 70% de manera constante significa ${fmx(ing70)} al mes. Cada 5 puntos de ocupación extra son ${fmx(cubiertasMes*S.ticket*.05)} adicionales.`});
+  }
+  decs.push({t:'Conoce a quién le estás cobrando',d:`Según la tabla NSE, tu precio de $${S.ticket} representa el ${((S.ticket/18000)*100).toFixed(1)}% del ingreso mensual del nivel C (clase media). Asegúrate de que tu comunicación, menú y experiencia hablen directamente a ese perfil de cliente.`});
+  if(decs.length<3)decs.push({t:'Calcula tu punto de equilibrio real',d:`Con ${Math.round(cubiertosdia)} cubiertos de capacidad diaria y un ticket de $${S.ticket}, necesitas una ocupación de al menos ${(((ing70*0.65)/cubiertasMes/S.ticket)*100).toFixed(0)}% para cubrir costos típicos de operación. Si aún no tienes este número calculado con tus costos reales, ese es tu siguiente paso.`});
+  document.getElementById('decisiones-wrap').innerHTML=decs.slice(0,3).map((d,i)=>`<div class="decision-card"><div class="dec-num">${i+1}</div><div><div class="dec-title">${d.t}</div><div class="dec-desc">${d.d}</div></div></div>`).join('');
+
+  // Risk circle 3 — animate to 100%
+  setTimeout(()=>setRC(3,100,'#1A7A46'),500);
+  goStep(3);
+}
 </script>
 </body>
 </html>
