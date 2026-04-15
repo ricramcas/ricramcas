@@ -1,1 +1,1075 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brújula de Valor v2 — Valida tu idea | ricramcas.com</title>
+<meta name="description" content="Herramienta gratuita para validar si tu idea vale la pena construir. Valida tu idea en 10 minutos. Analiza si el problema vale la pena, si tu propuesta encaja y si tu modelo de negocio tiene sentido. Gratis, con datos reales.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F9F8F6;--bg2:#F2F1EE;--bg3:#EAEAE6;--white:#FFFFFF;--border:#E0DFD9;--bdr2:#CCCAC3;--text:#111010;--t2:#3D3C38;--t3:#595855;--acc:#C4520A;--acclt:#FBF0E9;--accmd:#EFC9A8;--green:#1A7A46;--greenlt:#E8F5EE;--warn:#9B6E1A;--warnlt:#FDF7EB;--red:#B83020;--redlt:#FDECEA;--r:8px;--sh:0 1px 4px rgba(0,0,0,.07);--shmd:0 4px 24px rgba(0,0,0,.09);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6;}
+.nav{position:sticky;top:0;z-index:100;background:rgba(249,248,246,.93);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;}
+.nav-back{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--t3);text-decoration:none;transition:color .15s;}
+.nav-back:hover{color:var(--acc);}
+.nav-logo{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--text);text-decoration:none;}
+.nav-logo span{color:var(--acc);font-style:italic;}
+.screen{display:none;}
+.screen.active{display:block;}
+/* IMPACT SCREEN */
+.impact-wrap{max-width:740px;margin:0 auto;padding:48px 24px 80px;}
+.impact-eyebrow{display:inline-flex;align-items:center;gap:7px;background:var(--redlt);color:var(--red);font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:4px 12px;border-radius:100px;margin-bottom:24px;}
+.impact-h1{font-family:'Playfair Display',serif;font-size:clamp(32px,5vw,52px);font-weight:900;line-height:1.1;color:var(--text);margin-bottom:20px;}
+.impact-h1 em{font-style:italic;color:var(--acc);}
+.impact-sub{font-size:16px;color:var(--t2);line-height:1.75;max-width:560px;margin-bottom:40px;}
+.stat-trio{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:40px;}
+.stat-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:20px;position:relative;overflow:hidden;box-shadow:var(--sh);}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.stat-card.r::before{background:var(--red);}
+.stat-card.a::before{background:var(--warn);}
+.stat-card.g::before{background:var(--green);}
+.stat-num{font-family:'Playfair Display',serif;font-size:48px;font-weight:900;line-height:1;margin-bottom:8px;}
+.stat-num.r{color:var(--red);}.stat-num.a{color:var(--warn);}.stat-num.g{color:var(--green);}
+.stat-desc{font-size:13px;color:var(--t2);line-height:1.55;margin-bottom:6px;}
+.stat-src{font-size:11px;color:var(--t3);}
+.quote-block{border-left:3px solid var(--acc);padding:16px 20px;background:var(--acclt);border-radius:0 var(--r) var(--r) 0;margin-bottom:36px;}
+.quote-text{font-family:'Playfair Display',serif;font-size:16px;font-style:italic;color:var(--text);line-height:1.6;margin-bottom:6px;}
+.quote-auth{font-size:12px;color:var(--t3);}
+.sec-title{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);margin-bottom:16px;}
+.bar-list{display:flex;flex-direction:column;gap:12px;margin-bottom:36px;}
+.bar-row{display:flex;align-items:center;gap:12px;}
+.bar-lbl{font-size:13px;color:var(--t2);width:190px;flex-shrink:0;text-align:right;}
+.bar-track{flex:1;height:8px;background:var(--bg3);border-radius:100px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:100px;width:0;transition:width 1.2s cubic-bezier(.16,1,.3,1);}
+.bar-pct{font-size:13px;font-weight:700;width:36px;flex-shrink:0;}
+.bar-note{font-size:11px;color:var(--t3);padding-left:202px;margin-top:3px;}
+.funnel-rows{display:flex;flex-direction:column;gap:10px;margin-bottom:36px;}
+.funnel-row{display:flex;align-items:center;gap:12px;}
+.funnel-lbl{font-size:12px;color:var(--t2);width:180px;flex-shrink:0;text-align:right;}
+.funnel-track{flex:1;height:32px;background:var(--bg2);border-radius:var(--r);overflow:hidden;border:1px solid var(--border);}
+.funnel-fill{height:100%;border-radius:var(--r);display:flex;align-items:center;padding-left:12px;width:0;transition:width 1.4s cubic-bezier(.16,1,.3,1);}
+.funnel-txt{font-size:12px;font-weight:700;color:white;white-space:nowrap;}
+.funnel-n{font-size:12px;font-weight:700;width:40px;flex-shrink:0;}
+.insight-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:36px;}
+.insight-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:18px;box-shadow:var(--sh);}
+.insight-big{font-family:'Playfair Display',serif;font-size:36px;font-weight:900;line-height:1;margin-bottom:6px;}
+.insight-big.c{color:var(--acc);}.insight-big.g{color:var(--green);}.insight-big.a{color:var(--warn);}.insight-big.b{color:#185FA5;}
+.insight-desc{font-size:12px;color:var(--t2);line-height:1.55;margin-bottom:4px;}
+.insight-src{font-size:11px;color:var(--t3);}
+.impact-cta{background:var(--text);border-radius:var(--r);padding:28px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+.impact-cta strong{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:white;display:block;margin-bottom:6px;}
+.impact-cta p{font-size:13px;color:rgba(255,255,255,.65);line-height:1.6;}
+.btn-start{height:52px;padding:0 32px;background:var(--acc);color:white;border:none;border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .15s;box-shadow:0 2px 12px rgba(196,82,10,.4);}
+.btn-start:hover{background:#B34809;transform:translateY(-1px);}
+.sources-note{font-size:11px;color:var(--t3);line-height:1.7;margin-top:28px;padding-top:20px;border-top:1px solid var(--border);}
+/* STEPS */
+.steps-hero{max-width:740px;margin:0 auto;padding:32px 24px 0;}
+.progress-wrap{max-width:740px;margin:0 auto;padding:0 24px;}
+.progress-steps{display:flex;gap:0;border-radius:var(--r);overflow:hidden;border:1px solid var(--border);margin-bottom:6px;}
+.ps{flex:1;padding:10px 8px;background:var(--white);border-right:1px solid var(--border);text-align:center;transition:all .3s;}
+.ps:last-child{border-right:none;}
+.ps.done{background:var(--greenlt);}
+.ps.active{background:var(--acclt);}
+.ps-n{display:block;font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.05em;text-transform:uppercase;}
+.ps.active .ps-n{color:var(--acc);}
+.ps.done .ps-n{color:var(--green);}
+.ps-l{display:block;font-size:11px;font-weight:600;color:var(--t3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ps.active .ps-l{color:var(--acc);}
+.ps.done .ps-l{color:var(--green);}
+.progress-bar-track{height:3px;background:var(--bg3);border-radius:100px;margin-bottom:0;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--acc);border-radius:100px;transition:width .6s cubic-bezier(.16,1,.3,1);}
+.steps-wrap{max-width:740px;margin:0 auto;padding:0 24px 80px;}
+.step{display:none;}
+.step.active{display:block;animation:fadeUp .4s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.3;transform:scale(.6);}}
+/* STEP HEADER */
+.step-header{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:20px 24px;margin-bottom:20px;box-shadow:var(--sh);display:flex;align-items:flex-start;gap:20px;}
+.rc-wrap{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.rc-svg{transform:rotate(-90deg);}
+.rc-pct{font-family:'Playfair Display',serif;font-size:13px;font-weight:700;text-align:center;}
+.rc-lbl{font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--t3);text-align:center;max-width:64px;line-height:1.3;}
+.step-meta{flex:1;}
+.step-meta h2{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:4px;}
+.step-meta p{font-size:13px;color:var(--t3);line-height:1.55;}
+.badge-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+.step-badge{display:inline-flex;align-items:center;gap:6px;background:var(--bg2);border:1px solid var(--border);border-radius:100px;padding:4px 10px;font-size:11px;font-weight:600;color:var(--t3);white-space:nowrap;}
+.risk-stat{font-size:11px;font-weight:700;color:var(--red);background:var(--redlt);border:1px solid rgba(184,48,32,.15);border-radius:100px;padding:4px 10px;white-space:nowrap;}
+/* CARD */
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);padding:24px;margin-bottom:16px;}
+.card-title{font-size:13px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.ctag{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:100px;background:var(--acclt);color:var(--acc);}
+.ctag.g{background:var(--greenlt);color:var(--green);}
+.ctag.w{background:var(--warnlt);color:var(--warn);}
+/* EV BLOCK */
+.ev-block{border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:12px;}
+.ev-hdr{padding:13px 16px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:12px;}
+.ev-badge{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:100px;background:var(--acclt);color:var(--acc);white-space:nowrap;margin-top:2px;flex-shrink:0;}
+.ev-badge.g{background:var(--greenlt);color:var(--green);}
+.ev-badge.w{background:var(--warnlt);color:var(--warn);}
+.ev-badge.r{background:var(--redlt);color:var(--red);}
+.ev-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.ev-desc{font-size:12px;color:var(--t3);line-height:1.5;}
+.ev-body{padding:14px 16px;background:var(--white);}
+.ev-example{font-size:11px;color:var(--t3);font-style:italic;padding:8px 12px;background:var(--bg);border-radius:6px;margin-top:8px;border-left:2px solid var(--accmd);}
+/* EV OPTIONS (evidence-based, replaces opinion sliders) */
+.ev-opts{display:flex;flex-direction:column;gap:8px;}
+.ev-opt{padding:12px 14px;background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);cursor:pointer;transition:all .15s;text-align:left;font-family:'Plus Jakarta Sans',sans-serif;display:flex;align-items:flex-start;gap:12px;width:100%;}
+.ev-opt:hover{border-color:var(--accmd);background:var(--acclt);}
+.ev-opt.selected{border-color:var(--acc);background:var(--acclt);}
+.ev-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--bdr2);flex-shrink:0;margin-top:1px;transition:all .15s;display:flex;align-items:center;justify-content:center;}
+.ev-opt.selected .ev-dot{border-color:var(--acc);background:var(--acc);}
+.ev-dot-in{width:6px;height:6px;border-radius:50%;background:white;opacity:0;transition:opacity .15s;}
+.ev-opt.selected .ev-dot-in{opacity:1;}
+.ev-opt-body{flex:1;}
+.ev-main{font-size:13px;font-weight:600;color:var(--t2);margin-bottom:2px;}
+.ev-opt.selected .ev-main{color:var(--acc);}
+.ev-sub{font-size:11px;color:var(--t3);}
+/* TEXT AREAS */
+textarea{width:100%;min-height:72px;background:var(--bg);border:1.5px solid var(--bdr2);border-radius:var(--r);outline:none;resize:vertical;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--text);padding:12px 14px;transition:border-color .15s,box-shadow .15s;line-height:1.6;}
+textarea:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(196,82,10,.1);background:var(--white);}
+.atag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:100px;margin-top:6px;}
+.atag.ok{background:var(--greenlt);color:var(--green);}
+.atag.warn{background:var(--warnlt);color:var(--warn);}
+.atag.tip{background:var(--bg2);color:var(--t3);}
+/* INPUT */
+.iw{display:flex;align-items:center;background:var(--bg);border:1.5px solid var(--bdr2);border-radius:var(--r);overflow:hidden;transition:border-color .15s,box-shadow .15s;}
+.iw:focus-within{border-color:var(--acc);box-shadow:0 0 0 3px rgba(196,82,10,.1);background:var(--white);}
+.iw input{flex:1;border:none;outline:none;background:transparent;font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:600;color:var(--text);padding:0 14px;height:44px;}
+/* OPT GRIDS */
+.opt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;}
+.opt-btn{height:52px;padding:0 12px;background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:var(--t2);cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s;text-align:left;width:100%;}
+.opt-btn:hover{border-color:var(--accmd);background:var(--acclt);color:var(--acc);}
+.opt-btn.sel{border-color:var(--acc);background:var(--acclt);color:var(--acc);}
+.opt-emoji{font-size:18px;}
+.stage-grid{display:flex;flex-direction:column;gap:8px;}
+.stage-btn{padding:14px 16px;background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;transition:all .15s;text-align:left;width:100%;}
+.stage-btn:hover{border-color:var(--accmd);background:var(--acclt);}
+.stage-btn.sel{border-color:var(--acc);background:var(--acclt);}
+.stage-t{font-size:13px;font-weight:700;color:var(--t2);margin-bottom:2px;}
+.stage-btn.sel .stage-t{color:var(--acc);}
+.stage-d{font-size:12px;color:var(--t3);}
+/* DFV */
+.dfv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;}
+.dfv-card{border:1.5px solid var(--border);border-radius:var(--r);padding:16px;}
+.dfv-letter{font-family:'Playfair Display',serif;font-size:32px;font-weight:900;line-height:1;margin-bottom:4px;}
+.dfv-name{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;}
+/* NAV BTNS */
+.nav-btns{display:flex;gap:12px;margin-top:24px;justify-content:flex-end;}
+.btn-primary{height:52px;padding:0 28px;background:var(--acc);color:white;border:none;border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;text-decoration:none;transition:all .15s;box-shadow:0 2px 12px rgba(196,82,10,.3);}
+.btn-primary:hover{background:#B34809;transform:translateY(-1px);}
+.btn-ghost{height:52px;padding:0 24px;background:var(--white);color:var(--t2);border:1.5px solid var(--bdr2);border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px;text-decoration:none;transition:all .15s;}
+.btn-ghost:hover{border-color:var(--acc);color:var(--acc);background:var(--acclt);}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px;border-radius:4px;}
+/* RESULTS */
+.r-hero{background:var(--text);border-radius:var(--r);padding:28px;margin-bottom:20px;position:relative;overflow:hidden;}
+.r-hero::before{content:'';position:absolute;top:-50px;right:-50px;width:200px;height:200px;border-radius:50%;background:rgba(196,82,10,.07);}
+.r-eyebrow{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acc);margin-bottom:8px;}
+.r-title{font-family:'Playfair Display',serif;font-size:clamp(20px,3vw,28px);font-weight:900;color:white;margin-bottom:4px;line-height:1.2;}
+.r-sub{font-size:13px;color:rgba(255,255,255,.6);margin-bottom:20px;}
+.score-row{display:flex;gap:12px;flex-wrap:wrap;}
+.score-chip{padding:10px 16px;border-radius:var(--r);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);}
+.sc-val{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;line-height:1;}
+.sc-lbl{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px;}
+.lean-wrap{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:20px 24px;margin-bottom:16px;box-shadow:var(--sh);}
+.lean-title{font-size:13px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:14px;}
+.lean-track{display:flex;gap:0;border-radius:var(--r);overflow:hidden;border:1px solid var(--border);margin-bottom:10px;}
+.lean-step{flex:1;padding:10px 8px;text-align:center;background:var(--bg2);border-right:1px solid var(--border);transition:all .3s;}
+.lean-step:last-child{border-right:none;}
+.lean-step.active{background:var(--acc);}
+.lean-lbl{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.04em;}
+.lean-step.active .lean-lbl{color:white;}
+.lean-desc{font-size:12px;color:var(--t3);line-height:1.55;}
+.spider-wrap{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:24px;margin-bottom:16px;box-shadow:var(--sh);}
+.spider-title{font-size:13px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:20px;}
+.spider-inner{display:flex;gap:24px;align-items:center;flex-wrap:wrap;}
+.spider-legend{flex:1;min-width:180px;}
+.sl-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
+.sl-item:last-child{border-bottom:none;}
+.sl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.sl-name{font-size:12px;font-weight:600;color:var(--t2);flex:1;}
+.sl-bar{width:56px;height:4px;background:var(--bg3);border-radius:100px;overflow:hidden;}
+.sl-fill{height:100%;border-radius:100px;transition:width .8s cubic-bezier(.16,1,.3,1);}
+.sl-val{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;}
+.sem-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.sem-card{border-radius:var(--r);padding:14px 16px;border:1px solid transparent;}
+.sem-card.g{background:var(--greenlt);border-color:rgba(26,122,70,.2);}
+.sem-card.w{background:var(--warnlt);border-color:rgba(155,110,26,.2);}
+.sem-card.r{background:var(--redlt);border-color:rgba(184,48,32,.2);}
+.sem-ind{display:flex;align-items:center;gap:7px;margin-bottom:4px;}
+.sem-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.sem-dot.g{background:var(--green);}.sem-dot.w{background:var(--warn);}.sem-dot.r{background:var(--red);}
+.sem-badge{font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
+.sem-card.g .sem-badge{color:var(--green);}.sem-card.w .sem-badge{color:var(--warn);}.sem-card.r .sem-badge{color:var(--red);}
+.sem-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;}
+.sem-reason{font-size:12px;color:var(--t3);line-height:1.4;}
+.dfv-result{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+.dfv-rc{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:16px;text-align:center;box-shadow:var(--sh);}
+.dfv-rl{font-family:'Playfair Display',serif;font-size:36px;font-weight:900;line-height:1;margin-bottom:4px;}
+.dfv-rn{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--t3);margin-bottom:8px;}
+.dfv-rs{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;}
+.dfv-rd{font-size:11px;color:var(--t3);margin-top:4px;}
+.vpc-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+.vpc-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:16px;box-shadow:var(--sh);}
+.vpc-card-t{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.vpc-card.l .vpc-card-t{color:var(--acc);}
+.vpc-card.r .vpc-card-t{color:var(--green);}
+.vpc-item{font-size:12px;color:var(--t2);padding:5px 0;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:6px;line-height:1.4;}
+.vpc-item:last-child{border-bottom:none;}
+.slip-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.slip-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:14px;}
+.slip-letter{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;line-height:1;color:var(--acc);}
+.slip-name{font-size:11px;font-weight:700;color:var(--t2);margin:2px 0 8px;}
+.slip-sr{display:flex;align-items:center;gap:8px;}
+.slip-bar{flex:1;height:4px;background:var(--bg3);border-radius:100px;overflow:hidden;}
+.slip-fill{height:100%;border-radius:100px;transition:width .8s cubic-bezier(.16,1,.3,1);}
+.exp-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;margin-bottom:10px;box-shadow:var(--sh);display:flex;gap:16px;align-items:flex-start;}
+.exp-num{width:32px;height:32px;border-radius:50%;background:var(--acc);color:white;font-family:'Playfair Display',serif;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.exp-content{flex:1;}
+.exp-tag{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:100px;background:var(--acclt);color:var(--acc);display:inline-block;margin-bottom:6px;}
+.exp-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.exp-desc{font-size:13px;color:var(--t3);line-height:1.55;margin-bottom:8px;}
+.exp-meta{display:flex;gap:12px;flex-wrap:wrap;}
+.exp-mi{font-size:11px;font-weight:600;color:var(--t3);}
+.share-card{background:var(--text);border-radius:var(--r);padding:24px;margin-top:20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.share-text{color:rgba(255,255,255,.7);font-size:13px;}
+.share-text strong{color:white;display:block;font-size:15px;margin-bottom:4px;}
+.share-btns{display:flex;gap:8px;flex-wrap:wrap;}
+.btn-share{height:40px;padding:0 16px;background:rgba(255,255,255,.1);color:white;border:1px solid rgba(255,255,255,.2);border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .15s;}
+.btn-share:hover{background:rgba(255,255,255,.2);}
+@media(max-width:600px){.stat-trio,.insight-grid,.dfv-grid,.dfv-result,.vpc-row,.slip-grid,.sem-grid{grid-template-columns:1fr;}.spider-inner{flex-direction:column;}.bar-lbl{width:120px;font-size:11px;}.bar-note{padding-left:132px;}.funnel-lbl{width:120px;font-size:11px;}.ps-l{display:none;}.impact-cta{flex-direction:column;}.step-header{flex-direction:column;align-items:flex-start;}.rc-wrap{flex-direction:row;align-items:center;gap:10px;}}
+@media print{.nav,.progress-wrap,#screen-0,.nav-btns,.share-card{display:none!important;}#screen-steps{display:block!important;}.step{display:none!important;}#step-5{display:block!important;}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="/" class="nav-back" rel="noopener"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>ricramcas.com</a>
+  <a href="/" class="nav-logo">ric<span>ram</span>cas</a>
+  <div style="width:100px"></div>
+</nav>
+<!-- SCREEN 0: IMPACT DATA -->
+<div id="screen-0" class="screen active">
+<div class="impact-wrap">
+  <div class="impact-eyebrow">⚠ Antes de empezar — lee esto</div>
+  <h1 class="impact-h1">La mayoría no falla<br>por falta de ejecución.<br>Falla por construir<br><em>lo que nadie quería.</em></h1>
+  <p class="impact-sub">Estos son los datos reales de por qué los proyectos mueren — y por qué los próximos 10 minutos pueden ser la inversión más importante que hagas antes de gastar un solo peso más.</p>
+  <div class="stat-trio">
+    <div class="stat-card r"><div class="stat-num r" id="s1">0%</div><div class="stat-desc">de negocios y proyectos fracasan por falta de un producto que el mercado quiera de verdad. Es la causa número uno — por encima del dinero y el equipo.</div><div class="stat-src"><span class="tip" tabindex="0" data-tip="CB Insights: empresa que analiza por qué cierran los negocios. Revisaron 111 casos documentados.">CB Insights</span> · análisis de 111 negocios que cerraron · 2023</div></div>
+    <div class="stat-card a"><div class="stat-num a" id="s2">0%</div><div class="stat-desc">de emprendedores en México no hacen ninguna validación formal antes de invertir su capital.</div><div class="stat-src"><span class="tip" tabindex="0" data-tip="INADEM: Instituto que apoyaba el emprendimiento en México. ENAFIN: Encuesta Nacional sobre Financiamiento de Empresas. INEGI: Instituto Nacional de Estadística y Geografía.">INADEM / ENAFIN · INEGI</span> 2022</div></div>
+    <div class="stat-card g"><div class="stat-num g" id="s3">0×</div><div class="stat-desc">más probabilidades de conseguir inversión<span class="tip" tabindex="0" data-tip="Conseguir inversión significa que alguien externo (un inversionista) te da dinero a cambio de una parte de tu negocio, para que puedas crecer más rápido.">ⓘ</span> si pivotaste con datos de cliente en lugar de intuición.</div><div class="stat-src"><span class="tip" tabindex="0" data-tip="First Round Capital: firma de inversión en negocios tecnológicos que analizó los resultados de su portafolio de empresas.">First Round Capital</span> · análisis de portafolio</div></div>
+  </div>
+  <div class="quote-block">
+    <p class="quote-text">"Más del 95% de los nuevos productos fracasan. La razón no es tecnología ni ejecución — es que nadie preguntó si alguien los quería antes de construirlos."</p>
+    <cite class="quote-auth">— Clayton Christensen, Harvard Business School</cite>
+  </div>
+  <div class="sec-title">Por qué fracasan — las causas reales</div>
+  <div class="bar-list">
+    <div><div class="bar-row"><span class="bar-lbl">Sin un producto que el mercado quiera de verdad</span><div class="bar-track"><div class="bar-fill" style="background:var(--red)" data-w="42"></div></div><span class="bar-pct" style="color:var(--red)">42%</span></div><div class="bar-note">La causa #1 — y la única que esta herramienta ataca directamente</div></div>
+    <div><div class="bar-row"><span class="bar-lbl">Se agotó el dinero</span><div class="bar-track"><div class="bar-fill" style="background:var(--warn)" data-w="29"></div></div><span class="bar-pct" style="color:var(--warn)">29%</span></div><div class="bar-note">Muchas veces consecuencia directa de construir sin validar</div></div>
+    <div><div class="bar-row"><span class="bar-lbl">Equipo equivocado</span><div class="bar-track"><div class="bar-fill" style="background:var(--warn)" data-w="23"></div></div><span class="bar-pct" style="color:var(--warn)">23%</span></div><div class="bar-note">Falta de habilidades complementarias o conflictos entre fundadores</div></div>
+    <div><div class="bar-row"><span class="bar-lbl">Competencia subestimada</span><div class="bar-track"><div class="bar-fill" style="background:var(--t3)" data-w="19"></div></div><span class="bar-pct" style="color:var(--t3)">19%</span></div><div class="bar-note">No conocer el ecosistema real antes de entrar</div></div>
+    <div><div class="bar-row"><span class="bar-lbl">Modelo de negocio roto</span><div class="bar-track"><div class="bar-fill" style="background:var(--t3)" data-w="17"></div></div><span class="bar-pct" style="color:var(--t3)">17%</span></div><div class="bar-note">Números del negocio que nunca cuadraron — detectables antes de construir</div></div>
+  </div>
+  <div class="sec-title">El embudo de supervivencia — América Latina</div>
+  <div class="funnel-rows">
+    <div class="funnel-row"><span class="funnel-lbl">Ideas que se intentan</span><div class="funnel-track"><div class="funnel-fill" style="background:#3D3C38" data-w="100"><span class="funnel-txt">100 proyectos</span></div></div><span class="funnel-n">100%</span></div>
+    <div class="funnel-row"><span class="funnel-lbl">Sobreviven año 1</span><div class="funnel-track"><div class="funnel-fill" style="background:#595855" data-w="55"><span class="funnel-txt">55 proyectos</span></div></div><span class="funnel-n" style="color:var(--warn)">55%</span></div>
+    <div class="funnel-row"><span class="funnel-lbl">Sobreviven año 2</span><div class="funnel-track"><div class="funnel-fill" style="background:var(--warn)" data-w="35"><span class="funnel-txt">35 proyectos</span></div></div><span class="funnel-n" style="color:var(--warn)">35%</span></div>
+    <div class="funnel-row"><span class="funnel-lbl">Alcanzan tracción real</span><div class="funnel-track"><div class="funnel-fill" style="background:var(--red)" data-w="10"><span class="funnel-txt">10 proyectos</span></div></div><span class="funnel-n" style="color:var(--red)">10%</span></div>
+    <div class="funnel-row"><span class="funnel-lbl">Escalan sosteniblemente</span><div class="funnel-track"><div class="funnel-fill" style="background:var(--acc)" data-w="3"><span class="funnel-txt">3 proyectos</span></div></div><span class="funnel-n" style="color:var(--acc)">3%</span></div>
+  </div>
+  <div class="sec-title">Lo que cambia cuando validas primero</div>
+  <div class="insight-grid">
+    <div class="insight-card"><div class="insight-big c">−60%</div><div class="insight-desc">menos probabilidad de construir algo que nadie quiere si entrevistas 50 clientes potenciales antes de empezar</div><div class="insight-src"><span class="tip" tabindex="0" data-tip="IDEO: firma líder mundial de diseño e innovación. d.school: escuela de diseño de Stanford University.">IDEO / d.school</span> · investigación</div></div>
+    <div class="insight-card"><div class="insight-big g">+3.6×</div><div class="insight-desc">más probabilidades de conseguir inversión<span class="tip" tabindex="0" data-tip="Conseguir inversión significa que alguien externo (un inversionista) te da dinero a cambio de una parte de tu negocio, para que puedas crecer más rápido.">ⓘ</span> si pivotaste con datos de cliente, no con intuición propia</div><div class="insight-src"><span class="tip" tabindex="0" data-tip="First Round Capital: firma de inversión en negocios tecnológicos.">First Round Capital</span> · análisis de portafolio</div></div>
+    <div class="insight-card"><div class="insight-big a">&lt;5%</div><div class="insight-desc">de ideas que llegan a producto sin validación previa logran que el mercado quiera de verdad lo que construyeron</div><div class="insight-src"><span class="tip" tabindex="0" data-tip="Steve Blank: emprendedor y académico que desarrolló la metodología de Customer Discovery — hablar con clientes antes de construir.">Steve Blank</span> · The Startup Owner's Manual</div></div>
+    <div class="insight-card"><div class="insight-big b">$0</div><div class="insight-desc">cuesta una entrevista de 30 min con un cliente potencial. Una iteración de producto puede costar meses y miles de dólares.</div><div class="insight-src"><span class="tip" tabindex="0" data-tip="Lean Startup: metodología de emprendimiento de Eric Ries que propone validar ideas rápido y barato antes de construir el producto completo.">Lean Startup · Eric Ries</span></div></div>
+  </div>
+  <div class="impact-cta">
+    <div><strong>¿Tu idea está en ese 3%?</strong><p>La Brújula de Valor te ayuda a saberlo antes de invertir un peso más.<br>~10 minutos. Gratis. Sin registro.</p></div>
+    <button class="btn-start" onclick="startTool()">Empezar ahora →</button>
+  </div>
+  <div class="sources-note">Fuentes: CB Insights Post-Mortem Analysis 2023 (n=111) · INADEM/ENAFIN-INEGI 2022 · <span class="tip" tabindex="0" data-tip="Endeavor: organización global que apoya a emprendedores de alto impacto en América Latina y el mundo.">Endeavor México</span> 2022 · First Round Capital Portfolio Study · IDEO/d.school Research · Steve Blank, The Startup Owner's Manual · Clayton Christensen, HBS · Eric Ries, The Lean Startup</div>
+</div>
+</div>
+<!-- SCREEN STEPS -->
+<div id="screen-steps" class="screen">
+<div class="steps-hero">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+    <div style="flex:1;"><div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--text);">Brújula de <em style="color:var(--acc)">Valor</em></div><div style="font-size:12px;color:var(--t3);margin-top:2px;">Valida tu idea antes de construirla</div></div>
+    <div style="display:inline-flex;align-items:center;gap:7px;background:var(--acclt);color:var(--acc);font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:4px 12px;border-radius:100px;"><span style="width:5px;height:5px;border-radius:50%;background:var(--acc);animation:pulse 2s ease-in-out infinite;" aria-hidden="true"></span>Emprendimiento · Validación de ideas</div>
+  </div>
+</div>
+<div class="progress-wrap">
+  <div class="progress-steps" role="list">
+    <div class="ps active" id="ps-1" role="listitem"><span class="ps-n">Paso 1</span><span class="ps-l">Tu idea</span></div>
+    <div class="ps" id="ps-2" role="listitem"><span class="ps-n">Paso 2</span><span class="ps-l">El problema</span></div>
+    <div class="ps" id="ps-3" role="listitem"><span class="ps-n">Paso 3</span><span class="ps-l">Tu propuesta</span></div>
+    <div class="ps" id="ps-4" role="listitem"><span class="ps-n">Paso 4</span><span class="ps-l">El modelo</span></div>
+    <div class="ps" id="ps-5" role="listitem"><span class="ps-n">Paso 5</span><span class="ps-l">Diagnóstico</span></div>
+  </div>
+  <div class="progress-bar-track" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" aria-label="Progreso"><div class="progress-bar-fill" id="progress-fill" style="width:20%"></div></div>
+</div>
+<div class="steps-wrap">
+
+<!-- PASO 1 -->
+<div class="step active" id="step-1">
+  <div class="step-header">
+    <div class="rc-wrap" aria-hidden="true">
+      <svg class="rc-svg" width="68" height="68" viewBox="0 0 68 68"><circle cx="34" cy="34" r="28" fill="none" stroke="#EAEAE6" stroke-width="5"/><circle id="rc-1" cx="34" cy="34" r="28" fill="none" stroke="#C4520A" stroke-width="5" stroke-dasharray="175.9" stroke-dashoffset="175.9" stroke-linecap="round" style="transition:stroke-dashoffset .6s cubic-bezier(.16,1,.3,1)"/></svg>
+      <div class="rc-pct" id="rp-1" style="color:var(--acc)">0%</div>
+      <div class="rc-lbl">contexto base</div>
+    </div>
+    <div class="step-meta"><h2>Tu idea en 60 segundos</h2><p>Cuéntame lo básico. Todo el diagnóstico se personaliza según lo que respondas aquí.</p>
+      <div class="badge-row"><span class="step-badge">⏱ ~1 minuto</span><span class="step-badge">📦 Contexto base para todo</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">¿Cómo se llama tu proyecto? <span style="font-weight:400;color:var(--t3);font-size:11px">(opcional)</span></div>
+    <div class="iw"><input type="text" id="nombre-proyecto" placeholder="Ej: Inventario fácil, Menú digital, Tu proyecto..." maxlength="60" autocomplete="off" oninput="upRC1()"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">¿Qué tipo de proyecto es?</div>
+    <div class="opt-grid" id="tipo-grid" role="group" aria-label="Tipo de proyecto">
+      <button class="opt-btn" data-val="saas" onclick="selOpt('tipo',this);upRC1()" type="button"><span class="opt-emoji">💻</span>SaaS / Software</button>
+      <button class="opt-btn" data-val="marketplace" onclick="selOpt('tipo',this);upRC1()" type="button"><span class="opt-emoji">🛒</span>Marketplace</button>
+      <button class="opt-btn" data-val="fisico" onclick="selOpt('tipo',this);upRC1()" type="button"><span class="opt-emoji">📦</span>Producto físico</button>
+      <button class="opt-btn" data-val="servicio" onclick="selOpt('tipo',this);upRC1()" type="button"><span class="opt-emoji">🤝</span>Servicio / Consultoría</button>
+      <button class="opt-btn" data-val="app" onclick="selOpt('tipo',this);upRC1()" type="button"><span class="opt-emoji">📱</span>App / Mobile</button>
+      <button class="opt-btn" data-val="comunidad" onclick="selOpt('tipo',this);upRC1()" type="button"><span class="opt-emoji">🌐</span>Comunidad / Contenido</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">¿A quién le resuelve el problema?</div>
+    <div class="opt-grid" id="cliente-grid" role="group" aria-label="Tipo de cliente">
+      <button class="opt-btn" data-val="b2c" onclick="selOpt('cliente',this);upRC1()" type="button"><span class="opt-emoji">👤</span>Consumidor final</button>
+      <button class="opt-btn" data-val="pyme" onclick="selOpt('cliente',this);upRC1()" type="button"><span class="opt-emoji">🏪</span>Negocio pequeño</button>
+      <button class="opt-btn" data-val="empresa" onclick="selOpt('cliente',this);upRC1()" type="button"><span class="opt-emoji">🏢</span>Empresa grande</button>
+      <button class="opt-btn" data-val="gobierno" onclick="selOpt('cliente',this);upRC1()" type="button"><span class="opt-emoji">🏛️</span>Gobierno / Institución</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">¿En qué etapa estás hoy?</div>
+    <div class="stage-grid" id="etapa-grid" role="group" aria-label="Etapa del proyecto">
+      <button class="stage-btn" data-val="idea" onclick="selStage(this);upRC1()" type="button"><div class="stage-t">💡 Solo tengo la idea</div><div class="stage-d">Todavía no he construido nada ni hablado con clientes reales</div></button>
+      <button class="stage-btn" data-val="hipotesis" onclick="selStage(this);upRC1()" type="button"><div class="stage-t">🔍 Estoy validando hipótesis</div><div class="stage-d">He hablado con posibles clientes o tengo algo básico armado</div></button>
+      <button class="stage-btn" data-val="mvp" onclick="selStage(this);upRC1()" type="button"><div class="stage-t">🚀 Tengo una primera versión</div><div class="stage-d">Hay algo que funciona, aunque sea simple o manual</div></button>
+      <button class="stage-btn" data-val="traccion" onclick="selStage(this);upRC1()" type="button"><div class="stage-t">📈 Tengo primeros clientes o tracción</div><div class="stage-d">Alguien ya usó, pagó o se registró de forma activa</div></button>
+    </div>
+  </div>
+  <div class="nav-btns"><button class="btn-primary" onclick="goStep(2)" type="button">Siguiente — El problema →</button></div>
+</div>
+<!-- PASO 2: 4U's + BLAC -->
+<div class="step" id="step-2">
+  <div class="step-header">
+    <div class="rc-wrap" aria-hidden="true">
+      <svg class="rc-svg" width="68" height="68" viewBox="0 0 68 68"><circle cx="34" cy="34" r="28" fill="none" stroke="#EAEAE6" stroke-width="5"/><circle id="rc-2" cx="34" cy="34" r="28" fill="none" stroke="#B83020" stroke-width="5" stroke-dasharray="175.9" stroke-dashoffset="175.9" stroke-linecap="round" style="transition:stroke-dashoffset .6s cubic-bezier(.16,1,.3,1)"/></svg>
+      <div class="rc-pct" id="rp-2" style="color:var(--red)">0%</div>
+      <div class="rc-lbl">riesgo problema mitigado</div>
+    </div>
+    <div class="step-meta"><h2>¿El problema vale la pena?</h2><p>Antes de hablar de tu solución, evaluamos si el problema en sí merece atención. Aquí se define si vale el esfuerzo.</p>
+      <div class="badge-row"><span class="step-badge">⏱ ~3 minutos</span><span class="step-badge">🚦 Semáforo del problema</span><span class="risk-stat">⚠ 42% fracasa aquí</span></div>
+    </div>
+  </div>
+
+  <!-- 4U'S -->
+  <div class="card">
+    <div class="card-title">Las 4 preguntas clave del problema <span class="tip" tabindex="0" data-tip="Las 4U's es una forma de evaluar si un problema vale la pena resolver, creada por Alexander Osterwalder — especialista en modelos de negocio. Las 4 preguntas: ¿No está resuelto? ¿Tu segmento está ignorado? ¿Es urgente? ¿Tienes ventaja única?">ⓘ</span> <span class="ctag">¿Vale la pena resolver esto?</span></div>
+    <!-- UNMET -->
+    <div class="ev-block">
+      <div class="ev-hdr"><span class="ev-badge">Unmet</span><div><div class="ev-title">¿El problema no está bien resuelto hoy?</div><div class="ev-desc">No qué tan malo crees que es — qué evidencia observable tienes de que las soluciones actuales fallan.</div></div></div>
+      <div class="ev-body">
+        <div class="ev-opts" id="u1-opts" role="group" aria-label="Evidencia Unmet">
+          <button class="ev-opt" data-val="0" onclick="selEv('u1',this,0);upRC2()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">No lo he verificado — asumo que las opciones actuales son malas</div><div class="ev-sub">Solo intuición, sin datos externos</div></div></button>
+          <button class="ev-opt" data-val="3" onclick="selEv('u1',this,3);upRC2()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">He visto quejas o frustración en foros, redes o reseñas de competidores</div><div class="ev-sub">Evidencia pasiva — existe pero no la generé yo</div></div></button>
+          <button class="ev-opt" data-val="6" onclick="selEv('u1',this,6);upRC2()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">He hablado con personas que usan las soluciones actuales y describieron sus frustraciones</div><div class="ev-sub">Evidencia activa — conversaciones reales</div></div></button>
+          <button class="ev-opt" data-val="10" onclick="selEv('u1',this,10);upRC2()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">Tengo entrevistas documentadas donde el problema emerge sin que yo lo sugiriera</div><div class="ev-sub">Evidencia fuerte — el problema aparece espontáneamente</div></div></button>
+        </div>
+        <div class="ev-example">Señal de alerta: si nadie te lo ha dicho sin que tú lo sugirieras, el dolor probablemente es menor de lo que crees.</div>
+      </div>
+    </div>
+    <!-- UNDERSERVED -->
+    <div class="ev-block">
+      <div class="ev-hdr"><span class="ev-badge">Underserved</span><div><div class="ev-title">¿Tu segmento específico está siendo ignorado?</div><div class="ev-desc">No el mercado en general — el segmento exacto al que le vendes tú.</div></div></div>
+      <div class="ev-body">
+        <div class="ev-opts" id="u2-opts" role="group" aria-label="Evidencia Underserved">
+          <button class="ev-opt" data-val="0" onclick="selEv('u2',this,0);upRC2()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">Hay varias soluciones que atienden exactamente a mi segmento</div><div class="ev-sub">Mercado atendido — necesito diferenciación extraordinaria</div></div></button>
+          <button class="ev-opt" data-val="4" onclick="selEv('u2',this,4);upRC2()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">Hay soluciones pero hechas para un segmento más grande o diferente</div><div class="ev-sub">Brecha parcial — mi segmento usa herramientas que no son para ellos</div></div></button>
+          <button class="ev-opt" data-val="7" onclick="selEv('u2',this,7);upRC2()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">Solo hay workarounds informales — Excel, WhatsApp, papel</div><div class="ev-sub">Brecha clara — usan lo que pueden, no lo que necesitan</div></div></button>
+          <button class="ev-opt" data-val="10" onclick="selEv('u2',this,10);upRC2()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">No existe ninguna solución pensada para este segmento específico</div><div class="ev-sub">Mercado virgen — con el riesgo de que no exista por una razón</div></div></button>
+        </div>
+        <div class="ev-example">Ojo: "no hay competencia" puede ser una oportunidad enorme o señal de mercado no viable. Investiga siempre por qué no existe.</div>
+      </div>
+    </div>
+    <!-- URGENT -->
+    <div class="ev-block">
+      <div class="ev-hdr"><span class="ev-badge w">Urgent</span><div><div class="ev-title">¿Con qué frecuencia duele este problema?</div><div class="ev-desc">La urgencia no es lo que sientes tú — es la frecuencia con la que el cliente se enfrenta al problema.</div></div></div>
+      <div class="ev-body">
+        <div class="ev-opts" id="u3-opts" role="group" aria-label="Urgencia del problema">
+          <button class="ev-opt" data-val="1" onclick="selEv('u3',this,1);upRC2()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">Es un problema que aparece una vez al año o menos</div><div class="ev-sub">Urgencia baja — ciclo de venta muy largo, difícil de activar</div></div></button>
+          <button class="ev-opt" data-val="4" onclick="selEv('u3',this,4);upRC2()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">Ocurre mensualmente — lo sienten pero pueden ignorarlo por semanas</div><div class="ev-sub">Urgencia media — compran cuando el dolor acumula suficiente</div></div></button>
+          <button class="ev-opt" data-val="7" onclick="selEv('u3',this,7);upRC2()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">Lo enfrentan semanalmente — interfiere con su operación o vida</div><div class="ev-sub">Urgencia alta — están activamente buscando solución</div></div></button>
+          <button class="ev-opt" data-val="10" onclick="selEv('u3',this,10);upRC2()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">Es un problema diario — afecta su productividad, dinero o bienestar todos los días</div><div class="ev-sub">Urgencia crítica — la gente paga para resolver esto hoy mismo</div></div></button>
+        </div>
+        <div class="ev-example">Regla de oro: el mercado paga en función de la frecuencia del dolor. Un problema diario de $50 supera a un problema anual de $500.</div>
+      </div>
+    </div>
+    <!-- UNDERUTILIZED -->
+    <div class="ev-block">
+      <div class="ev-hdr"><span class="ev-badge">Underutilized</span><div><div class="ev-title">¿Tienes una ventaja que otros no pueden replicar fácilmente?</div><div class="ev-desc">Un recurso, acceso, datos o experiencia vivida que te da posición única para resolver esto.</div></div></div>
+      <div class="ev-body">
+        <div class="ev-opts" id="u4-opts" role="group" aria-label="Ventaja competitiva">
+          <button class="ev-opt" data-val="0" onclick="selEv('u4',this,0);upRC2()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">No tengo ninguna ventaja especial — cualquiera podría hacer esto</div><div class="ev-sub">Ganarás con ejecución pura — posible pero más costoso</div></div></button>
+          <button class="ev-opt" data-val="4" onclick="selEv('u4',this,4);upRC2()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">Tengo experiencia en la industria o acceso a la red de clientes</div><div class="ev-sub">Ventaja moderada — replicable con tiempo y dinero</div></div></button>
+          <button class="ev-opt" data-val="7" onclick="selEv('u4',this,7);upRC2()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">Vivo o viví el problema en carne propia — entiendo matices que un externo no puede ver</div><div class="ev-sub">Ventaja real de insider — credibilidad y conocimiento tácito</div></div></button>
+          <button class="ev-opt" data-val="10" onclick="selEv('u4',this,10);upRC2()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">Tengo datos únicos, tecnología propia o acceso exclusivo difícil de copiar</div><div class="ev-sub">Ventaja estructural — foso defensivo real desde el inicio</div></div></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLAC -->
+  <div class="card">
+    <div class="card-title">BLAC — Profundidad real del problema <span class="ctag w">¿Es real o percibido?</span></div>
+    <div class="ev-block">
+      <div class="ev-hdr"><span class="ev-badge g">Behavior</span><div><div class="ev-title">¿Qué hace la gente hoy para resolverlo?</div><div class="ev-desc">Describe el comportamiento actual observable. No lo que dicen — lo que hacen.</div></div></div>
+      <div class="ev-body">
+        <textarea id="blac-b" rows="2" placeholder="Ej: Usan WhatsApp para coordinar pedidos entre sucursales, lo que genera confusión, pedidos duplicados y pérdida del historial..." oninput="analyzeText('blac-b','blac-b-tag');upRC2()"></textarea>
+        <div id="blac-b-tag"></div>
+        <div class="ev-example">Si no sabes cómo lo resuelven hoy, ese es tu primer experimento antes de construir nada.</div>
+      </div>
+    </div>
+    <div class="ev-block">
+      <div class="ev-hdr"><span class="ev-badge g">Limitation</span><div><div class="ev-title">¿Dónde truena la solución actual?</div><div class="ev-desc">¿Qué no puede hacer el workaround de hoy? ¿Qué los obliga a usar algo no diseñado para esto?</div></div></div>
+      <div class="ev-body">
+        <textarea id="blac-l" rows="2" placeholder="Ej: No escala más de 3 sucursales, no genera reportes automáticos, requiere que alguien esté pendiente 24/7..." oninput="analyzeText('blac-l','blac-l-tag');upRC2()"></textarea>
+        <div id="blac-l-tag"></div>
+      </div>
+    </div>
+    <div class="ev-block">
+      <div class="ev-hdr"><span class="ev-badge w">Alternative</span><div><div class="ev-title">¿Qué alternativas reales existen?</div><div class="ev-desc">Nombra competidores o sustitutos concretos. "No hay competencia" es casi siempre una señal de alerta.</div></div></div>
+      <div class="ev-body">
+        <textarea id="blac-a" rows="2" placeholder="Ej: Square, Bind ERP, Google Sheets compartidas, contratar un asistente administrativo..." oninput="analyzeText('blac-a','blac-a-tag');upRC2()"></textarea>
+        <div id="blac-a-tag"></div>
+        <div class="ev-example">El mercado lleva décadas viviendo con el problema de alguna manera. Siempre hay alternativas — encuéntralas.</div>
+      </div>
+    </div>
+    <div class="ev-block">
+      <div class="ev-hdr"><span class="ev-badge w">Consequence</span><div><div class="ev-title">¿Qué pierde el cliente si no resuelve esto?</div><div class="ev-desc">En dinero, tiempo, oportunidades o reputación. La consecuencia cuantificable es tu argumento de venta más fuerte.</div></div></div>
+      <div class="ev-body">
+        <textarea id="blac-c" rows="2" placeholder="Ej: Pierde ~$8,000 MXN/mes por errores de inventario, toma decisiones sin datos, acumula estrés que lo aleja del negocio real..." oninput="analyzeText('blac-c','blac-c-tag');upRC2()"></textarea>
+        <div id="blac-c-tag"></div>
+        <div class="ev-example">Si no puedes cuantificar la consecuencia, ese es tu experimento más urgente. Sin número no hay argumento de venta real.</div>
+      </div>
+    </div>
+  </div>
+  <div class="nav-btns">
+    <button class="btn-ghost" onclick="goStep(1)" type="button">← Atrás</button>
+    <button class="btn-primary" onclick="goStep(3)" type="button">Siguiente — Tu propuesta →</button>
+  </div>
+</div>
+<!-- PASO 3: VPC + JTBD + DFV -->
+<div class="step" id="step-3">
+  <div class="step-header">
+    <div class="rc-wrap" aria-hidden="true">
+      <svg class="rc-svg" width="68" height="68" viewBox="0 0 68 68"><circle cx="34" cy="34" r="28" fill="none" stroke="#EAEAE6" stroke-width="5"/><circle id="rc-3" cx="34" cy="34" r="28" fill="none" stroke="#9B6E1A" stroke-width="5" stroke-dasharray="175.9" stroke-dashoffset="175.9" stroke-linecap="round" style="transition:stroke-dashoffset .6s cubic-bezier(.16,1,.3,1)"/></svg>
+      <div class="rc-pct" id="rp-3" style="color:var(--warn)">0%</div>
+      <div class="rc-lbl">riesgo fit mitigado</div>
+    </div>
+    <div class="step-meta"><h2>¿Tu propuesta encaja?</h2><p>Value Proposition Canvas + Jobs-to-be-done en 3 tipos + Desirability/Feasibility/Viability: ¿conecta con lo que el cliente necesita y puedes entregarlo?</p>
+      <div class="badge-row"><span class="step-badge">⏱ ~3 minutos</span><span class="step-badge">🎯 Qué tan probable es que funcione</span><span class="risk-stat">⚠ Menos del 5% lo logra sin validar esto</span></div>
+    </div>
+  </div>
+
+  <!-- JTBD 3 tipos -->
+  <div class="card">
+    <div class="card-title">Jobs-to-be-done <span class="ctag g">Christensen · 3 tipos</span></div>
+    <p style="font-size:13px;color:var(--t3);margin-bottom:16px;line-height:1.6">Los clientes no compran productos — contratan soluciones para hacer un trabajo. Hay 3 tipos de jobs. Los emprendedores suelen ver solo el primero y perder los otros dos, que muchas veces son los que mueven la compra real.</p>
+    <div class="ev-block">
+      <div class="ev-hdr"><span class="ev-badge g">Job funcional</span><div><div class="ev-title">¿Qué tarea concreta quiere completar?</div><div class="ev-desc">El trabajo práctico, medible, que el cliente necesita hacer. El más obvio de los tres.</div></div></div>
+      <div class="ev-body">
+        <textarea id="jtbd-f" rows="2" placeholder="Ej: Llevar un control preciso del inventario de su restaurante sin necesitar a alguien dedicado a eso..." oninput="analyzeText('jtbd-f','jtbd-f-tag');upRC3()"></textarea>
+        <div id="jtbd-f-tag"></div>
+      </div>
+    </div>
+    <div class="ev-block">
+      <div class="ev-hdr"><span class="ev-badge">Job social</span><div><div class="ev-title">¿Cómo quiere ser percibido por otros?</div><div class="ev-desc">Qué dice sobre él o ella el hecho de usar tu solución. Este job mueve muchas compras que parecen racionales pero no lo son.</div></div></div>
+      <div class="ev-body">
+        <textarea id="jtbd-s" rows="2" placeholder="Ej: Verse como empresario profesional ante socios o banco — no como alguien que administra su negocio por WhatsApp..." oninput="analyzeText('jtbd-s','jtbd-s-tag');upRC3()"></textarea>
+        <div id="jtbd-s-tag"></div>
+        <div class="ev-example">El iPhone se vende principalmente por job social. La mayoría no necesita la cámara de 48MP — necesita lo que esa cámara dice sobre ellos.</div>
+      </div>
+    </div>
+    <div class="ev-block">
+      <div class="ev-hdr"><span class="ev-badge">Job emocional</span><div><div class="ev-title">¿Cómo quiere sentirse después de usar tu solución?</div><div class="ev-desc">La sensación que busca: tranquilidad, confianza, control, libertad. El job más poderoso y el más ignorado.</div></div></div>
+      <div class="ev-body">
+        <textarea id="jtbd-e" rows="2" placeholder="Ej: Sentir que tiene el negocio bajo control y puede irse a dormir sin preocuparse por lo que pasó en la cocina..." oninput="analyzeText('jtbd-e','jtbd-e-tag');upRC3()"></textarea>
+        <div id="jtbd-e-tag"></div>
+        <div class="ev-example">Muchos fundadores venden la función y olvidan la emoción. Si tu marketing solo describe qué hace, estás dejando dinero sobre la mesa.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VPC -->
+  <div class="card">
+    <div class="card-title">Value Proposition Canvas <span class="ctag">Osterwalder</span></div>
+    <div class="ev-block">
+      <div class="ev-hdr"><span class="ev-badge r">Dolores y frustraciones <span class="tip" tabindex="0" data-tip="Pains: las frustraciones, miedos y obstáculos que enfrenta el cliente mientras intenta hacer su trabajo.">ⓘ</span></span><div><div class="ev-title">¿Qué frustraciones y riesgos enfrenta hoy?</div><div class="ev-desc">¿Qué le duele, le molesta, le da miedo o le hace perder mientras intenta hacer ese job?</div></div></div>
+      <div class="ev-body">
+        <textarea id="vpc-pains" rows="2" placeholder="Ej: No saber si está ganando o perdiendo en cada platillo. Miedo a que alguien le robe. Perder tiempo en tareas repetitivas..." oninput="analyzeText('vpc-pains','vpc-pains-tag');upRC3()"></textarea>
+        <div id="vpc-pains-tag"></div>
+      </div>
+    </div>
+    <div class="ev-block">
+      <div class="ev-hdr"><span class="ev-badge g">Gains</span><div><div class="ev-title">¿Qué resultados y beneficios espera?</div><div class="ev-desc">¿Qué considera éxito? ¿Qué lo haría feliz o impresionaría a alguien más?</div></div></div>
+      <div class="ev-body">
+        <textarea id="vpc-gains" rows="2" placeholder="Ej: Saber en tiempo real cuánto está ganando. Poder irse de vacaciones sin que todo se caiga. Datos para negociar con proveedores..." oninput="analyzeText('vpc-gains','vpc-gains-tag');upRC3()"></textarea>
+        <div id="vpc-gains-tag"></div>
+      </div>
+    </div>
+    <div class="ev-block">
+      <div class="ev-hdr"><span class="ev-badge">Cómo alivias las frustraciones <span class="tip" tabindex="0" data-tip="Pain relievers: las formas en que tu solución reduce o elimina las frustraciones del cliente. Cada dolor del cliente idealmente tiene su alivio en tu propuesta.">ⓘ</span></span><div><div class="ev-title">¿Cómo alivia tu solución esas frustraciones específicas?</div><div class="ev-desc">Un pain reliever por cada pain. Si no tienes respuesta para alguno, ese es un gap en tu propuesta.</div></div></div>
+      <div class="ev-body">
+        <textarea id="vpc-relievers" rows="2" placeholder="Ej: Dashboard en tiempo real desde el celular elimina la incertidumbre. Alertas de descuadres reducen riesgo de robo..." oninput="analyzeText('vpc-relievers','vpc-relievers-tag');upRC3()"></textarea>
+        <div id="vpc-relievers-tag"></div>
+      </div>
+    </div>
+    <div class="ev-block">
+      <div class="ev-hdr"><span class="ev-badge g">Beneficios adicionales que creas <span class="tip" tabindex="0" data-tip="Gain creators: los beneficios que crea tu solución que el cliente no necesariamente esperaba, pero que lo deleitan. Son lo que genera que te recomienden.">ⓘ</span></span><div><div class="ev-title">¿Qué ganancias crea que el cliente no esperaba?</div><div class="ev-desc">Beneficios adicionales que no pedía pero que van a deleitar. Son lo que genera referidos.</div></div></div>
+      <div class="ev-body">
+        <textarea id="vpc-creators" rows="2" placeholder="Ej: Reporte automático mensual para mostrar al banco. Benchmark vs otros restaurantes similares..." oninput="analyzeText('vpc-creators','vpc-creators-tag');upRC3()"></textarea>
+        <div id="vpc-creators-tag"></div>
+      </div>
+    </div>
+    <!-- Validación -->
+    <div class="ev-block" style="margin-top:12px">
+      <div class="ev-hdr"><span class="ev-badge g">Validación real con clientes <span class="tip" tabindex="0" data-tip="Lean Startup propone validar hipótesis rápido y barato antes de construir. La validación más poderosa: que alguien pague o pre-pague por lo que estás construyendo.">ⓘ</span></span><div><div class="ev-title">¿Has validado este fit con clientes reales?</div><div class="ev-desc">No con amigos o familia. Con personas que podrían pagar por la solución.</div></div></div>
+      <div class="ev-body">
+        <div class="ev-opts" id="validado-opts" role="group" aria-label="Nivel de validación">
+          <button class="ev-opt" data-val="0" onclick="selEv('validado',this,0);upRC3()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">No he hablado con ningún cliente potencial real</div><div class="ev-sub">Todo es hipótesis — riesgo máximo de fit</div></div></button>
+          <button class="ev-opt" data-val="3" onclick="selEv('validado',this,3);upRC3()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">He tenido conversaciones informales con 1–5 personas del segmento</div><div class="ev-sub">Señales tempranas — insuficientes para concluir, suficientes para continuar</div></div></button>
+          <button class="ev-opt" data-val="6" onclick="selEv('validado',this,6);upRC3()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">He hecho entrevistas estructuradas con 10+ personas del segmento objetivo</div><div class="ev-sub">Validación sólida — tienes patrones reales, no anécdotas</div></div></button>
+          <button class="ev-opt" data-val="10" onclick="selEv('validado',this,10);upRC3()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">Alguien ha pagado, pre-pagado o firmado carta de intención</div><div class="ev-sub">Dinero sobre la mesa — el único validador real del mercado</div></div></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DFV -->
+  <div class="card">
+    <div class="card-title">Desirability · Feasibility · Viability <span class="ctag">IDEO / Tim Brown</span></div>
+    <p style="font-size:13px;color:var(--t3);margin-bottom:16px;line-height:1.6">El triángulo de innovación de IDEO. Las ideas que sobreviven son deseadas por el mercado, factibles técnicamente y viables como negocio. La mayoría falla en uno de los tres — ¿cuál es el tuyo?</p>
+    <div class="dfv-grid">
+      <div class="dfv-card">
+        <div class="dfv-letter" style="color:var(--acc)">D</div>
+        <div class="dfv-name" style="color:var(--acc)">Desirability</div>
+        <p style="font-size:12px;color:var(--t3);margin-bottom:12px;line-height:1.5">¿La gente realmente quiere esto? ¿Hay demanda suficiente para sostener un negocio?</p>
+        <div class="ev-opts" id="dfv-d-opts" role="group" aria-label="Desirability">
+          <button class="ev-opt" data-val="2" onclick="selEv('dfvD',this,2);upRC3()" type="button" style="padding:8px 12px"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main" style="font-size:12px">Asumo que sí — sin evidencia</div></div></button>
+          <button class="ev-opt" data-val="5" onclick="selEv('dfvD',this,5);upRC3()" type="button" style="padding:8px 12px"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main" style="font-size:12px">Hay señales pero sin validación formal</div></div></button>
+          <button class="ev-opt" data-val="8" onclick="selEv('dfvD',this,8);upRC3()" type="button" style="padding:8px 12px"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main" style="font-size:12px">Validado con clientes reales o pagos</div></div></button>
+        </div>
+      </div>
+      <div class="dfv-card">
+        <div class="dfv-letter" style="color:var(--green)">F</div>
+        <div class="dfv-name" style="color:var(--green)">Feasibility</div>
+        <p style="font-size:12px;color:var(--t3);margin-bottom:12px;line-height:1.5">¿Puedes construirlo con los recursos que tienes? ¿Técnica, operativa y legalmente?</p>
+        <div class="ev-opts" id="dfv-f-opts" role="group" aria-label="Feasibility">
+          <button class="ev-opt" data-val="2" onclick="selEv('dfvF',this,2);upRC3()" type="button" style="padding:8px 12px"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main" style="font-size:12px">Necesito recursos o equipo que no tengo</div></div></button>
+          <button class="ev-opt" data-val="5" onclick="selEv('dfvF',this,5);upRC3()" type="button" style="padding:8px 12px"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main" style="font-size:12px">Puedo hacer una versión básica con lo que tengo</div></div></button>
+          <button class="ev-opt" data-val="8" onclick="selEv('dfvF',this,8);upRC3()" type="button" style="padding:8px 12px"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main" style="font-size:12px">Puedo lanzar sin recursos adicionales</div></div></button>
+        </div>
+      </div>
+      <div class="dfv-card">
+        <div class="dfv-letter" style="color:var(--warn)">V</div>
+        <div class="dfv-name" style="color:var(--warn)">Viability</div>
+        <p style="font-size:12px;color:var(--t3);margin-bottom:12px;line-height:1.5">¿El modelo de negocio puede generar valor sostenible? ¿Los números funcionan?</p>
+        <div class="ev-opts" id="dfv-v-opts" role="group" aria-label="Viability">
+          <button class="ev-opt" data-val="2" onclick="selEv('dfvV',this,2);upRC3()" type="button" style="padding:8px 12px"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main" style="font-size:12px">No he modelado los números aún</div></div></button>
+          <button class="ev-opt" data-val="5" onclick="selEv('dfvV',this,5);upRC3()" type="button" style="padding:8px 12px"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main" style="font-size:12px">Tengo estimaciones que se ven bien</div></div></button>
+          <button class="ev-opt" data-val="8" onclick="selEv('dfvV',this,8);upRC3()" type="button" style="padding:8px 12px"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main" style="font-size:12px">Tengo números del negocio modelados y validados</div></div></button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="nav-btns">
+    <button class="btn-ghost" onclick="goStep(2)" type="button">← Atrás</button>
+    <button class="btn-primary" onclick="goStep(4)" type="button">Siguiente — El modelo →</button>
+  </div>
+</div>
+<!-- PASO 4: BMC + SLIP -->
+<div class="step" id="step-4">
+  <div class="step-header">
+    <div class="rc-wrap" aria-hidden="true">
+      <svg class="rc-svg" width="68" height="68" viewBox="0 0 68 68"><circle cx="34" cy="34" r="28" fill="none" stroke="#EAEAE6" stroke-width="5"/><circle id="rc-4" cx="34" cy="34" r="28" fill="none" stroke="#C4520A" stroke-width="5" stroke-dasharray="175.9" stroke-dashoffset="175.9" stroke-linecap="round" style="transition:stroke-dashoffset .6s cubic-bezier(.16,1,.3,1)"/></svg>
+      <div class="rc-pct" id="rp-4" style="color:var(--acc)">0%</div>
+      <div class="rc-lbl">riesgo modelo mitigado</div>
+    </div>
+    <div class="step-meta"><h2>¿Tu modelo tiene pies?</h2><p>Business Model Canvas priorizado por riesgo + SLIP: ¿qué tan fácil es que alguien adopte tu solución sin fricción?</p>
+      <div class="badge-row"><span class="step-badge">⏱ ~3 minutos</span><span class="step-badge">📊 Bloques de mayor riesgo</span><span class="risk-stat">⚠ 17% muere por modelo roto</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Tu modelo de negocio — lo más importante <span class="tip" tabindex="0" data-tip="El Business Model Canvas es una herramienta para diseñar y revisar tu modelo de negocio en una sola página. Creado por Alexander Osterwalder.">ⓘ</span> <span class="ctag w">Riesgo priorizado</span></div>
+    <div class="ev-block">
+      <div class="ev-hdr"><span class="ev-badge">Segmento</span><div><div class="ev-title">¿Quién exactamente es tu primer cliente pagador?</div><div class="ev-desc">No "pymes" o "millennials". Nombra una persona específica con cargo, tamaño, contexto. Tan específico que duela.</div></div></div>
+      <div class="ev-body">
+        <textarea id="bmc-segmento" rows="2" placeholder="Ej: Dueños de restaurantes de 1–3 sucursales en CDMX, facturan $200–500k/mes, usan WhatsApp para operar y tienen al menos 5 empleados..." oninput="analyzeText('bmc-segmento','bmc-seg-tag');upRC4()"></textarea>
+        <div id="bmc-seg-tag"></div>
+        <div class="ev-example">Si tu descripción aplica a más de 10 millones de personas, es demasiado amplia. La especificidad no limita — enfoca.</div>
+      </div>
+    </div>
+    <div class="ev-block">
+      <div class="ev-hdr"><span class="ev-badge w">Canal</span><div><div class="ev-title">¿Cómo vas a conseguir tu cliente número 100?</div><div class="ev-desc">No el primero (siempre llega por contacto). El 100. ¿Tienes una teoría de adquisición repetible?</div></div></div>
+      <div class="ev-body">
+        <textarea id="bmc-canal" rows="2" placeholder="Ej: Primeros 20 por referidos directos. Del 20 al 100 con contenido educativo en TikTok + Google Ads cuando tenga números de rentabilidad del negocio validados..." oninput="analyzeText('bmc-canal','bmc-canal-tag');upRC4()"></textarea>
+        <div id="bmc-canal-tag"></div>
+      </div>
+    </div>
+    <div class="ev-block">
+      <div class="ev-hdr"><span class="ev-badge w">Ingresos</span><div><div class="ev-title">¿Cómo y cuándo entra el dinero exactamente?</div><div class="ev-desc">¿Suscripción, transacción, gratis con opción de pago, licencia? ¿Cada cuándo paga? ¿Cuánto en promedio?</div></div></div>
+      <div class="ev-body">
+        <textarea id="bmc-ingresos" rows="2" placeholder="Ej: Suscripción mensual $499 MXN. El cliente paga automático el día 1. Plan anual con 2 meses gratis para reducir abandono..." oninput="analyzeText('bmc-ingresos','bmc-ing-tag');upRC4()"></textarea>
+        <div id="bmc-ing-tag"></div>
+      </div>
+    </div>
+    <div class="ev-block">
+      <div class="ev-hdr"><span class="ev-badge g">Disposición a pagar</span><div><div class="ev-title">¿Alguien ha puesto dinero real sobre la mesa?</div><div class="ev-desc">Opiniones son gratis. El dinero es el único validador real de valor percibido.</div></div></div>
+      <div class="ev-body">
+        <div class="ev-opts" id="pago-opts" role="group" aria-label="Evidencia de pago">
+          <button class="ev-opt" data-val="0" onclick="selEv('pago',this,0);upRC4()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">Nadie ha pagado nada — ni siquiera un peso simbólico</div><div class="ev-sub">Riesgo máximo de modelo de negocio</div></div></button>
+          <button class="ev-opt" data-val="3" onclick="selEv('pago',this,3);upRC4()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">Me han dicho informalmente que pagarían</div><div class="ev-sub">Señal débil — la gente dice que paga más de lo que realmente paga</div></div></button>
+          <button class="ev-opt" data-val="7" onclick="selEv('pago',this,7);upRC4()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">Alguien pre-pagó, pagó por el MVP o firmó carta de intención</div><div class="ev-sub">Señal fuerte — dinero real mueve la aguja</div></div></button>
+          <button class="ev-opt" data-val="10" onclick="selEv('pago',this,10);upRC4()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">Tengo clientes de pago activos y recurrentes</div><div class="ev-sub">Validación máxima — el mercado habló con su dinero</div></div></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIP correcto -->
+  <div class="card">
+    <div class="card-title">SLIP — Fricción de adopción <span class="ctag g">¿Qué tan fácil es que alguien lo use?</span></div>
+    <p style="font-size:13px;color:var(--t3);margin-bottom:16px;line-height:1.6">La mejor solución del mundo falla si hay demasiada fricción para adoptarla. Estas 4 dimensiones determinan si la gente llega al valor o abandona antes.</p>
+    <div class="ev-block">
+      <div class="ev-hdr"><span class="ev-badge g">Simple</span><div><div class="ev-title">¿Qué tan fácil es entender y usar tu solución desde el día 1?</div><div class="ev-desc">¿Puede alguien obtener valor sin leer manual, ver tutorial o recibir demo?</div></div></div>
+      <div class="ev-body">
+        <div class="ev-opts" id="slip-s-opts" role="group" aria-label="Simplicidad">
+          <button class="ev-opt" data-val="2" onclick="selEv('slipS',this,2);upRC4()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">Requiere capacitación, demo o soporte para empezar</div><div class="ev-sub">Alta fricción de entrada — cada paso que requiere ayuda reduce conversión</div></div></button>
+          <button class="ev-opt" data-val="6" onclick="selEv('slipS',this,6);upRC4()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">Se entiende con un tutorial corto o video de 3 minutos</div><div class="ev-sub">Fricción media — aceptable si el valor es claro desde el inicio</div></div></button>
+          <button class="ev-opt" data-val="10" onclick="selEv('slipS',this,10);upRC4()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">Se entiende solo — el usuario llega al valor sin instrucciones</div><div class="ev-sub">Fricción mínima — Canva, Google Maps, WhatsApp son el punto de referencia</div></div></button>
+        </div>
+      </div>
+    </div>
+    <div class="ev-block">
+      <div class="ev-hdr"><span class="ev-badge g">Low cost</span><div><div class="ev-title">¿El costo total de adoptar es bajo?</div><div class="ev-desc">Precio + tiempo de setup + migración de datos + capacitación. El precio es solo una parte del costo real.</div></div></div>
+      <div class="ev-body">
+        <div class="ev-opts" id="slip-l-opts" role="group" aria-label="Costo de adopción">
+          <button class="ev-opt" data-val="2" onclick="selEv('slipL',this,2);upRC4()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">Alto costo total — precio elevado, setup complejo o migración dolorosa</div><div class="ev-sub">Solo funciona si el ganancia que genera es muy clara y cuantificable</div></div></button>
+          <button class="ev-opt" data-val="6" onclick="selEv('slipL',this,6);upRC4()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">Costo moderado — precio razonable y setup de menos de 1 hora</div><div class="ev-sub">Aceptable si el valor percibido lo justifica desde el día 1</div></div></button>
+          <button class="ev-opt" data-val="10" onclick="selEv('slipL',this,10);upRC4()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">Costo mínimo — gratuito o gratis con opción de pago, setup en minutos, sin migración</div><div class="ev-sub">Barrera de entrada casi nula — la adopción crece sola</div></div></button>
+        </div>
+      </div>
+    </div>
+    <div class="ev-block">
+      <div class="ev-hdr"><span class="ev-badge">Instant value</span><div><div class="ev-title">¿El usuario percibe valor antes de comprometerse al 100%?</div><div class="ev-desc">¿Hay un momento de entender el valor ocurre temprano — antes del primer pago, antes de terminar el proceso de bienvenida completo?</div></div></div>
+      <div class="ev-body">
+        <div class="ev-opts" id="slip-i-opts" role="group" aria-label="Velocidad de valor">
+          <button class="ev-opt" data-val="2" onclick="selEv('slipI',this,2);upRC4()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">El valor real aparece semanas o meses después de adoptar</div><div class="ev-sub">Altísimo abandono antes de llegar al valor</div></div></button>
+          <button class="ev-opt" data-val="6" onclick="selEv('slipI',this,6);upRC4()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">El valor es visible en los primeros días de uso</div><div class="ev-sub">Aceptable si el proceso inicial guía bien al usuario</div></div></button>
+          <button class="ev-opt" data-val="10" onclick="selEv('slipI',this,10);upRC4()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">El momento en que entiende el valor ocurre en los primeros minutos — antes de pagar</div><div class="ev-sub">Canva: diseño bonito en 2 min sin registro. Ese es el punto de referencia.</div></div></button>
+        </div>
+      </div>
+    </div>
+    <div class="ev-block">
+      <div class="ev-hdr"><span class="ev-badge">Plays well</span><div><div class="ev-title">¿Se integra con lo que tu cliente ya usa y hace hoy?</div><div class="ev-desc">¿Interrumpe su flujo de trabajo o se inserta naturalmente? ¿Conecta con sus herramientas actuales?</div></div></div>
+      <div class="ev-body">
+        <div class="ev-opts" id="slip-p-opts" role="group" aria-label="Integración con flujo actual">
+          <button class="ev-opt" data-val="2" onclick="selEv('slipP',this,2);upRC4()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">Rompe su flujo actual — tiene que cambiar cómo hace las cosas para usarlo</div><div class="ev-sub">La fricción de cambio de hábito es el mayor asesino silencioso de productos</div></div></button>
+          <button class="ev-opt" data-val="6" onclick="selEv('slipP',this,6);upRC4()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">Requiere algunos cambios pero se adapta en 1–2 semanas</div><div class="ev-sub">Adoptable si el valor percibido supera el dolor del cambio</div></div></button>
+          <button class="ev-opt" data-val="10" onclick="selEv('slipP',this,10);upRC4()" type="button"><div class="ev-dot"><div class="ev-dot-in"></div></div><div class="ev-opt-body"><div class="ev-main">Se inserta perfectamente — complementa su flujo existente sin interrumpirlo</div><div class="ev-sub">Una app dentro de WhatsApp tiene casi cero fricción de adopción</div></div></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn-ghost" onclick="goStep(3)" type="button">← Atrás</button>
+    <button class="btn-primary" onclick="calcular()" type="button">Ver mi diagnóstico completo →</button>
+  </div>
+</div>
+<!-- PASO 5: DIAGNÓSTICO -->
+<div class="step" id="step-5">
+  <div class="r-hero">
+    <div class="r-eyebrow">Brújula de Valor · Diagnóstico completo</div>
+    <div class="r-title" id="r-title">Tu idea tiene potencial real</div>
+    <div class="r-sub" id="r-sub">Aquí está tu mapa de riesgos y los próximos experimentos</div>
+    <div class="score-row">
+      <div class="score-chip"><div class="sc-val" id="sc-g" style="color:var(--acc)">--</div><div class="sc-lbl">Score global</div></div>
+      <div class="score-chip"><div class="sc-val" id="sc-p" style="color:#7EC8A4">--</div><div class="sc-lbl">Problema</div></div>
+      <div class="score-chip"><div class="sc-val" id="sc-f" style="color:#F5C47C">--</div><div class="sc-lbl">Encaje con el cliente</div></div>
+      <div class="score-chip"><div class="sc-val" id="sc-m" style="color:#A8C4E8">--</div><div class="sc-lbl">Modelo</div></div>
+      <div class="score-chip"><div class="sc-val" id="sc-s" style="color:#AADABC">--</div><div class="sc-lbl">Adopción</div></div>
+    </div>
+  </div>
+
+  <!-- LEAN LEVEL -->
+  <div class="lean-wrap">
+    <div class="lean-title">📍 Nivel Lean Startup — dónde estás hoy</div>
+    <div class="lean-track">
+      <div class="lean-step" id="lean-1"><span class="lean-lbl">Idea</span></div>
+      <div class="lean-step" id="lean-2"><span class="lean-lbl">Hipótesis</span></div>
+      <div class="lean-step" id="lean-3"><span class="lean-lbl">Experimento</span></div>
+      <div class="lean-step" id="lean-4"><span class="lean-lbl">Dato</span></div>
+      <div class="lean-step" id="lean-5"><span class="lean-lbl">Convicción</span></div>
+    </div>
+    <div class="lean-desc" id="lean-desc">Calculando...</div>
+  </div>
+
+  <!-- SPIDER -->
+  <div class="spider-wrap">
+    <div class="spider-title">🕸️ Radar de riesgo <span style="font-size:11px;font-weight:400;color:var(--t3);text-transform:none;letter-spacing:0">— 10 = sin riesgo · 1 = riesgo crítico</span></div>
+    <div class="spider-inner">
+      <div style="flex-shrink:0">
+        <svg id="spider-svg" width="260" height="260" viewBox="0 0 260 260" aria-label="Radar de riesgo" role="img">
+          <polygon id="ring1" points="" fill="none" stroke="#E0DFD9" stroke-width="1"/>
+          <polygon id="ring2" points="" fill="none" stroke="#E0DFD9" stroke-width="1"/>
+          <polygon id="ring3" points="" fill="none" stroke="#E0DFD9" stroke-width="1"/>
+          <polygon id="ring4" points="" fill="none" stroke="#E0DFD9" stroke-width="1"/>
+          <line id="ax0" stroke="#E0DFD9" stroke-width="1"/><line id="ax1" stroke="#E0DFD9" stroke-width="1"/><line id="ax2" stroke="#E0DFD9" stroke-width="1"/><line id="ax3" stroke="#E0DFD9" stroke-width="1"/><line id="ax4" stroke="#E0DFD9" stroke-width="1"/>
+          <polygon id="spider-data" points="" fill="rgba(196,82,10,.15)" stroke="#C4520A" stroke-width="2.5" stroke-linejoin="round"/>
+          <text id="lbl0" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="11" font-weight="600" fill="#3D3C38"/>
+          <text id="lbl1" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="11" font-weight="600" fill="#3D3C38"/>
+          <text id="lbl2" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="11" font-weight="600" fill="#3D3C38"/>
+          <text id="lbl3" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="11" font-weight="600" fill="#3D3C38"/>
+          <text id="lbl4" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="11" font-weight="600" fill="#3D3C38"/>
+        </svg>
+      </div>
+      <div class="spider-legend" id="spider-legend"></div>
+    </div>
+  </div>
+
+  <!-- DFV RESULT -->
+  <div class="card">
+    <div class="card-title">🔺 Triángulo DFV — tu punto débil</div>
+    <div class="dfv-result" id="dfv-result"></div>
+    <div id="dfv-weakness" style="font-size:13px;color:var(--t3);line-height:1.6;padding:12px 16px;background:var(--bg);border-radius:var(--r);border-left:3px solid var(--acc)"></div>
+  </div>
+
+  <!-- SEMÁFORO -->
+  <div class="card">
+    <div class="card-title">🚦 Semáforo por hipótesis</div>
+    <div class="sem-grid" id="sem-grid"></div>
+  </div>
+
+  <!-- VPC MINI -->
+  <div class="card">
+    <div class="card-title">🎯 Tu Value Proposition Canvas</div>
+    <div class="vpc-row">
+      <div class="vpc-card l"><div class="vpc-card-t"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><circle cx="6" cy="6" r="5" stroke="var(--acc)" stroke-width="1.5"/></svg>Propuesta de valor</div><div id="vpc-left"></div></div>
+      <div class="vpc-card r"><div class="vpc-card-t"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><rect x="1" y="1" width="10" height="10" stroke="var(--green)" stroke-width="1.5" rx="2"/></svg>Perfil del cliente</div><div id="vpc-right"></div></div>
+    </div>
+  </div>
+
+  <!-- SLIP RESULT -->
+  <div class="card">
+    <div class="card-title">⚡ SLIP — Fricción de adopción</div>
+    <div class="slip-grid" id="slip-result"></div>
+  </div>
+
+  <!-- EXPERIMENTS -->
+  <div class="card">
+    <div class="card-title">🧪 Tus próximos 3 experimentos</div>
+    <p style="font-size:13px;color:var(--t3);margin-bottom:16px;line-height:1.5">Generados según tus hipótesis más débiles. En orden de prioridad.</p>
+    <div id="experiments"></div>
+  </div>
+
+  <div class="share-card">
+    <div class="share-text"><strong id="share-title">Tu diagnóstico está listo</strong>Generado con Brújula de Valor · ricramcas.com</div>
+    <div class="share-btns">
+      <button class="btn-share" onclick="window.print()" type="button">🖨️ Imprimir</button>
+      <button class="btn-share" onclick="location.reload()" type="button">🔄 Nueva idea</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /steps-wrap -->
+</div><!-- /screen-steps -->
+<script>
+// STATE
+const S={tipo:null,cliente:null,etapa:null,u1:0,u2:0,u3:0,u4:0,validado:0,pago:0,slipS:0,slipL:0,slipI:0,slipP:0,dfvD:0,dfvF:0,dfvV:0};
+
+// SCREEN SWITCH
+function startTool(){
+  document.getElementById('screen-0').classList.remove('active');
+  document.getElementById('screen-steps').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ANIMATE COUNTERS + BARS
+function animNum(id,target,sfx,dur,dec){
+  const el=document.getElementById(id);if(!el)return;
+  const start=performance.now();
+  function step(now){const p=Math.min((now-start)/dur,1),e=1-Math.pow(1-p,3);el.textContent=(dec?(target*e).toFixed(1):Math.round(target*e))+sfx;if(p<1)requestAnimationFrame(step);}
+  requestAnimationFrame(step);
+}
+function animBars(){document.querySelectorAll('.bar-fill[data-w]').forEach((el,i)=>setTimeout(()=>{el.style.width=el.dataset.w+'%'},i*100));}
+function animFunnel(){document.querySelectorAll('.funnel-fill[data-w]').forEach((el,i)=>setTimeout(()=>{el.style.width=el.dataset.w+'%'},i*130));}
+function animateAll(){animNum('s1',42,'%',1200);animNum('s2',72,'%',1300);animNum('s3',3.6,'×',1400,true);setTimeout(animBars,400);setTimeout(animFunnel,600);}
+const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){animateAll();io.disconnect();}})},{threshold:.1});
+const el0=document.querySelector('.impact-wrap');if(el0)io.observe(el0);
+
+// STEP NAVIGATION
+let currentStep=1;
+function goStep(n){
+  document.getElementById('step-'+currentStep).classList.remove('active');
+  document.getElementById('step-'+n).classList.add('active');
+  currentStep=n;
+  const fills=[0,20,40,60,80,100];
+  document.getElementById('progress-fill').style.width=fills[n]+'%';
+  for(let i=1;i<=5;i++){const ps=document.getElementById('ps-'+i);ps.classList.remove('active','done');if(i===n)ps.classList.add('active');else if(i<n)ps.classList.add('done');}
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// SELECTORS
+function selOpt(group,btn){
+  document.getElementById(group+'-grid').querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');S[group]=btn.dataset.val;
+}
+function selStage(btn){
+  document.querySelectorAll('.stage-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');S.etapa=btn.dataset.val;
+}
+function selEv(key,btn,val){
+  btn.closest('.ev-opts').querySelectorAll('.ev-opt').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');S[key]=val;
+}
+
+// RISK CIRCLES
+function setRC(n,pct,colHigh){
+  const circ=document.getElementById('rc-'+n),rp=document.getElementById('rp-'+n);
+  if(!circ||!rp)return;
+  const offset=175.9-(pct/100)*175.9;
+  circ.style.strokeDashoffset=offset;
+  const col=pct>=70?'var(--green)':pct>=40?colHigh||'var(--warn)':'var(--red)';
+  circ.style.stroke=col;rp.style.color=col;rp.textContent=Math.round(pct)+'%';
+}
+function upRC1(){
+  let s=0;
+  if(document.getElementById('nombre-proyecto').value.trim())s+=5;
+  if(S.tipo)s+=30;if(S.cliente)s+=30;if(S.etapa)s+=35;
+  setRC(1,s,'#C4520A');
+}
+function upRC2(){
+  const opted=[S.u1,S.u2,S.u3,S.u4].filter(v=>v>0).length;
+  const texts=['blac-b','blac-l','blac-a','blac-c'].filter(id=>{const t=document.getElementById(id);return t&&t.value.trim().length>20;}).length;
+  setRC(2,(opted/4)*50+(texts/4)*50,'#B83020');
+}
+function upRC3(){
+  const opted=[S.validado,S.dfvD,S.dfvF,S.dfvV].filter(v=>v>0).length;
+  const texts=['jtbd-f','jtbd-s','jtbd-e','vpc-pains','vpc-gains','vpc-relievers'].filter(id=>{const t=document.getElementById(id);return t&&t.value.trim().length>15;}).length;
+  setRC(3,(opted/4)*40+(texts/6)*60,'#9B6E1A');
+}
+function upRC4(){
+  const opted=[S.pago,S.slipS,S.slipL,S.slipI,S.slipP].filter(v=>v>0).length;
+  const texts=['bmc-segmento','bmc-canal','bmc-ingresos'].filter(id=>{const t=document.getElementById(id);return t&&t.value.trim().length>15;}).length;
+  setRC(4,(opted/5)*50+(texts/3)*50,'#C4520A');
+}
+
+// BLAC TEXT ANALYSIS
+function analyzeText(tid,tagId){
+  const el=document.getElementById(tid),tag=document.getElementById(tagId);
+  if(!el||!tag)return;
+  const txt=el.value.trim();
+  if(txt.length<10){tag.innerHTML='';return;}
+  const hasNum=/\d/.test(txt);
+  const hasSpec=/\b(porque|cuando|ya que|genera|causa|produce|resulta|pierden|pierde|cuesta|vale|pesos|MXN|USD|\$|%|horas|días|semanas)\b/i.test(txt);
+  const isShort=txt.length<40;
+  const isVague=/\b(muchos|algunos|varios|a veces|en general|normalmente|básicamente|todo|todos)\b/i.test(txt);
+  let t='';
+  if(txt.length>80&&hasNum&&hasSpec)t='<span class="atag ok">✓ Respuesta específica y cuantificada</span>';
+  else if(txt.length>40&&hasSpec&&!isVague)t='<span class="atag ok">✓ Buena especificidad</span>';
+  else if(isShort)t='<span class="atag tip">💡 Sé más específico — ¿quién exactamente? ¿cuánto?</span>';
+  else if(isVague)t='<span class="atag warn">⚠ Evita generalizaciones — reemplaza "muchos" por un número</span>';
+  else if(!hasNum&&txt.length>40)t='<span class="atag warn">⚠ Intenta agregar un número concreto</span>';
+  tag.innerHTML=t;
+}
+
+// SPIDER CHART
+function drawSpider(scores){
+  const cx=130,cy=130,r=90,n=5;
+  const angles=Array.from({length:n},(_,i)=>(i*2*Math.PI/n)-Math.PI/2);
+  const labels=['Problema','Encaje con el cliente','Modelo','Adopción','Validación'];
+  const colors=['#C4520A','#1A7A46','#9B6E1A','#185FA5','#7B5EA7'];
+  const pt=(a,rad)=>[cx+rad*Math.cos(a),cy+rad*Math.sin(a)];
+  const ring=f=>angles.map(a=>pt(a,r*f).join(',')).join(' ');
+  [.25,.5,.75,1].forEach((f,i)=>document.getElementById('ring'+(i+1)).setAttribute('points',ring(f)));
+  angles.forEach((a,i)=>{const[x,y]=pt(a,r);const ax=document.getElementById('ax'+i);ax.setAttribute('x1',cx);ax.setAttribute('y1',cy);ax.setAttribute('x2',x);ax.setAttribute('y2',y);});
+  document.getElementById('spider-data').setAttribute('points',scores.map((s,i)=>pt(angles[i],r*(s/10)).join(',')).join(' '));
+  angles.forEach((a,i)=>{const[x,y]=pt(a,r+18);const el=document.getElementById('lbl'+i);el.setAttribute('x',x);el.setAttribute('y',y+4);el.textContent=labels[i];});
+  document.getElementById('spider-legend').innerHTML=scores.map((s,i)=>{
+    const pct=(s/10)*100,col=s>=7?'var(--green)':s>=4?'var(--warn)':'var(--red)';
+    return`<div class="sl-item"><div class="sl-dot" style="background:${colors[i]}"></div><span class="sl-name">${labels[i]}</span><div class="sl-bar"><div class="sl-fill" style="width:${pct}%;background:${colors[i]}"></div></div><span class="sl-val" style="color:${col}">${s.toFixed(1)}</span></div>`;
+  }).join('');
+}
+
+// CALCULATE
+function calcular(){
+  // Score problema
+  const blacR=['blac-b','blac-l','blac-a','blac-c'].reduce((acc,id)=>{
+    const t=document.getElementById(id);if(!t)return acc;
+    const txt=t.value.trim();let q=0;
+    if(txt.length>80)q+=2;else if(txt.length>30)q+=1;
+    if(/\d/.test(txt))q+=2;
+    if(/\b(porque|cuando|genera|cuesta|pesos|MXN|\$|%)\b/i.test(txt))q+=1;
+    return acc+Math.min(q,5);
+  },0);
+  const sP=Math.min(10,((S.u1+S.u2+S.u3+S.u4)/4)*0.7+(blacR/20)*3);
+
+  // Score fit
+  const textR=['jtbd-f','jtbd-s','jtbd-e','vpc-pains','vpc-gains','vpc-relievers'].reduce((acc,id)=>{
+    const t=document.getElementById(id);return acc+(t&&t.value.trim().length>20?1:0);
+  },0);
+  const sF=Math.min(10,(textR/6)*5+(S.validado/10)*5);
+
+  // Score modelo
+  const etapaMap={idea:1,hipotesis:3,mvp:6,traccion:9};
+  const etS=etapaMap[S.etapa]||1;
+  const textM=['bmc-segmento','bmc-canal','bmc-ingresos'].reduce((acc,id)=>{
+    const t=document.getElementById(id);return acc+(t&&t.value.trim().length>20?1:0);
+  },0);
+  const sM=Math.min(10,(S.pago/10)*4+(etS/9)*3+(textM/3)*3);
+
+  // Score adopción SLIP
+  const sS=Math.min(10,(S.slipS+S.slipL+S.slipI+S.slipP)/4);
+
+  // Score validación
+  const sV=Math.min(10,(S.validado/10)*5+(etS/9)*3+(S.pago/10)*2);
+
+  const scores=[sP,sF,sM,sS,sV];
+  const global=scores.reduce((a,b)=>a+b,0)/5;
+
+  // Hero
+  document.getElementById('sc-g').textContent=global.toFixed(1);
+  document.getElementById('sc-p').textContent=sP.toFixed(1);
+  document.getElementById('sc-f').textContent=sF.toFixed(1);
+  document.getElementById('sc-m').textContent=sM.toFixed(1);
+  document.getElementById('sc-s').textContent=sS.toFixed(1);
+  const nb=document.getElementById('nombre-proyecto').value.trim();
+  const nm=nb?`"${nb}"`:'Tu idea';
+  let [rt,rs]=global>=7.5?[`${nm} tiene bases sólidas`,'Las señales son positivas. El riesgo más alto está en los experimentos que aún no has corrido.']:global>=5?[`${nm} va en la dirección correcta`,'Hay potencial real pero hipótesis críticas sin validar. Los experimentos son tu próximo paso obligado.']:[`${nm} necesita más validación`,'No es un no — es un "todavía no". Define los experimentos que te darán la evidencia que falta.'];
+  document.getElementById('r-title').textContent=rt;
+  document.getElementById('r-sub').textContent=rs;
+  if(nb)document.getElementById('share-title').textContent=`Diagnóstico de "${nb}" listo`;
+
+  // Lean
+  let lean=S.pago>=7||S.etapa==='traccion'?5:S.pago>=3||S.etapa==='mvp'?4:S.validado>=6?3:S.validado>=3||S.etapa==='hipotesis'?2:1;
+  for(let i=1;i<=5;i++)document.getElementById('lean-'+i).classList.toggle('active',i===lean);
+  const ld=['Solo tienes la idea. El siguiente paso es hablar con clientes reales — no construir nada más.','Estás formulando hipótesis. El trabajo ahora es diseñar experimentos rápidos y baratos.','Tienes datos de entrevistas. Es momento de construir el experimento más simple que valide disposición a pagar.','Tienes datos reales. Enfócate en entender por qué compran y optimizar antes de escalar.','Tienes tracción. El riesgo ahora es escalabilidad del modelo — mantén números de rentabilidad del negocio sanos.'];
+  document.getElementById('lean-desc').textContent=ld[lean-1];
+
+  // Spider
+  drawSpider(scores);
+
+  // DFV result
+  const dfvItems=[
+    {L:'D',N:'Desirability',sc:S.dfvD,desc:['Sin evidencia de demanda','Señales sin validación formal','Demanda validada con clientes'][S.dfvD<=2?0:S.dfvD<=5?1:2]},
+    {L:'F',N:'Feasibility',sc:S.dfvF,desc:['Necesitas recursos que no tienes','MVP factible con recursos actuales','Lanzamiento factible hoy'][S.dfvF<=2?0:S.dfvF<=5?1:2]},
+    {L:'V',N:'Viability',sc:S.dfvV,desc:['Números sin modelar','Estimaciones que se ven bien','Unit economics validados'][S.dfvV<=2?0:S.dfvV<=5?1:2]},
+  ];
+  document.getElementById('dfv-result').innerHTML=dfvItems.map(d=>{
+    const col=d.sc>=7?'var(--green)':d.sc>=4?'var(--warn)':'var(--red)';
+    return`<div class="dfv-rc"><div class="dfv-rl" style="color:${col}">${d.L}</div><div class="dfv-rn">${d.N}</div><div class="dfv-rs" style="color:${col}">${d.sc}/10</div><div class="dfv-rd">${d.desc}</div></div>`;
+  }).join('');
+  const weakDFV=[...dfvItems].sort((a,b)=>a.sc-b.sc)[0];
+  const dfvAdv={D:'La demanda es tu riesgo más alto. Antes de construir más, necesitas 10 conversaciones con clientes que confirmen que esto duele lo suficiente como para pagar.',F:'La factibilidad es tu constraint. Define qué es el MVP más pequeño posible — y si necesitas equipo o recursos, ese es tu experimento #1.',V:'El modelo de negocio no está claro. Modela números de rentabilidad del negocio antes de seguir: ¿cuánto cuesta adquirir un cliente? ¿Cuánto vale en su ciclo de vida?'};
+  document.getElementById('dfv-weakness').textContent=`⚠ Tu punto débil es ${weakDFV.N}: ${dfvAdv[weakDFV.L]}`;
+
+  // Semáforo
+  const sems=[
+    {n:'Problema sin resolver (Unmet)',sc:S.u1,lb:'4U · Unmet',r:['Las soluciones actuales ya son buenas. Tu ventaja tiene que ser extraordinaria para competir.','Hay espacio pero también alternativas. Diferenciación clara es clave.','El mercado carece de buenas soluciones. Ese es tu punto de entrada.']},
+    {n:'Segmento desatendido (Underserved)',sc:S.u2,lb:'4U · Underserved',r:['Segmento bien atendido. Define tu nicho con precisión quirúrgica.','Brecha parcial. Tu segmento usa herramientas que no son para ellos.','Segmento claramente desatendido. Primera ventaja validada.']},
+    {n:'Urgencia real (Urgent)',sc:S.u3,lb:'4U · Urgent',r:['Sin urgencia, el ciclo de venta es largo y el CAC se dispara.','Urgencia moderada. El tiempo de adopción puede ser lento.','Problema urgente. La gente actúa y paga cuando duele hoy.']},
+    {n:'Fit con el cliente (VPC)',sc:sF,lb:'VPC Fit',r:['Fit bajo. Regresa al perfil del cliente antes de construir más.','Fit parcial. Hay gaps — identifica cuáles pains no estás aliviando.','Buen fit. Lo que ofreces conecta con lo que el cliente necesita.']},
+    {n:'Fricción de adopción (SLIP)',sc:sS,lb:'SLIP',r:['Alta fricción. Simplifica antes de lanzar.','Fricción moderada. Mueve el instant value lo más temprano posible.','Adopción fluida. Baja fricción es una ventaja competitiva sostenible.']},
+    {n:'Modelo de negocio (BMC)',sc:sM,lb:'BMC',r:['Modelo sin validar. Define cómo entra el dinero y pon un precio real frente a clientes.','Modelo en construcción. Los elementos están pero necesitan validación.','Modelo con señales positivas. Hay evidencia de que puede funcionar.']},
+    {n:'Nivel de validación (Lean)',sc:sV,lb:'Lean Startup',r:['Estás en modo idea pura. Hablar con clientes es tu única prioridad ahora.','Estás validando. Diseña experimentos con criterios numéricos de éxito.','Tienes datos reales. Optimiza lo que funciona antes de escalar.']},
+  ];
+  document.getElementById('sem-grid').innerHTML=sems.map(s=>{
+    const c=s.sc>=7?'g':s.sc>=4?'w':'r';
+    const st=c==='g'?'Sólido':c==='w'?'En proceso':'Riesgo crítico';
+    const reason=s.sc>=7?s.r[2]:s.sc>=4?s.r[1]:s.r[0];
+    return`<div class="sem-card ${c}"><div class="sem-ind"><div class="sem-dot ${c}"></div><span class="sem-badge">${st} · ${s.lb}</span></div><div class="sem-name">${s.n}</div><div class="sem-reason">${reason}</div></div>`;
+  }).join('');
+
+  // VPC mini
+  const trunc=(id,max)=>{const t=document.getElementById(id);if(!t||!t.value.trim())return'(no completado)';const v=t.value.trim();return v.length>max?v.slice(0,max)+'…':v;};
+  document.getElementById('vpc-left').innerHTML=[{l:'Cómo alivias las frustraciones <span class="tip" tabindex="0" data-tip="Pain relievers: las formas en que tu solución reduce o elimina las frustraciones del cliente. Cada dolor del cliente idealmente tiene su alivio en tu propuesta.">ⓘ</span>',t:trunc('vpc-relievers',90)},{l:'Beneficios adicionales que creas <span class="tip" tabindex="0" data-tip="Gain creators: los beneficios que crea tu solución que el cliente no necesariamente esperaba, pero que lo deleitan. Son lo que genera que te recomienden.">ⓘ</span>',t:trunc('vpc-creators',90)}].map(i=>`<div class="vpc-item"><span style="color:var(--t3)">→</span><span><strong>${i.l}:</strong> ${i.t}</span></div>`).join('');
+  document.getElementById('vpc-right').innerHTML=[{l:'Job funcional',t:trunc('jtbd-f',80)},{l:'Job social',t:trunc('jtbd-s',80)},{l:'Job emocional',t:trunc('jtbd-e',80)},{l:'Pains',t:trunc('vpc-pains',80)},{l:'Gains',t:trunc('vpc-gains',80)}].map(i=>`<div class="vpc-item"><span style="color:var(--t3)">→</span><span><strong>${i.l}:</strong> ${i.t}</span></div>`).join('');
+
+  // SLIP result
+  document.getElementById('slip-result').innerHTML=[['S','Simple',S.slipS],['L','Low cost',S.slipL],['I','Instant value',S.slipI],['P','Plays well',S.slipP]].map(([L,N,v])=>{
+    const col=v>=7?'var(--green)':v>=4?'var(--warn)':'var(--red)';
+    return`<div class="slip-card"><div class="slip-letter">${L}</div><div class="slip-name">${N}</div><div class="slip-sr"><div class="slip-bar"><div class="slip-fill" style="width:${v*10}%;background:${col}"></div></div><span style="font-size:12px;font-weight:700;color:${col}">${v}/10</span></div></div>`;
+  }).join('');
+
+  // Experiments — por hipótesis más débil
+  const exps=[
+    {k:'u3',sc:S.u3,tag:'4U · Urgent',title:'Entrevistas de problema en 72 horas',desc:'Habla con 5 personas del segmento. No les muestres tu solución. Pregunta: "¿Qué haces hoy para resolver [problema]? ¿Cuándo fue la última vez que te afectó?" — y cállate.',tiempo:'3 días',senal:'Si 3 de 5 lo mencionan sin que tú lo sugieras, la urgencia es real.'},
+    {k:'pago',sc:S.pago,tag:'Lean · Preventa',title:'Test de disposición a pagar esta semana',desc:'Envía a 10 personas del segmento exacto: "Estoy construyendo [solución] para [perfil]. Cuesta $X al mes. ¿Quieres ser de los primeros?" — con link de pago real, no pregunta.',tiempo:'1 semana',senal:'2 de 10 pagando = hipótesis validada. 0 de 10 = regresa al precio o segmento.'},
+    {k:'dfvV',sc:S.dfvV,tag:'DFV · Viability',title:'Modela tus números de rentabilidad del negocio en 2 horas',desc:'Abre una hoja de cálculo y modela: CAC estimado por canal, LTV a 12 meses, margen bruto y tiempo para payback. No necesita ser perfecto — necesita revelar si los números son posibles.',tiempo:'2 horas',senal:'LTV/CAC > 3 y payback < 12 meses = el modelo tiene piernas.'},
+    {k:'slipI',sc:S.slipI,tag:'SLIP · Instant Value',title:'Diseña el aha moment en 48 horas',desc:'Define cuál es el momento exacto en que tu usuario percibe valor por primera vez. Rediseña tu flujo para que ese momento ocurra lo más temprano posible — antes del primer pago.',tiempo:'2 días',senal:'El aha moment debe ocurrir en la primera sesión. Si no puedes identificarlo, ese es el bug de producto más urgente.'},
+    {k:'u2',sc:S.u2,tag:'4U · Underserved',title:'Auditoría de competidores desde los ojos del cliente',desc:'Regístrate como cliente en las 3 alternativas más cercanas. Documenta exactamente qué frustraciones persisten para tu segmento. Eso es tu posicionamiento real.',tiempo:'1 semana',senal:'Si encuentras 3+ gaps consistentes, el segmento sí está desatendido de forma estructural.'},
+    {k:'dfvD',sc:S.dfvD,tag:'DFV · Desirability',title:'Página de aterrizaje con botón de pago real',desc:'Construye una landing de una página con tu propuesta y un botón de "reservar acceso" con pago real. Dirige tráfico orgánico (WhatsApp, LinkedIn) durante 7 días y mide conversión.',tiempo:'1 semana',senal:'>3% de conversión = hay demanda real. Si nadie hace clic, el problema es el mensaje o la propuesta.'},
+    {k:'slipS',sc:S.slipS,tag:'SLIP · Simple',title:'Test de proceso de bienvenida de 5 minutos con 3 usuarios',desc:'Ponle tu prototipo a 3 personas que no saben nada de tu solución. No digas nada. Observa: ¿en qué paso se detienen? ¿Dónde preguntan algo? Cada punto de confusión es un bug de diseño.',tiempo:'2 días',senal:'Si llegan al valor en menos de 5 minutos sin ayuda, el diseño funciona.'},
+  ].sort((a,b)=>a.sc-b.sc);
+
+  document.getElementById('experiments').innerHTML=exps.slice(0,3).map((w,i)=>`
+    <div class="exp-card">
+      <div class="exp-num">${i+1}</div>
+      <div class="exp-content">
+        <span class="exp-tag">${w.tag}</span>
+        <div class="exp-title">${w.title}</div>
+        <div class="exp-desc">${w.desc}</div>
+        <div class="exp-meta"><span class="exp-mi">⏱ ${w.tiempo}</span><span class="exp-mi">✅ ${w.senal}</span></div>
+      </div>
+    </div>`).join('');
+
+  goStep(5);
+}
+</script>
+
+<!-- CTA COMUNIDAD -->
+<style>
+.brujula-cta{background:var(--text);border-radius:var(--r);padding:26px 28px;margin:24px 0 0;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;}
+.bc-eyebrow{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:rgba(37,211,102,.75);margin-bottom:8px;}
+.bc-title{font-family:'Playfair Display',serif;font-size:19px;font-weight:700;color:white;margin-bottom:7px;}
+.bc-desc{font-size:13px;color:rgba(255,255,255,.55);line-height:1.6;margin-bottom:14px;}
+.bc-btns{display:flex;gap:8px;flex-wrap:wrap;}
+.bc-wa{height:42px;padding:0 18px;background:#25d366;color:white;border:none;border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none;transition:all .15s;}
+.bc-wa:hover{background:#20c45a;transform:translateY(-1px);}
+.bc-ig{height:42px;padding:0 16px;background:rgba(255,255,255,.07);color:white;border:1px solid rgba(255,255,255,.17);border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none;transition:all .15s;}
+.bc-ig:hover{background:rgba(255,255,255,.14);}
+.bc-icon{font-size:52px;line-height:1;filter:drop-shadow(0 4px 12px rgba(37,211,102,.2));}
+@media(max-width:540px){.brujula-cta{grid-template-columns:1fr;}.bc-icon{display:none;}}
+</style>
+
+<div class="brujula-cta" style="max-width:740px;margin:24px auto 0;">
+  <div>
+    <div class="bc-eyebrow">¿Te fue útil? Hay más donde esto vino</div>
+    <div class="bc-title">Únete a la comunidad gratuita</div>
+    <div class="bc-desc">Comparto información útil para tomar mejores decisiones en tu negocio. Sin publicidad. Sin ventas.</div>
+    <div class="bc-btns">
+      <a href="https://chat.whatsapp.com/L5m2FAFlsFl8lA2eT5XNvZ?mode=gi_t" class="bc-wa" target="_blank" rel="noopener">💬 Comunidad WhatsApp</a>
+      <a href="https://instagram.com/ricramcas" class="bc-ig" target="_blank" rel="noopener">📸 @ricramcas en Instagram</a>
+    </div>
+  </div>
+  <div class="bc-icon" aria-hidden="true">💬</div>
+</div>
+
+</body>
+</html>
 
