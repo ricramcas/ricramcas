@@ -31,7 +31,9 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .tip::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--text);color:white;font-size:12px;font-weight:400;line-height:1.5;padding:10px 14px;border-radius:var(--r);width:240px;white-space:normal;pointer-events:none;opacity:0;transition:opacity .2s;z-index:999;box-shadow:var(--shmd);font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:0;text-transform:none;}
 .tip::before{content:'';position:absolute;bottom:calc(100% + 3px);left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--text);pointer-events:none;opacity:0;transition:opacity .2s;}
 .tip:hover::after,.tip:hover::before,.tip:focus::after,.tip:focus::before{opacity:1;}
-@media(max-width:600px){.tip::after{bottom:auto;top:calc(100% + 8px);width:200px;}.tip::before{bottom:auto;top:calc(100% + 3px);border-top-color:transparent;border-bottom-color:var(--text);}}
+@media(max-width:600px){
+  .tip::after{bottom:auto;top:calc(100% + 8px);width:200px;left:0;transform:none;}
+  .tip::before{bottom:auto;top:calc(100% + 3px);border-top-color:transparent;border-bottom-color:var(--text);}}
 
 /* ── NAV ── */
 .nav{position:sticky;top:0;z-index:200;background:rgba(249,248,246,.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 max(24px,5vw);height:60px;display:flex;align-items:center;justify-content:space-between;gap:24px;}
@@ -55,15 +57,15 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 /* ROTATING HEADLINE */
 .hero-h1{font-family:'Playfair Display',serif;font-size:clamp(34px,4.2vw,54px);font-weight:900;line-height:1.08;color:var(--text);margin-bottom:24px;letter-spacing:-.02em;}
 .hero-h1 .line-static{display:block;}
-.hero-h1 .line-rotate-wrap{display:block;overflow:hidden;height:1.12em;}
-.hero-h1 .line-rotate{display:flex;flex-direction:column;animation:rotateLines 9s ease-in-out infinite;}
-.hero-h1 .line-rotate span{display:block;font-style:italic;color:var(--acc);line-height:1.12;flex-shrink:0;}
+.hero-h1 .line-rotate-wrap{display:block;overflow:hidden;height:1.15em;min-height:1.15em;}
+.hero-h1 .line-rotate{display:flex;flex-direction:column;animation:rotateLines 9s ease-in-out infinite;width:100%;}
+.hero-h1 .line-rotate span{display:block;font-style:italic;color:var(--acc);line-height:1.15;flex-shrink:0;white-space:nowrap;}
 @keyframes rotateLines{
   0%,16%{transform:translateY(0);}
-  20%,36%{transform:translateY(-1.12em);}
-  40%,56%{transform:translateY(-2.24em);}
-  60%,76%{transform:translateY(-3.36em);}
-  80%,96%{transform:translateY(-4.48em);}
+  20%,36%{transform:translateY(calc(var(--rotate-h, 1.15em) * -1));}
+  40%,56%{transform:translateY(calc(var(--rotate-h, 1.15em) * -2));}
+  60%,76%{transform:translateY(calc(var(--rotate-h, 1.15em) * -3));}
+  80%,96%{transform:translateY(calc(var(--rotate-h, 1.15em) * -4));}
   100%{transform:translateY(0);}
 }
 
@@ -80,7 +82,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
 /* HERO RIGHT CARDS */
 .hero-right{display:flex;flex-direction:column;gap:14px;}
-.hsc{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:20px;box-shadow:var(--sh);position:relative;overflow:visible;}
+.hsc{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:20px;box-shadow:var(--sh);position:static;overflow:visible;}
 .hsc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--acc);}
 .hsc-num{font-family:'Playfair Display',serif;font-size:36px;font-weight:900;color:var(--acc);line-height:1;margin-bottom:8px;}
 .hsc-desc{font-size:13px;color:var(--t2);line-height:1.6;}
@@ -134,13 +136,11 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .tt-btn:last-child{border-right:none;}
 .tt-btn:hover{color:var(--text);background:var(--bg2);}
 .tt-btn.active{background:var(--acc);color:white;}
-.tt-panel{display:none!important;}
-.tt-panel.active{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;animation:fadeUp .3s ease both;}
-.tt-panel[hidden]{display:none!important;}
-.tt-panel.active[hidden]{display:grid!important;}
+.tt-panel{display:none;}
+.tt-panel.active{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;animation:fadeUp .3s ease both;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 
-.tool-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:24px;box-shadow:var(--sh);display:flex;flex-direction:column;transition:all .2s;text-decoration:none;color:inherit;}
+.tool-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:24px;box-shadow:var(--sh);display:flex;flex-direction:column;transition:all .2s;text-decoration:none;color:inherit;overflow:visible;}
 .tool-card:hover{transform:translateY(-3px);box-shadow:var(--shmd);border-color:var(--accmd);}
 .tool-card.soon{opacity:.72;}
 .tc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px;}
@@ -508,7 +508,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     </div>
 
     <!-- EMPRENDIMIENTO -->
-    <div class="tt-panel" id="panel-emp" role="tabpanel" aria-labelledby="tab-emp" hidden>
+    <div class="tt-panel" id="panel-emp" role="tabpanel" aria-labelledby="tab-emp">
       <a href="/herramientas/producto/brujula-valor" class="tool-card">
         <div class="tc-top"><div class="tc-icon blue">🧭</div><span class="tc-badge-live">Disponible</span></div>
         <div class="tc-name">Brújula de Valor</div>
@@ -533,7 +533,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     </div>
 
     <!-- SALUD -->
-    <div class="tt-panel" id="panel-salud" role="tabpanel" aria-labelledby="tab-salud" hidden>
+    <div class="tt-panel" id="panel-salud" role="tabpanel" aria-labelledby="tab-salud">
       <div class="tool-card soon">
         <div class="tc-top"><div class="tc-icon green">🏥</div><span class="tc-badge-soon">Próximamente</span></div>
         <div class="tc-name">¿Dónde hay oportunidades en salud?</div>
@@ -551,7 +551,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     </div>
 
     <!-- FINANZAS -->
-    <div class="tt-panel" id="panel-fin" role="tabpanel" aria-labelledby="tab-fin" hidden>
+    <div class="tt-panel" id="panel-fin" role="tabpanel" aria-labelledby="tab-fin">
       <div class="tool-card soon">
         <div class="tc-top"><div class="tc-icon orange">📅</div><span class="tc-badge-soon">Próximamente</span></div>
         <div class="tc-name">¿Cuándo te quedas sin dinero?</div>
@@ -734,43 +734,98 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 </footer>
 
 <script>
-// TABS
+// ── TABS ──
 function switchTab(id, btn) {
-  document.querySelectorAll('.tt-panel').forEach(p => { p.classList.remove('active'); p.removeAttribute('hidden'); });
-  document.querySelectorAll('.tt-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
-  const panel = document.getElementById('panel-' + id);
-  panel.classList.add('active');
-  btn.classList.add('active'); btn.setAttribute('aria-selected','true');
+  document.querySelectorAll('.tt-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tt-btn').forEach(function(b) { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+  document.getElementById('panel-' + id).classList.add('active');
+  btn.classList.add('active');
+  btn.setAttribute('aria-selected','true');
 }
-// init: handled by CSS .tt-panel{display:none} — remove hidden attrs
-document.querySelectorAll('.tt-panel').forEach(p => p.removeAttribute('hidden'));
 
-// ENTRANCE ANIMATIONS
-const heroLeft = document.querySelectorAll('.hero-left > *');
-heroLeft.forEach((el, i) => {
-  el.style.opacity = '0'; el.style.transform = 'translateY(18px)';
-  el.style.transition = ;
-  requestAnimationFrame(() => requestAnimationFrame(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }));
-});
-const heroRight = document.querySelectorAll('.hero-right > *');
-heroRight.forEach((el, i) => {
-  el.style.opacity = '0'; el.style.transform = 'translateY(14px)';
-  el.style.transition = ;
-  requestAnimationFrame(() => requestAnimationFrame(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }));
-});
+// ── ROTATING TEXT HEIGHT FIX ──
+// @keyframes can't use CSS vars, so we inject a <style> tag with the real pixel values
+function fixRotateHeight() {
+  var wrap = document.querySelector('.line-rotate-wrap');
+  var firstSpan = document.querySelector('.line-rotate span');
+  if (!wrap || !firstSpan) return;
+  var h = firstSpan.getBoundingClientRect().height;
+  if (h <= 0) return;
+  // Set the container height
+  wrap.style.height = h + 'px';
+  // Inject keyframes with real pixel values
+  var styleId = 'rotate-kf-style';
+  var existing = document.getElementById(styleId);
+  if (existing) existing.remove();
+  var style = document.createElement('style');
+  style.id = styleId;
+  style.textContent = [
+    '@keyframes rotateLines {',
+    '  0%,16%  { transform: translateY(0); }',
+    '  20%,36% { transform: translateY(-' + (h * 1) + 'px); }',
+    '  40%,56% { transform: translateY(-' + (h * 2) + 'px); }',
+    '  60%,76% { transform: translateY(-' + (h * 3) + 'px); }',
+    '  80%,96% { transform: translateY(-' + (h * 4) + 'px); }',
+    '  100%    { transform: translateY(0); }',
+    '}'
+  ].join('\n');
+  document.head.appendChild(style);
+}
+// Run after fonts load for accurate measurement
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(fixRotateHeight);
+} else {
+  window.addEventListener('load', fixRotateHeight);
+}
+window.addEventListener('resize', fixRotateHeight);
 
-// SCROLL REVEAL
-const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; obs.unobserve(e.target); }
+// ── ENTRANCE ANIMATIONS ──
+(function() {
+  var delay = 0;
+  document.querySelectorAll('.hero-left > *').forEach(function(el) {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(18px)';
+    el.style.transition = 'opacity .55s ease ' + delay + 's, transform .55s ease ' + delay + 's';
+    delay += 0.09;
   });
-}, { threshold: 0.08 });
-document.querySelectorAll('.prob-card, .tool-card, .sb-point, .sugg-card, .hsc').forEach(el => {
-  el.style.opacity = '0'; el.style.transform = 'translateY(14px)';
-  el.style.transition = 'opacity .45s ease, transform .45s ease';
-  obs.observe(el);
-});
+  delay = 0.25;
+  document.querySelectorAll('.hero-right > *').forEach(function(el) {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(14px)';
+    el.style.transition = 'opacity .5s ease ' + delay + 's, transform .5s ease ' + delay + 's';
+    delay += 0.1;
+  });
+  // Trigger animations
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() {
+      document.querySelectorAll('.hero-left > *, .hero-right > *').forEach(function(el) {
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+      });
+    });
+  });
+})();
+
+// ── SCROLL REVEAL ──
+if ('IntersectionObserver' in window) {
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.prob-card, .tool-card, .sb-point, .sugg-card, .hsc').forEach(function(el) {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(14px)';
+    el.style.transition = 'opacity .45s ease, transform .45s ease';
+    obs.observe(el);
+  });
+}
 </script>
 </body>
 </html>
+
 
