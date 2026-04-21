@@ -7,6 +7,14 @@
 <meta name="description" content="Descubre si tu precio está bien posicionado. Análisis gratuito con datos reales de 22 ciudades, 8 tipos de cocina y 7 niveles de ingreso en México.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-25ZX71GCQ4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-25ZX71GCQ4');
+</script>
 <style>
 :root{
   --bg:#F9F8F6;--bg2:#F2F1EE;--bg3:#EAEAE6;--white:#FFFFFF;
@@ -597,7 +605,7 @@ tr:hover td{background:var(--bg);}
   </div>
 
   <div class="share-bar">
-    <button class="btn-share" onclick="window.print()" type="button">🖨️ Imprimir diagnóstico</button>
+    <button class="btn-share" onclick="gtag('event','diagnostico_compartido');window.print()" type="button">🖨️ Imprimir diagnóstico</button>
     <button class="btn-share" onclick="location.reload()" type="button">🔄 Nuevo diagnóstico</button>
   </div>
 
@@ -657,7 +665,7 @@ function goStep(n){
   for(let i=1;i<=3;i++){const ps=document.getElementById('ps-'+i);ps.classList.remove('active','done');if(i===n)ps.classList.add('active');else if(i<n)ps.classList.add('done');}
   window.scrollTo({top:0,behavior:'smooth'});
 }
-function irPaso2(){S.mesas=parseInt(document.getElementById('mesas').value)||10;S.personas=parseInt(document.getElementById('personas').value)||3;goStep(2);}
+function irPaso2(){S.mesas=parseInt(document.getElementById('mesas').value)||10;S.personas=parseInt(document.getElementById('personas').value)||3;gtag('event','calc_paso1',{ciudad:S.ciudad||'',cocina:selectedCocina||'',ticket:sliderValue||0});goStep(2);}
 
 function selCocina(btn){
   document.querySelectorAll('#cocina-grid .cocina-btn').forEach(b=>b.classList.remove('sel'));
@@ -765,8 +773,11 @@ function calcDiag(){
   document.getElementById('decs-wrap').innerHTML=decs.slice(0,3).map((d,i)=>`<div class="dec-card"><div class="dec-num">${i+1}</div><div><div class="dec-title">${d.t}</div><div class="dec-desc">${d.d}</div></div></div>`).join('');
 
   setTimeout(()=>setRC(3,100,'var(--green)'),600);
+  gtag('event','calc_paso2',{mesas:S.mesas||0,personas:S.personas||0});
+  gtag('event','diagnostico_completado',{ciudad:S.ciudad||'',cocina:selectedCocina||'',ticket:sliderValue||0});
   goStep(3);
 }
 </script>
 </body>
 </html>
+
