@@ -9,6 +9,14 @@
 <meta property="og:description" content="Datos reales, metodologías probadas y conocimiento digerido. Gratis, sin términos difíciles.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-25ZX71GCQ4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-25ZX71GCQ4');
+</script>
 <style>
 :root{
   --bg:#F9F8F6;--bg2:#F2F1EE;--bg3:#EAEAE6;--white:#FFFFFF;
@@ -360,7 +368,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
           Ver herramientas
         </a>
-        <a href="https://open.spotify.com/show/2N0W7QCBGNCZyxtTT0C5yg" class="btn-hero-g" target="_blank" rel="noopener">
+        <a href="https://open.spotify.com/show/2N0W7QCBGNCZyxtTT0C5yg" onclick="gtag('event','click_spotify')" class="btn-hero-g" target="_blank" rel="noopener">
           <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true"><circle cx="7.5" cy="7.5" r="6.5" stroke="currentColor" stroke-width="1.4"/><path d="M4.5 6.5C5.8 6 8 6 9.5 6.5M5 8.5C6.2 8 8.5 8.2 9.5 8.5M5.5 10.5C6.5 10.2 8.5 10.3 9.5 10.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
           Podcast: Nada es al Dente
         </a>
@@ -465,7 +473,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
     <!-- RESTAURANTES -->
     <div class="tt-panel active" id="panel-rest" role="tabpanel" aria-labelledby="tab-rest">
-      <a href="/herramientas/restaurantes" class="tool-card">
+      <a href="/herramientas/restaurantes" class="tool-card" onclick="gtag('event','click_herramienta',{herramienta:'Diagnóstico de Precio',tab:'restaurantes'})">
         <div class="tc-top"><div class="tc-icon orange">🎯</div><span class="tc-badge-live">Disponible</span></div>
         <div class="tc-name">Diagnóstico de Precio</div>
         <div class="tc-desc">¿Estás cobrando lo que deberías? Descubre si tu precio encaja con lo que cobra tu tipo de cocina en tu ciudad, quiénes en tu mercado pueden pagarte, y cuántos clientes necesitas para llenar tu restaurante.</div>
@@ -479,7 +487,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
         <div class="tc-who">Para cocinas de cualquier tamaño · datos de la industria restaurantera 2026</div>
         <div class="tc-soon-txt">Próximamente disponible</div>
       </div>
-      <a href="/herramientas/restaurantes/nomina" class="tool-card">
+      <a href="/herramientas/restaurantes/nomina" class="tool-card" onclick="gtag('event','click_herramienta',{herramienta:'Nómina',tab:'restaurantes'})">
         <div class="tc-top"><div class="tc-icon orange">👥</div><span class="tc-badge-live">Disponible</span></div>
         <div class="tc-name">¿Cuánto te cuesta tu equipo?</div>
         <div class="tc-desc">Calcula el costo real de tu nómina: IMSS, INFONAVIT, aguinaldo y vacaciones incluidos. Simulador en tiempo real donde subes y bajas sueldos y ves al instante cuánto te cuesta cada persona. Incluye la Ley de Propinas 2025.</div>
@@ -497,14 +505,14 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
     <!-- EMPRENDIMIENTO -->
     <div class="tt-panel" id="panel-emp" role="tabpanel" aria-labelledby="tab-emp">
-      <a href="/herramientas/producto/brujula-valor" class="tool-card">
+      <a href="/herramientas/producto/brujula-valor" class="tool-card" onclick="gtag('event','click_herramienta',{herramienta:'Brújula de Valor',tab:'emprendimiento'})">
         <div class="tc-top"><div class="tc-icon blue">🧭</div><span class="tc-badge-live">Disponible</span></div>
         <div class="tc-name">Brújula de Valor</div>
         <div class="tc-desc">Antes de gastar dinero o tiempo construyendo tu idea: descubre si vale la pena. En unos minutos analizas si el problema que quieres resolver es real, si tu solución encaja con lo que la gente necesita, y si tu modelo de negocio tiene sentido. Con datos de por qué fracasan los proyectos.</div>
         <div class="tc-who">Para cualquiera que tenga una idea de negocio · cualquier industria</div>
         <div class="tc-action">Analizar mi idea →</div>
       </a>
-      <a href="/herramientas/producto/strategy-canvas" class="tool-card">
+      <a href="/herramientas/producto/strategy-canvas" class="tool-card" onclick="gtag('event','click_herramienta',{herramienta:'Canvas de Diferenciación',tab:'emprendimiento'})">
         <div class="tc-top"><div class="tc-icon blue">🗺️</div><span class="tc-badge-live">Disponible</span></div>
         <div class="tc-name">¿En qué eres diferente?</div>
         <div class="tc-desc">Compárate con la competencia factor por factor y ve las diferencias en una gráfica en tiempo real. Descubre dónde realmente destacas, dónde estás igual y dónde estás por debajo — y qué hacer con cada uno.</div>
@@ -566,7 +574,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
       <p class="about-text">Tengo experiencia en innovación, emprendimiento y tecnología. Obsesionado con entender cómo funcionan los negocios por dentro y ayudar a otros a tener éxito en los suyos.</p>
       <p class="about-text">Estas herramientas nacieron de preguntas que yo mismo me hice — y que me costaron tiempo, dinero y errores que se podían haber evitado. Si yo ya pasé por ese proceso, no tiene sentido que tú pases por lo mismo.</p>
       <div class="about-links">
-        <a href="https://linkedin.com/in/ricardoramirezc" class="about-link dark" target="_blank" rel="noopener" aria-label="LinkedIn de Ricardo">
+        <a href="https://linkedin.com/in/ricardoramirezc" onclick="gtag('event','click_linkedin')" class="about-link dark" target="_blank" rel="noopener" aria-label="LinkedIn de Ricardo">
           <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true"><rect x="1.5" y="1.5" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M4 6.5V11M4 4V4.5M7 11V8.5C7 7.4 7.9 6.5 9 6.5C10.1 6.5 11 7.4 11 8.5V11M7 6.5V11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           LinkedIn
         </a>
@@ -597,7 +605,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
         <div class="wa-perk">Red de emprendedores construyendo algo</div>
       </div>
       <div class="wa-btns">
-        <a href="https://chat.whatsapp.com/L5m2FAFlsFl8lA2eT5XNvZ?mode=gi_t" class="btn-wa" target="_blank" rel="noopener" aria-label="Unirme a la comunidad de WhatsApp">
+        <a href="https://chat.whatsapp.com/L5m2FAFlsFl8lA2eT5XNvZ?mode=gi_t" class="btn-wa" onclick="gtag('event','click_whatsapp',{ubicacion:'landing_cta'})" target="_blank" rel="noopener" aria-label="Unirme a la comunidad de WhatsApp">
           <svg width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden="true"><path d="M8.5 1.5C4.63 1.5 1.5 4.63 1.5 8.5C1.5 9.73 1.84 10.88 2.42 11.87L1.5 15.5L5.22 14.47C6.23 15.03 7.33 15.5 8.5 15.5C12.37 15.5 15.5 12.37 15.5 8.5C15.5 4.63 12.37 1.5 8.5 1.5ZM11.75 10.75C11.6 11.15 10.86 11.52 10.5 11.56C10.14 11.61 9.74 11.62 9.29 11.48C9.03 11.38 8.69 11.27 8.25 11.07C6.42 10.23 5.23 8.37 5.14 8.25C5.04 8.13 4.37 7.26 4.37 6.36C4.37 5.46 4.85 5.02 5.04 4.82C5.22 4.62 5.44 4.57 5.57 4.57C5.7 4.57 5.84 4.57 5.96 4.57C6.09 4.57 6.27 4.52 6.44 4.93C6.62 5.34 7.01 6.25 7.07 6.37C7.12 6.49 7.15 6.62 7.08 6.77C7.01 6.92 6.98 7.01 6.87 7.14C6.75 7.27 6.63 7.44 6.53 7.54C6.41 7.66 6.29 7.79 6.42 8.01C6.55 8.23 7.01 8.96 7.68 9.56C8.54 10.32 9.26 10.56 9.48 10.67C9.7 10.78 9.83 10.76 9.96 10.62C10.09 10.47 10.53 9.96 10.67 9.74C10.81 9.52 10.96 9.56 11.16 9.63C11.36 9.7 12.27 10.15 12.49 10.27C12.71 10.38 12.86 10.44 12.91 10.53C12.97 10.63 12.97 11.02 12.81 11.42L11.75 10.75Z" fill="currentColor"/></svg>
           Unirme a la comunidad
         </a>
@@ -753,3 +761,4 @@ document.querySelectorAll('.prob-card, .tool-card, .sb-point, .sugg-card, .hsc')
 </script>
 </body>
 </html>
+
