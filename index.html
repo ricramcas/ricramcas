@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ricramcas — Herramientas gratuitas para emprender con información real</title>
-<meta name="description" content="Herramientas gratuitas para tomar mejores decisiones en tu negocio. Para restauranteros, emprendedores, dueños de producto y más. Datos reales, sin términos difíciles.">
+<meta name="description" content="Herramientas gratuitas para tomar mejores decisiones en tu negocio. Para restauranteros, emprendedores, dueños de producto y más. Datos reales, sin...">
 <meta property="og:title" content="ricramcas — Herramientas gratuitas para emprender">
 <meta property="og:description" content="Datos reales, metodologías probadas y conocimiento digerido. Gratis, sin términos difíciles.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,9 +31,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .tip::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--text);color:white;font-size:12px;font-weight:400;line-height:1.5;padding:10px 14px;border-radius:var(--r);width:240px;white-space:normal;pointer-events:none;opacity:0;transition:opacity .2s;z-index:999;box-shadow:var(--shmd);font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:0;text-transform:none;}
 .tip::before{content:'';position:absolute;bottom:calc(100% + 3px);left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--text);pointer-events:none;opacity:0;transition:opacity .2s;}
 .tip:hover::after,.tip:hover::before,.tip:focus::after,.tip:focus::before{opacity:1;}
-@media(max-width:600px){
-  .tip::after{bottom:auto;top:calc(100% + 8px);width:200px;left:0;transform:none;}
-  .tip::before{bottom:auto;top:calc(100% + 3px);border-top-color:transparent;border-bottom-color:var(--text);}}
+@media(max-width:600px){.tip::after{bottom:auto;top:calc(100% + 8px);width:200px;}.tip::before{bottom:auto;top:calc(100% + 3px);border-top-color:transparent;border-bottom-color:var(--text);}}
 
 /* ── NAV ── */
 .nav{position:sticky;top:0;z-index:200;background:rgba(249,248,246,.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 max(24px,5vw);height:60px;display:flex;align-items:center;justify-content:space-between;gap:24px;}
@@ -57,15 +55,15 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 /* ROTATING HEADLINE */
 .hero-h1{font-family:'Playfair Display',serif;font-size:clamp(34px,4.2vw,54px);font-weight:900;line-height:1.08;color:var(--text);margin-bottom:24px;letter-spacing:-.02em;}
 .hero-h1 .line-static{display:block;}
-.hero-h1 .line-rotate-wrap{display:block;overflow:hidden;height:1.15em;min-height:1.15em;}
-.hero-h1 .line-rotate{display:flex;flex-direction:column;animation:rotateLines 9s ease-in-out infinite;width:100%;}
-.hero-h1 .line-rotate span{display:block;font-style:italic;color:var(--acc);line-height:1.15;flex-shrink:0;white-space:nowrap;}
+.hero-h1 .line-rotate-wrap{display:block;overflow:hidden;height:1.12em;}
+.hero-h1 .line-rotate{display:flex;flex-direction:column;animation:rotateLines 9s ease-in-out infinite;}
+.hero-h1 .line-rotate span{display:block;font-style:italic;color:var(--acc);line-height:1.12;flex-shrink:0;}
 @keyframes rotateLines{
   0%,16%{transform:translateY(0);}
-  20%,36%{transform:translateY(calc(var(--rotate-h, 1.15em) * -1));}
-  40%,56%{transform:translateY(calc(var(--rotate-h, 1.15em) * -2));}
-  60%,76%{transform:translateY(calc(var(--rotate-h, 1.15em) * -3));}
-  80%,96%{transform:translateY(calc(var(--rotate-h, 1.15em) * -4));}
+  20%,36%{transform:translateY(-1.12em);}
+  40%,56%{transform:translateY(-2.24em);}
+  60%,76%{transform:translateY(-3.36em);}
+  80%,96%{transform:translateY(-4.48em);}
   100%{transform:translateY(0);}
 }
 
@@ -82,7 +80,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
 /* HERO RIGHT CARDS */
 .hero-right{display:flex;flex-direction:column;gap:14px;}
-.hsc{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:20px;box-shadow:var(--sh);position:static;overflow:visible;}
+.hsc{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:20px;box-shadow:var(--sh);position:relative;overflow:visible;}
 .hsc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--acc);}
 .hsc-num{font-family:'Playfair Display',serif;font-size:36px;font-weight:900;color:var(--acc);line-height:1;margin-bottom:8px;}
 .hsc-desc{font-size:13px;color:var(--t2);line-height:1.6;}
@@ -92,7 +90,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .hsc-wa-text{flex:1;}
 .hsc-wa-title{font-size:13px;font-weight:700;color:white;margin-bottom:2px;}
 .hsc-wa-sub{font-size:11px;color:rgba(255,255,255,.5);}
-.btn-wa-mini{flex-shrink:0;height:34px;padding:0 14px;background:#25d366;color:white;border:none;border-radius:6px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;transition:all .15s;}
+.btn-wa-mini{flex-shrink:0;height:44px;padding:0 14px;background:#25d366;color:white;border:none;border-radius:6px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;transition:all .15s;}
 .btn-wa-mini:hover{background:#20c45a;}
 
 /* STRIP */
@@ -140,7 +138,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .tt-panel.active{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;animation:fadeUp .3s ease both;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 
-.tool-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:24px;box-shadow:var(--sh);display:flex;flex-direction:column;transition:all .2s;text-decoration:none;color:inherit;overflow:visible;}
+.tool-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:24px;box-shadow:var(--sh);display:flex;flex-direction:column;transition:all .2s;text-decoration:none;color:inherit;}
 .tool-card:hover{transform:translateY(-3px);box-shadow:var(--shmd);border-color:var(--accmd);}
 .tool-card.soon{opacity:.72;}
 .tc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px;}
@@ -162,7 +160,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .about-section{padding:88px max(24px,5vw);background:var(--bg);}
 .about-grid{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:320px 1fr;gap:72px;align-items:start;}
 .about-photo-wrap{display:flex;justify-content:center;}
-.about-photo{width:240px;height:240px;border-radius:50%;object-fit:cover;object-position:center top;display:block;border:4px solid var(--white);box-shadow:var(--shmd);}
+.about-photo{width:240px;height:240px;border-radius:50%;object-fit:cover;object-position:center top;display:block;border:4px solid var(--white);box-shadow:var(--shmd);max-width:100%;}
 .about-name{font-family:'Playfair Display',serif;font-size:32px;font-weight:900;color:var(--text);margin-bottom:4px;}
 .about-handle{font-size:14px;color:var(--t3);margin-bottom:20px;}
 .about-pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;}
@@ -223,7 +221,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .podcast-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--text);margin-bottom:10px;}
 .podcast-desc{font-size:14px;color:var(--t2);line-height:1.7;margin-bottom:18px;}
 .podcast-btns{display:flex;gap:10px;flex-wrap:wrap;}
-.btn-pod{height:42px;padding:0 16px;border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:7px;text-decoration:none;transition:all .15s;cursor:pointer;}
+.btn-pod{height:44px;padding:0 16px;border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:7px;text-decoration:none;transition:all .15s;cursor:pointer;}
 .btn-pod.dark{background:var(--text);color:white;border:none;}
 .btn-pod.dark:hover{background:var(--t2);}
 .btn-pod.outline{background:var(--white);color:var(--t2);border:1.5px solid var(--bdr2);}
@@ -250,6 +248,18 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .footer-machin cite{font-style:normal;font-weight:600;color:rgba(255,255,255,.45);}
 
 /* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .hero-inner{grid-template-columns:1fr;gap:32px;}
+  .hero-right{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .hsc-wa{grid-column:1/-1;}
+  .about-grid{grid-template-columns:1fr;gap:32px;}
+  .wa-card{grid-template-columns:1fr;}
+  .wa-right{display:none;}
+  .prob-grid{grid-template-columns:1fr;}
+  .podcast-inner{flex-direction:column;gap:24px;}
+  .wa-btns{flex-direction:column;align-items:flex-start;}
+  .hero-btns{gap:10px;}
+}
 @media(max-width:960px){
   .hero-inner{grid-template-columns:1fr;gap:40px;}
   .hero-right{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
@@ -260,6 +270,9 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   .wa-right{display:none;}
   .prob-grid{grid-template-columns:1fr;}
   .solution-box{grid-template-columns:1fr;}
+  .podcast-inner{flex-direction:column;align-items:flex-start;}
+  .podcast-art{width:120px;height:120px;}
+  .wa-btns{flex-wrap:wrap;}
 }
 @media(max-width:600px){
   .hero{min-height:auto;padding:40px 20px 56px;}
@@ -271,9 +284,38 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   .footer-top{flex-direction:column;align-items:flex-start;}
   .footer-bottom{flex-direction:column;align-items:flex-start;}
   .footer-machin{text-align:left;}
+  .hsc-wa{flex-wrap:wrap;gap:10px;}
+  .hsc-wa-text{min-width:0;flex:1;}
+  .about-photo{width:180px;height:180px;}
+  .section-sub{font-size:14px;}
+  .prob-card{padding:20px;}
+  .wa-card{padding:28px 20px;}
+  .sugg-ig{flex-direction:column;align-items:flex-start;gap:12px;}
+  .podcast-btns{flex-wrap:wrap;}
 }
 :focus-visible{outline:3px solid var(--acc);outline-offset:2px;border-radius:4px;}
-</style>
+
+@media(max-width:430px){
+  .nav{padding:0 16px;}
+  .hero{padding:32px 16px 48px;}
+  .hero-h1{font-size:clamp(28px,7vw,38px);}
+  .hero-value{padding:14px 16px;}
+  .hsc{padding:16px;}
+  .hsc-num{font-size:32px;}
+  .wa-card{padding:24px 16px;}
+  .wa-h2{font-size:22px;}
+  .wa-desc{font-size:13px;}
+  .btn-wa{height:48px;font-size:13px;}
+  .section-h2{font-size:clamp(22px,6vw,32px);}
+  .about-pills{gap:6px;}
+  .pill{font-size:11px;padding:5px 10px;}
+  .about-name{font-size:26px;}
+  .sugg-inner{padding:0 4px;}
+  .footer-inner{padding:0 16px;}
+  .prob-card{padding:16px;}
+  .tc-name{font-size:14px;}
+  .strip-item{padding:12px 16px;}
+}</style>
 </head>
 <body>
 
@@ -375,85 +417,32 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
       </div>
     </div>
 
-
-    <!-- 3 puntos sin caja -->
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;margin-top:40px;">
-      <div style="display:flex;align-items:flex-start;gap:16px;padding:24px;background:var(--white);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);">
-        <div style="width:44px;height:44px;border-radius:50%;background:var(--acclt);border:1.5px solid var(--accmd);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">🔬</div>
-        <div>
-          <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">Formas de analizar probadas, no teoría</div>
-          <div style="font-size:13px;color:var(--t3);line-height:1.65;">Las herramientas que usan los mejores equipos del mundo para tomar decisiones — ahora en español, paso a paso, con ejemplos reales.</div>
+    <div class="solution-box">
+      <div>
+        <h3 class="sb-h3">Información real,<br><em>para todos</em></h3>
+        <p class="sb-p">Llevo años aplicando formas de analizar negocios en proyectos reales — restaurantes, productos propios y proyectos de tecnología. Lo que aprendí lo convierto en herramientas que cualquiera puede usar. No importa si eres un taquero o alguien con posgrado. La información es la misma. El acceso también.</p>
+      </div>
+      <div class="sb-points">
+        <div class="sb-point">
+          <div class="sb-point-icon" aria-hidden="true">🔬</div>
+          <div>
+            <div class="sb-pt-title">Formas de analizar probadas, no teoría</div>
+            <div class="sb-pt-desc">Las herramientas que usan los mejores equipos del mundo para tomar decisiones — ahora en español, paso a paso, con ejemplos reales.</div>
+          </div>
         </div>
-      </div>
-      <div style="display:flex;align-items:flex-start;gap:16px;padding:24px;background:var(--white);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);">
-        <div style="width:44px;height:44px;border-radius:50%;background:var(--acclt);border:1.5px solid var(--accmd);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">📊</div>
-        <div>
-          <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">Datos reales de México</div>
-          <div style="font-size:13px;color:var(--t3);line-height:1.65;">No estimaciones globales que no aplican aquí. Números de tu país, tu ciudad y tu industria — de fuentes oficiales y verificadas.</div>
+        <div class="sb-point">
+          <div class="sb-point-icon" aria-hidden="true">📊</div>
+          <div>
+            <div class="sb-pt-title">Datos reales de México</div>
+            <div class="sb-pt-desc">No estimaciones globales que no aplican aquí. Números de tu país, tu ciudad y tu industria — de fuentes oficiales y verificadas.</div>
+          </div>
         </div>
-      </div>
-      <div style="display:flex;align-items:flex-start;gap:16px;padding:24px;background:var(--white);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);">
-        <div style="width:44px;height:44px;border-radius:50%;background:var(--acclt);border:1.5px solid var(--accmd);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">🤝</div>
-        <div>
-          <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">Para que nadie falle por no saber</div>
-          <div style="font-size:13px;color:var(--t3);line-height:1.65;">Cada herramienta explica cada término y cada número. Si no entiendes algo, hay una explicación. Así de simple.</div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- STRIP -->
-<div class="strip" role="region" aria-label="Datos de las herramientas">
-  <div class="strip-inner">
-    <div class="strip-item"><div class="strip-num" id="sc1">22</div><div class="strip-label">ciudades de México cubiertas</div></div>
-    <div class="strip-item"><div class="strip-num">100%</div><div class="strip-label">gratuito · sin registro</div></div>
-    <div class="strip-item"><div class="strip-num">0</div><div class="strip-label">datos personales necesarios</div></div>
-  </div>
-</div>
-
-<!-- PROBLEM SECTION -->
-<section class="problem-section" aria-labelledby="prob-h2">
-  <div class="section-wrap">
-    <h2 class="section-h2" id="prob-h2">Creer que algo va a funcionar<br>sin verificarlo es uno de los<br><em>errores más caros que existen</em></h2>
-    <p class="section-sub">No es falta de ganas ni de talento. Es que la información para evitar esos errores estaba dispersa, en lenguaje difícil o detrás de un costo que no todos pueden pagar. Eso es exactamente lo que este sitio resuelve.</p>
-
-    <div class="prob-grid">
-      <div class="prob-card hi">
-        <span class="pc-icon" aria-hidden="true">🔍</span>
-        <div class="pc-stat">9 de 10</div>
-        <div class="pc-title">negocios que fallan lo hacen por razones que se podían detectar antes</div>
-        <div class="pc-desc">El precio mal calculado, no saber quién es tu cliente real, o construir algo que nadie quería — son errores evitables si tienes la información correcta desde el principio.</div>
-      </div>
-      <div class="prob-card hi">
-        <span class="pc-icon" aria-hidden="true">📚</span>
-        <div class="pc-title">La información existe — pero no llega</div>
-        <div class="pc-desc">Hay datos públicos muy valiosos sobre salarios, precios del mercado, hábitos de consumo y más. El problema es que están dispersos, en lenguaje técnico y sin contexto práctico. Yo ya hice ese trabajo de buscarlos, entenderlos y organizarlos.</div>
-      </div>
-    </div>
-
-    <!-- 3 puntos sin caja negra -->
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;margin-top:40px;">
-      <div style="display:flex;align-items:flex-start;gap:16px;padding:24px;background:var(--white);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);">
-        <div style="width:44px;height:44px;border-radius:50%;background:var(--acclt);border:1.5px solid var(--accmd);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;" aria-hidden="true">🔬</div>
-        <div>
-          <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">Formas de analizar probadas, no teoría</div>
-          <div style="font-size:13px;color:var(--t3);line-height:1.65;">Las herramientas que usan los mejores equipos del mundo para tomar decisiones — ahora en español, paso a paso, con ejemplos reales.</div>
-        </div>
-      </div>
-      <div style="display:flex;align-items:flex-start;gap:16px;padding:24px;background:var(--white);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);">
-        <div style="width:44px;height:44px;border-radius:50%;background:var(--acclt);border:1.5px solid var(--accmd);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;" aria-hidden="true">📊</div>
-        <div>
-          <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">Datos reales de México</div>
-          <div style="font-size:13px;color:var(--t3);line-height:1.65;">No estimaciones globales que no aplican aquí. Números de tu país, tu ciudad y tu industria — de fuentes oficiales y verificadas.</div>
-        </div>
-      </div>
-      <div style="display:flex;align-items:flex-start;gap:16px;padding:24px;background:var(--white);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);">
-        <div style="width:44px;height:44px;border-radius:50%;background:var(--acclt);border:1.5px solid var(--accmd);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;" aria-hidden="true">🤝</div>
-        <div>
-          <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">Para que nadie falle por no saber</div>
-          <div style="font-size:13px;color:var(--t3);line-height:1.65;">Cada herramienta explica cada término y cada número. Si no entiendes algo, hay una explicación. Así de simple.</div>
+        <div class="sb-point">
+          <div class="sb-point-icon" aria-hidden="true">🤝</div>
+          <div>
+            <div class="sb-pt-title">Para que nadie falle por no saber</div>
+            <div class="sb-pt-desc">Cada herramienta explica cada término y cada número. Si no entiendes algo, hay una explicación. Así de simple.</div>
+          </div>
         </div>
       </div>
     </div>
@@ -734,7 +723,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 </footer>
 
 <script>
-// ── TABS ──
+// TABS
 function switchTab(id, btn) {
   document.querySelectorAll('.tt-panel').forEach(function(p) { p.classList.remove('active'); });
   document.querySelectorAll('.tt-btn').forEach(function(b) { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
@@ -743,89 +732,35 @@ function switchTab(id, btn) {
   btn.setAttribute('aria-selected','true');
 }
 
-// ── ROTATING TEXT HEIGHT FIX ──
-// @keyframes can't use CSS vars, so we inject a <style> tag with the real pixel values
-function fixRotateHeight() {
-  var wrap = document.querySelector('.line-rotate-wrap');
-  var firstSpan = document.querySelector('.line-rotate span');
-  if (!wrap || !firstSpan) return;
-  var h = firstSpan.getBoundingClientRect().height;
-  if (h <= 0) return;
-  // Set the container height
-  wrap.style.height = h + 'px';
-  // Inject keyframes with real pixel values
-  var styleId = 'rotate-kf-style';
-  var existing = document.getElementById(styleId);
-  if (existing) existing.remove();
-  var style = document.createElement('style');
-  style.id = styleId;
-  style.textContent = [
-    '@keyframes rotateLines {',
-    '  0%,16%  { transform: translateY(0); }',
-    '  20%,36% { transform: translateY(-' + (h * 1) + 'px); }',
-    '  40%,56% { transform: translateY(-' + (h * 2) + 'px); }',
-    '  60%,76% { transform: translateY(-' + (h * 3) + 'px); }',
-    '  80%,96% { transform: translateY(-' + (h * 4) + 'px); }',
-    '  100%    { transform: translateY(0); }',
-    '}'
-  ].join('\n');
-  document.head.appendChild(style);
-}
-// Run after fonts load for accurate measurement
-if (document.fonts && document.fonts.ready) {
-  document.fonts.ready.then(fixRotateHeight);
-} else {
-  window.addEventListener('load', fixRotateHeight);
-}
-window.addEventListener('resize', fixRotateHeight);
+// ENTRANCE ANIMATIONS
+let delay = 0;
+const heroLeft = document.querySelectorAll('.hero-left > *');
+heroLeft.forEach((el) => {
+  el.style.opacity = '0'; el.style.transform = 'translateY(18px)';
+  el.style.transition = 'opacity .55s ease ' + delay + 's, transform .55s ease ' + delay + 's';
+  delay += 0.09;
+  requestAnimationFrame(() => requestAnimationFrame(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }));
+});
+delay = 0.25;
+const heroRight = document.querySelectorAll('.hero-right > *');
+heroRight.forEach((el) => {
+  el.style.opacity = '0'; el.style.transform = 'translateY(14px)';
+  el.style.transition = 'opacity .5s ease ' + delay + 's, transform .5s ease ' + delay + 's';
+  delay += 0.1;
+  requestAnimationFrame(() => requestAnimationFrame(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }));
+});
 
-// ── ENTRANCE ANIMATIONS ──
-(function() {
-  var delay = 0;
-  document.querySelectorAll('.hero-left > *').forEach(function(el) {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(18px)';
-    el.style.transition = 'opacity .55s ease ' + delay + 's, transform .55s ease ' + delay + 's';
-    delay += 0.09;
+// SCROLL REVEAL
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; obs.unobserve(e.target); }
   });
-  delay = 0.25;
-  document.querySelectorAll('.hero-right > *').forEach(function(el) {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(14px)';
-    el.style.transition = 'opacity .5s ease ' + delay + 's, transform .5s ease ' + delay + 's';
-    delay += 0.1;
-  });
-  // Trigger animations
-  requestAnimationFrame(function() {
-    requestAnimationFrame(function() {
-      document.querySelectorAll('.hero-left > *, .hero-right > *').forEach(function(el) {
-        el.style.opacity = '1';
-        el.style.transform = 'translateY(0)';
-      });
-    });
-  });
-})();
-
-// ── SCROLL REVEAL ──
-if ('IntersectionObserver' in window) {
-  var obs = new IntersectionObserver(function(entries) {
-    entries.forEach(function(e) {
-      if (e.isIntersecting) {
-        e.target.style.opacity = '1';
-        e.target.style.transform = 'translateY(0)';
-        obs.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.08 });
-  document.querySelectorAll('.prob-card, .tool-card, .sb-point, .sugg-card, .hsc').forEach(function(el) {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(14px)';
-    el.style.transition = 'opacity .45s ease, transform .45s ease';
-    obs.observe(el);
-  });
-}
+}, { threshold: 0.08 });
+document.querySelectorAll('.prob-card, .tool-card, .sb-point, .sugg-card, .hsc').forEach(el => {
+  el.style.opacity = '0'; el.style.transform = 'translateY(14px)';
+  el.style.transition = 'opacity .45s ease, transform .45s ease';
+  obs.observe(el);
+});
 </script>
 </body>
 </html>
-
-
