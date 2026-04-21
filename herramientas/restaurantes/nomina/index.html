@@ -7,6 +7,14 @@
 <meta name="description" content="Calcula el costo real de tu nómina: IMSS, INFONAVIT, aguinaldo, vacaciones y Ley de Propinas 2025. Simulador en tiempo real para restaurantes. Gratis.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-25ZX71GCQ4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-25ZX71GCQ4');
+</script>
 <style>
 :root{
   --bg:#F9F8F6;--bg2:#F2F1EE;--bg3:#EAEAE6;--white:#FFFFFF;
@@ -431,7 +439,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15);}
   </div>
 
   <div class="nav-btns">
-    <button class="btn-primary" onclick="goStep(2)" type="button">Siguiente — Tus ventas →</button>
+    <button class="btn-primary" onclick="gtag('event','nomina_paso2',{total_personas:getTotals().personas,total_sueldos:Math.round(getTotals().sueldos)});goStep(2)" type="button">Siguiente — Tus ventas →</button>
   </div>
 </div>
 
@@ -523,7 +531,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15);}
       Generado con ricramcas.com · 2026
     </div>
     <div class="share-btns">
-      <button class="btn-share" onclick="window.print()" type="button">🖨️ Imprimir</button>
+      <button class="btn-share" onclick="gtag('event','nomina_impresa');window.print()" type="button">🖨️ Imprimir</button>
       <button class="btn-share" onclick="location.reload()" type="button">🔄 Nuevo cálculo</button>
     </div>
   </div>
@@ -669,6 +677,7 @@ function goStep(n) {
 // ZONA FRONTERA
 // ─────────────────────────────────────────────
 function setZona(esZona) {
+  if(esZona) gtag('event','nomina_zona_frontera');
   S.zonaFrontera = esZona;
   document.getElementById('zona-si').classList.toggle('sel', esZona);
   document.getElementById('zona-no').classList.toggle('sel', !esZona);
@@ -862,6 +871,7 @@ function upRC2() {
 // CALCULAR
 // ─────────────────────────────────────────────
 function calcular() {
+  const _t=getTotals();const _v=parseInt(document.getElementById('ventas-mes').value)||0;const _pct=_v>0?Math.round((_t.total/_v)*100):0;gtag('event','nomina_completada',{total_personas:_t.personas,costo_total:Math.round(_t.total),pct_ventas:_pct});
   S.ventasMes     = parseInt(document.getElementById('ventas-mes').value) || 0;
   S.propinasMonto = S.propinas ? (parseInt(document.getElementById('propinas-monto').value) || 0) : 0;
 
@@ -1068,3 +1078,4 @@ window.addEventListener('load', function() {
 
 </body>
 </html>
+
