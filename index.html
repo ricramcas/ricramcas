@@ -460,7 +460,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     <div class="tools-tabs" role="tablist" aria-label="Categorías de herramientas">
       <button class="tt-btn active" role="tab" aria-selected="true" aria-controls="panel-rest" id="tab-rest" onclick="switchTab('rest',this)" type="button">🍽️ Restaurantes</button>
       <button class="tt-btn" role="tab" aria-selected="false" aria-controls="panel-emp" id="tab-emp" onclick="switchTab('emp',this)" type="button">💡 Emprendimiento</button>
-      <button class="tt-btn" role="tab" aria-selected="false" aria-controls="panel-salud" id="tab-salud" onclick="switchTab('salud',this)" type="button">🏥 Salud</button>
       <button class="tt-btn" role="tab" aria-selected="false" aria-controls="panel-fin" id="tab-fin" onclick="switchTab('fin',this)" type="button">💰 Finanzas</button>
     </div>
 
@@ -480,13 +479,13 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
         <div class="tc-who">Para cocinas de cualquier tamaño · datos de la industria restaurantera 2026</div>
         <div class="tc-soon-txt">Próximamente disponible</div>
       </div>
-      <div class="tool-card soon">
-        <div class="tc-top"><div class="tc-icon warn">👥</div><span class="tc-badge-soon">Próximamente</span></div>
+      <a href="/herramientas/restaurantes/nomina" class="tool-card">
+        <div class="tc-top"><div class="tc-icon orange">👥</div><span class="tc-badge-live">Disponible</span></div>
         <div class="tc-name">¿Cuánto te cuesta tu equipo?</div>
-        <div class="tc-desc">Calcula el costo total real de tener empleados: sueldo, seguro social, fondo de vivienda, vacaciones y aguinaldo. Incluye la Ley de Propinas 2025 y los salarios mínimos actualizados para cada puesto en un restaurante.</div>
-        <div class="tc-who">Con salarios mínimos y leyes actualizados a 2026</div>
-        <div class="tc-soon-txt">Próximamente disponible</div>
-      </div>
+        <div class="tc-desc">Calcula el costo real de tu nómina: IMSS, INFONAVIT, aguinaldo y vacaciones incluidos. Simulador en tiempo real donde subes y bajas sueldos y ves al instante cuánto te cuesta cada persona. Incluye la Ley de Propinas 2025.</div>
+        <div class="tc-who">Para restaurantes · salarios mínimos y leyes actualizados a 2026</div>
+        <div class="tc-action">Usar herramienta →</div>
+      </a>
       <div class="tool-card soon">
         <div class="tc-top"><div class="tc-icon warn">⚖️</div><span class="tc-badge-soon">Próximamente</span></div>
         <div class="tc-name">¿Cuánto necesitas vender para no perder?</div>
@@ -522,23 +521,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     </div>
 
     <!-- SALUD -->
-    <div class="tt-panel" id="panel-salud" role="tabpanel" aria-labelledby="tab-salud">
-      <div class="tool-card soon">
-        <div class="tc-top"><div class="tc-icon green">🏥</div><span class="tc-badge-soon">Próximamente</span></div>
-        <div class="tc-name">¿Dónde hay oportunidades en salud?</div>
-        <div class="tc-desc">Ve en qué estados y tipos de población hay mayores necesidades de atención médica sin cubrir. Útil antes de lanzar cualquier proyecto o servicio relacionado con salud.</div>
-        <div class="tc-who">Para emprendedores en salud · organizaciones · equipos de innovación</div>
-        <div class="tc-soon-txt">Próximamente disponible</div>
-      </div>
-      <div class="tool-card soon">
-        <div class="tc-top"><div class="tc-icon green">✅</div><span class="tc-badge-soon">Próximamente</span></div>
-        <div class="tc-name">¿Tu proyecto de salud puede sobrevivir en México?</div>
-        <div class="tc-desc">Revisa si tu idea en el sector salud tiene las condiciones para funcionar en el ecosistema mexicano: permisos, adopción hospitalaria, integración con sistemas existentes y más.</div>
-        <div class="tc-who">Para proyectos de tecnología en salud · equipos hospitalarios</div>
-        <div class="tc-soon-txt">Próximamente disponible</div>
-      </div>
-    </div>
-
     <!-- FINANZAS -->
     <div class="tt-panel" id="panel-fin" role="tabpanel" aria-labelledby="tab-fin">
       <div class="tool-card soon">
