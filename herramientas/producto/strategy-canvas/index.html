@@ -7,6 +7,14 @@
 <meta name="description" content="Descubre en qué dimensiones tu producto o servicio es genuinamente diferente a la competencia. Canvas de estrategia en tiempo real. Gratis, sin registro.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-25ZX71GCQ4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-25ZX71GCQ4');
+</script>
 <style>
 :root{
   --bg:#F9F8F6;--bg2:#F2F1EE;--bg3:#EAEAE6;--white:#FFFFFF;
@@ -754,6 +762,7 @@ let curStep = 1;
 // NAVIGATION
 // ─────────────────────────────────────────────
 function startTool() {
+  gtag('event','canvas_iniciado');
   document.getElementById('screen-0').classList.remove('active');
   document.getElementById('screen-steps').classList.add('active');
   window.scrollTo({ top:0, behavior:'smooth' });
@@ -783,6 +792,7 @@ function selTipo(btn) {
   document.querySelectorAll('.tipo-btn').forEach(b => b.classList.remove('sel'));
   btn.classList.add('sel');
   S.tipo = btn.dataset.tipo;
+  gtag('event','canvas_tipo',{tipo:S.tipo});
   checkPaso1();
 }
 
@@ -791,6 +801,7 @@ function checkPaso1() {
 }
 
 function irPaso2() {
+  gtag('event','canvas_paso2',{tipo:S.tipo||''});
   S.nombre   = document.getElementById('nombre-producto').value.trim();
   S.segmento = document.getElementById('segmento').value.trim();
   // Init factores from DB
@@ -907,6 +918,7 @@ function renameFactorFromInput(i, val) {
 
 function addFactor() {
   if (S.customCount >= 2) return;
+  gtag('event','canvas_factor_agregado',{count:S.customCount+1});
   S.factores.push({
     id: 'custom_' + S.customCount,
     nombre: 'Mi factor ' + (S.customCount + 1),
@@ -1041,6 +1053,8 @@ function drawFinalCanvas() {
 // CALCULAR — DIAGNÓSTICO
 // ─────────────────────────────────────────────
 function calcular() {
+  const _dp=Math.round(((S.factores.reduce((a,f)=>a+f.me,0)/S.factores.length)-(S.factores.reduce((a,f)=>a+f.ind,0)/S.factores.length))/(S.factores.reduce((a,f)=>a+f.ind,0)/S.factores.length)*100);
+  gtag('event','canvas_completado',{tipo:S.tipo||'',diff_pct:_dp,factores_count:S.factores.length});
   const n      = S.factores.length;
   const avgMe  = S.factores.reduce((a,f) => a+f.me,  0) / n;
   const avgInd = S.factores.reduce((a,f) => a+f.ind, 0) / n;
