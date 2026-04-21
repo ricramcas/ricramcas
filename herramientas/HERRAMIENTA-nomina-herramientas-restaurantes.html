@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Cuánto te cuesta tu equipo? | ricramcas.com</title>
+<meta name="description" content="Calcula el costo real de tu nómina: IMSS, INFONAVIT, aguinaldo, vacaciones y Ley de Propinas 2025. Simulador en tiempo real para restaurantes. Gratis.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F9F8F6;--bg2:#F2F1EE;--bg3:#EAEAE6;--white:#FFFFFF;
+  --border:#E0DFD9;--bdr2:#CCCAC3;
+  --text:#111010;--t2:#3D3C38;--t3:#595855;
+  --acc:#C4520A;--acclt:#FBF0E9;--accmd:#EFC9A8;
+  --green:#1A7A46;--greenlt:#E8F5EE;
+  --warn:#9B6E1A;--warnlt:#FDF7EB;
+  --red:#B83020;--redlt:#FDECEA;
+  --r:8px;--sh:0 1px 4px rgba(0,0,0,.07);--shmd:0 4px 24px rgba(0,0,0,.09);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6;overflow-x:hidden;}
+
+/* TOOLTIP */
+.tip{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:var(--bg3);border:1px solid var(--bdr2);font-size:10px;font-weight:700;color:var(--t3);cursor:help;position:relative;vertical-align:middle;margin-left:3px;flex-shrink:0;transition:all .15s;line-height:1;}
+.tip:hover,.tip:focus{background:var(--acc);border-color:var(--acc);color:white;outline:none;}
+.tip::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--text);color:white;font-size:12px;font-weight:400;line-height:1.5;padding:10px 14px;border-radius:var(--r);width:240px;white-space:normal;pointer-events:none;opacity:0;transition:opacity .2s;z-index:999;box-shadow:var(--shmd);font-family:'Plus Jakarta Sans',sans-serif;}
+.tip::before{content:'';position:absolute;bottom:calc(100% + 3px);left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--text);pointer-events:none;opacity:0;transition:opacity .2s;}
+.tip:hover::after,.tip:hover::before,.tip:focus::after,.tip:focus::before{opacity:1;}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px;border-radius:4px;}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:200;background:rgba(249,248,246,.95);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;}
+.nav-back{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--t3);text-decoration:none;transition:color .15s;}
+.nav-back:hover{color:var(--acc);}
+.nav-logo{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--text);text-decoration:none;}
+.nav-logo span{color:var(--acc);font-style:italic;}
+
+/* SCREENS */
+.screen{display:none;}.screen.active{display:block;}
+
+/* IMPACT */
+.impact-wrap{max-width:700px;margin:0 auto;padding:48px 24px 80px;}
+.impact-eyebrow{display:inline-flex;align-items:center;gap:7px;background:var(--acclt);color:var(--acc);font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:4px 12px;border-radius:100px;margin-bottom:24px;}
+.impact-h1{font-family:'Playfair Display',serif;font-size:clamp(30px,5vw,50px);font-weight:900;line-height:1.1;color:var(--text);margin-bottom:18px;}
+.impact-h1 em{font-style:italic;color:var(--acc);}
+.impact-sub{font-size:15px;color:var(--t2);line-height:1.75;max-width:540px;margin-bottom:36px;}
+.stat-trio{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:32px;}
+.stat-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:18px;position:relative;overflow:visible;box-shadow:var(--sh);}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--r) var(--r) 0 0;}
+.stat-card.r::before{background:var(--red);}
+.stat-card.a::before{background:var(--warn);}
+.stat-card.g::before{background:var(--green);}
+.stat-num{font-family:'Playfair Display',serif;font-size:42px;font-weight:900;line-height:1;margin-bottom:6px;}
+.stat-num.r{color:var(--red);}.stat-num.a{color:var(--warn);}.stat-num.g{color:var(--green);}
+.stat-desc{font-size:12px;color:var(--t2);line-height:1.5;}
+.stat-src{font-size:11px;color:var(--t3);margin-top:4px;}
+.example-box{background:var(--acclt);border:1.5px solid var(--accmd);border-radius:var(--r);padding:20px 22px;margin-bottom:32px;}
+.example-box-title{font-size:11px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;}
+.example-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--accmd);}
+.example-row:last-child{border-bottom:none;}
+.example-lbl{font-size:13px;color:var(--t2);}
+.example-val{font-size:13px;font-weight:700;color:var(--text);}
+.example-val.total{font-family:'Playfair Display',serif;font-size:20px;color:var(--acc);}
+.example-row.total-row{padding-top:12px;margin-top:4px;border-top:2px solid var(--accmd);border-bottom:none;}
+.ley-banner{background:var(--warnlt);border:1.5px solid rgba(155,110,26,.3);border-radius:var(--r);padding:16px 18px;margin-bottom:28px;display:flex;gap:12px;align-items:flex-start;}
+.ley-icon{font-size:20px;flex-shrink:0;margin-top:1px;}
+.ley-title{font-size:13px;font-weight:700;color:var(--warn);margin-bottom:3px;}
+.ley-text{font-size:13px;color:var(--t2);line-height:1.55;}
+.impact-cta{background:var(--text);border-radius:var(--r);padding:22px 26px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.impact-cta strong{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:white;display:block;margin-bottom:3px;}
+.impact-cta p{font-size:13px;color:rgba(255,255,255,.6);}
+.btn-start{height:50px;padding:0 28px;background:var(--acc);color:white;border:none;border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .15s;box-shadow:0 2px 12px rgba(196,82,10,.4);}
+.btn-start:hover{background:#B34809;transform:translateY(-1px);}
+
+/* STEPS STRUCTURE */
+.steps-hdr{max-width:700px;margin:0 auto;padding:28px 24px 0;}
+.progress-wrap{max-width:700px;margin:0 auto;padding:0 24px;}
+.progress-steps{display:flex;gap:0;border-radius:var(--r);overflow:hidden;border:1px solid var(--border);margin-bottom:6px;}
+.ps{flex:1;padding:10px 8px;background:var(--white);border-right:1px solid var(--border);text-align:center;transition:all .3s;}
+.ps:last-child{border-right:none;}
+.ps.done{background:var(--greenlt);}
+.ps.active{background:var(--acclt);}
+.ps-n{display:block;font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.05em;text-transform:uppercase;}
+.ps.active .ps-n{color:var(--acc);}
+.ps.done .ps-n{color:var(--green);}
+.ps-l{display:block;font-size:11px;font-weight:600;color:var(--t3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ps.active .ps-l{color:var(--acc);}
+.ps.done .ps-l{color:var(--green);}
+.progress-bar-track{height:3px;background:var(--bg3);border-radius:100px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--acc);border-radius:100px;transition:width .6s cubic-bezier(.16,1,.3,1);}
+.steps-wrap{max-width:700px;margin:0 auto;padding:0 24px 140px;}
+
+/* STEP */
+.step{display:none;}
+.step.active{display:block;animation:fadeUp .4s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.3;transform:scale(.6);}}
+
+/* STEP HEADER */
+.step-hdr{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:18px 22px;margin-bottom:16px;box-shadow:var(--sh);display:flex;align-items:flex-start;gap:16px;}
+.rc-wrap{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.rc-svg{transform:rotate(-90deg);}
+.rc-pct{font-family:'Playfair Display',serif;font-size:13px;font-weight:700;text-align:center;}
+.rc-lbl{font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--t3);text-align:center;max-width:60px;line-height:1.3;}
+.step-meta{flex:1;}
+.step-meta h2{font-family:'Playfair Display',serif;font-size:19px;font-weight:700;margin-bottom:3px;}
+.step-meta p{font-size:13px;color:var(--t3);line-height:1.5;}
+.badge-row{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
+.step-badge{display:inline-flex;align-items:center;gap:5px;background:var(--bg2);border:1px solid var(--border);border-radius:100px;padding:3px 9px;font-size:11px;font-weight:600;color:var(--t3);}
+
+/* CARD */
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);padding:20px;margin-bottom:14px;}
+.card-title{font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+
+/* PUESTO ROW — the live slider section */
+.puesto-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;margin-bottom:10px;box-shadow:var(--sh);transition:border-color .2s;}
+.puesto-card.active-p{border-color:var(--accmd);}
+.puesto-card:not(.active-p){opacity:.55;transition:opacity .2s,border-color .2s;}
+.puesto-card:not(.active-p):hover{opacity:.8;}
+.puesto-top{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.puesto-icon{font-size:22px;flex-shrink:0;}
+.puesto-nombre{font-size:15px;font-weight:700;color:var(--text);flex:1;}
+.puesto-min-badge{font-size:10px;font-weight:700;background:var(--greenlt);color:var(--green);border:1px solid rgba(26,122,70,.2);border-radius:100px;padding:3px 8px;white-space:nowrap;}
+.puesto-min-badge.warn{background:var(--warnlt);color:var(--warn);border-color:rgba(155,110,26,.2);}
+.puesto-controls{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;margin-bottom:10px;}
+.puesto-qty{display:flex;align-items:center;gap:6px;}
+.qty-btn{width:30px;height:30px;border-radius:6px;border:1.5px solid var(--bdr2);background:var(--bg2);color:var(--text);font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;padding:0;}
+.qty-btn:hover{border-color:var(--acc);color:var(--acc);background:var(--acclt);}
+.qty-num{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--text);min-width:18px;text-align:center;}
+.puesto-slider-wrap{flex:1;}
+.sueldo-display{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--text);line-height:1;margin-bottom:4px;transition:color .15s;}
+.sueldo-display.hot{color:var(--acc);}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;background:var(--bg3);border-radius:100px;outline:none;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--white);border:2.5px solid var(--acc);box-shadow:0 2px 8px rgba(196,82,10,.25);cursor:pointer;transition:transform .15s;}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15);}
+.slider-poles{display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-top:3px;}
+.puesto-costo{text-align:right;flex-shrink:0;}
+.costo-label{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px;}
+.costo-val{font-family:'Playfair Display',serif;font-size:20px;font-weight:900;color:var(--acc);}
+.costo-sub{font-size:10px;color:var(--t3);}
+.puesto-desglose{background:var(--bg);border-radius:6px;padding:10px 12px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:4px 10px;margin-top:2px;}
+.des-item{text-align:center;}
+.des-item-val{font-size:12px;font-weight:700;color:var(--t2);}
+.des-item-lbl{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.03em;}
+.puesto-alerta{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--warn);background:var(--warnlt);border-radius:6px;padding:7px 10px;margin-top:8px;}
+
+/* TOTAL STICKY BAR */
+.total-bar{position:fixed;bottom:0;left:0;right:0;z-index:50;background:var(--text);border-top:2px solid rgba(196,82,10,.4);padding:12px 24px;padding-bottom:calc(12px + env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.total-bar-left{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
+.total-bar-label{font-size:11px;font-weight:600;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;}
+.total-bar-val{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:var(--acc);}
+.total-bar-sub{font-size:12px;color:rgba(255,255,255,.45);}
+.total-bar-chips{display:flex;gap:8px;flex-wrap:wrap;}
+.tbchip{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:6px 10px;text-align:center;}
+.tbchip-val{font-family:'Playfair Display',serif;font-size:16px;font-weight:900;color:white;line-height:1;}
+.tbchip-lbl{font-size:9px;color:rgba(255,255,255,.5);margin-top:2px;letter-spacing:.03em;}
+
+/* STEP 2 — ventas + propinas */
+.iw{display:flex;align-items:center;background:var(--bg);border:1.5px solid var(--bdr2);border-radius:var(--r);overflow:hidden;transition:border-color .15s,box-shadow .15s;}
+.iw:focus-within{border-color:var(--acc);box-shadow:0 0 0 3px rgba(196,82,10,.1);background:var(--white);}
+.pfx{padding:0 10px;font-size:12px;font-weight:600;color:var(--t3);background:var(--bg2);border-right:1.5px solid var(--bdr2);height:44px;display:flex;align-items:center;white-space:nowrap;}
+.iw input{flex:1;border:none;outline:none;background:transparent;font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:600;color:var(--text);padding:0 12px;height:44px;min-width:0;}
+.iw input::-webkit-inner-spin-button,.iw input::-webkit-outer-spin-button{-webkit-appearance:none;}
+.field{margin-bottom:14px;}
+.field-label{font-size:12px;font-weight:700;color:var(--t2);margin-bottom:6px;display:flex;align-items:center;gap:4px;}
+.field-hint{font-size:11px;color:var(--t3);margin-top:4px;line-height:1.5;}
+.propinas-toggle{display:flex;gap:8px;flex-wrap:wrap;}
+.toggle-btn{height:40px;padding:0 16px;background:var(--bg2);border:1.5px solid var(--bdr2);border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:var(--t3);cursor:pointer;transition:all .15s;}
+.toggle-btn.sel{border-color:var(--acc);background:var(--acclt);color:var(--acc);}
+.toggle-btn:hover:not(.sel){border-color:var(--accmd);color:var(--acc);}
+
+/* NAV BUTTONS */
+.nav-btns{display:flex;gap:10px;margin-top:20px;justify-content:flex-end;}
+.btn-primary{height:50px;padding:0 26px;background:var(--acc);color:white;border:none;border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .15s;box-shadow:0 2px 12px rgba(196,82,10,.3);}
+.btn-primary:hover{background:#B34809;transform:translateY(-1px);}
+.btn-ghost{height:50px;padding:0 22px;background:var(--white);color:var(--t2);border:1.5px solid var(--bdr2);border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .15s;}
+.btn-ghost:hover{border-color:var(--acc);color:var(--acc);background:var(--acclt);}
+
+/* RESULTS */
+.the-number{background:var(--text);border-radius:var(--r);padding:20px 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:14px;}
+.tn-num{font-family:'Playfair Display',serif;font-size:52px;font-weight:900;color:var(--acc);line-height:1;flex-shrink:0;}
+.tn-text{font-size:13px;line-height:1.75;color:rgba(255,255,255,.75);}
+.tn-text strong{color:white;}
+.result-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px;}
+.r-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;box-shadow:var(--sh);border-top-width:3px;}
+.r-card.g{border-top-color:var(--green);}
+.r-card.a{border-top-color:var(--warn);}
+.r-card.r{border-top-color:var(--red);}
+.r-num{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;line-height:1;margin-bottom:3px;}
+.r-num.g{color:var(--green);}.r-num.a{color:var(--warn);}.r-num.r{color:var(--red);}
+.r-lbl{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px;}
+.r-desc{font-size:11px;color:var(--t3);line-height:1.45;}
+
+/* SEMÁFORO */
+.semaforo-card{border-radius:var(--r);padding:16px 18px;margin-bottom:14px;display:flex;align-items:center;gap:16px;}
+.semaforo-card.verde{background:var(--greenlt);border:1.5px solid rgba(26,122,70,.2);}
+.semaforo-card.amarillo{background:var(--warnlt);border:1.5px solid rgba(155,110,26,.2);}
+.semaforo-card.rojo{background:var(--redlt);border:1.5px solid rgba(184,48,32,.2);}
+.sem-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;}
+.semaforo-card.verde .sem-dot{background:var(--green);}
+.semaforo-card.amarillo .sem-dot{background:var(--warn);}
+.semaforo-card.rojo .sem-dot{background:var(--red);}
+.sem-title{font-size:14px;font-weight:700;margin-bottom:2px;}
+.semaforo-card.verde .sem-title{color:var(--green);}
+.semaforo-card.amarillo .sem-title{color:var(--warn);}
+.semaforo-card.rojo .sem-title{color:var(--red);}
+.sem-desc{font-size:13px;color:var(--t2);line-height:1.5;}
+
+/* DESGLOSE NÓMINA DETALLADO */
+.nomina-tabla{background:var(--white);border:1px solid var(--border);border-radius:var(--r);overflow:visible;margin-bottom:14px;box-shadow:var(--sh);}
+.nt-header{display:grid;grid-template-columns:1fr 90px 90px 90px 100px;gap:8px;padding:10px 16px;background:var(--bg2);border-bottom:1px solid var(--border);}
+.nt-header span{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.04em;text-align:right;}
+.nt-header span:first-child{text-align:left;}
+.nt-row{display:grid;grid-template-columns:1fr 90px 90px 90px 100px;gap:8px;padding:10px 16px;border-bottom:1px solid var(--border);align-items:center;}
+.nt-row:last-child{border-bottom:none;}
+.nt-row.subtotal{background:var(--bg);border-top:2px solid var(--border);}
+.nt-nombre{font-size:13px;font-weight:600;color:var(--text);}
+.nt-nombre small{display:block;font-size:11px;font-weight:400;color:var(--t3);}
+.nt-val{font-size:12px;color:var(--t2);text-align:right;}
+.nt-val.bold{font-weight:700;color:var(--text);}
+.nt-val.acc{font-weight:700;color:var(--acc);}
+.nt-row.subtotal .nt-val{font-size:13px;font-weight:700;}
+
+/* LEY DE PROPINAS ALERT */
+.propinas-alert{background:var(--warnlt);border:1.5px solid rgba(155,110,26,.25);border-radius:var(--r);padding:16px 18px;margin-bottom:14px;}
+.pa-title{font-size:13px;font-weight:700;color:var(--warn);margin-bottom:8px;display:flex;align-items:center;gap:7px;}
+.pa-item{font-size:13px;color:var(--t2);padding:5px 0;border-bottom:1px solid rgba(155,110,26,.1);line-height:1.5;display:flex;gap:8px;}
+.pa-item:last-child{border-bottom:none;}
+.pa-item::before{content:'→';color:var(--warn);flex-shrink:0;font-weight:700;}
+
+/* DECISIONES */
+.dec-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start;box-shadow:var(--sh);}
+.dec-num{width:28px;height:28px;border-radius:50%;background:var(--acc);color:white;font-family:'Playfair Display',serif;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.dec-body{flex:1;}
+.dec-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.dec-desc{font-size:13px;color:var(--t3);line-height:1.55;}
+
+/* SHARE */
+.share-bar{background:var(--text);border-radius:var(--r);padding:18px 22px;margin-top:20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.share-text{color:rgba(255,255,255,.65);font-size:12px;}
+.share-text strong{color:white;display:block;font-size:14px;margin-bottom:2px;}
+.share-btns{display:flex;gap:8px;}
+.btn-share{height:38px;padding:0 14px;background:rgba(255,255,255,.1);color:white;border:1px solid rgba(255,255,255,.18);border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .15s;}
+.btn-share:hover{background:rgba(255,255,255,.2);}
+
+/* CTA COMUNIDAD */
+.brujula-cta{background:var(--text);border-radius:var(--r);padding:26px 28px;margin:24px 0 0;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;}
+.bc-eyebrow{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:rgba(37,211,102,.75);margin-bottom:8px;}
+.bc-title{font-family:'Playfair Display',serif;font-size:19px;font-weight:700;color:white;margin-bottom:7px;}
+.bc-desc{font-size:13px;color:rgba(255,255,255,.55);line-height:1.6;margin-bottom:14px;}
+.bc-btns{display:flex;gap:8px;flex-wrap:wrap;}
+.bc-wa{height:44px;padding:0 18px;background:#25d366;color:white;border:none;border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none;transition:all .15s;}
+.bc-wa:hover{background:#20c45a;}
+.bc-ig{height:44px;padding:0 16px;background:rgba(255,255,255,.07);color:white;border:1px solid rgba(255,255,255,.17);border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none;transition:all .15s;}
+.bc-icon{font-size:48px;line-height:1;}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .stat-trio{grid-template-columns:1fr 1fr;}
+  .result-grid{grid-template-columns:1fr 1fr;}
+  .nt-header,.nt-row{grid-template-columns:1fr 80px 80px 90px;}
+  .nt-header span:nth-child(3),.nt-row .nt-val:nth-child(3){display:none;}
+  .total-bar{padding:10px 16px;}
+  .puesto-desglose{grid-template-columns:1fr 1fr;}
+  .brujula-cta{grid-template-columns:1fr;}
+  .bc-icon{display:none;}
+}
+@media(max-width:540px){
+  .tip::after{bottom:auto;top:calc(100% + 8px);width:200px;left:0;transform:none;}
+  .tip::before{bottom:auto;top:calc(100% + 3px);border-top-color:transparent;border-bottom-color:var(--text);}
+  .stat-trio,.result-grid{grid-template-columns:1fr;}
+  .step-hdr{flex-direction:column;}
+  .rc-wrap{flex-direction:row;align-items:center;gap:10px;}
+  .nav-btns{flex-direction:column;gap:8px;align-items:stretch;}
+  .btn-primary,.btn-ghost{width:100%;justify-content:center;}
+  .ps-l{display:none;}
+  .puesto-controls{grid-template-columns:auto 1fr;}
+  .puesto-costo{display:none;}
+  .nt-header,.nt-row{grid-template-columns:1fr 80px 100px;}
+  .nt-header span:nth-child(2),.nt-row .nt-val:nth-child(2),
+  .nt-header span:nth-child(3),.nt-row .nt-val:nth-child(3){display:none;}
+  .the-number{flex-direction:column;gap:12px;}
+  .total-bar-chips{display:none;}
+  .bc-btns{flex-direction:column;}
+  .bc-wa,.bc-ig{width:100%;justify-content:center;}
+}
+@media(max-width:430px){
+  .nav{padding:0 14px;}
+  .impact-wrap{padding:32px 16px 56px;}
+  .steps-hdr,.steps-wrap{padding-left:14px;padding-right:14px;}
+  .card{padding:14px;}
+  .puesto-card{padding:14px;}
+}
+@media print{
+  .nav,.progress-wrap,#screen-0,.nav-btns,.share-bar,.total-bar{display:none!important;}
+  #screen-steps{display:block!important;}
+  .step{display:none!important;}
+  #step-3{display:block!important;}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-back" rel="noopener">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    ricramcas.com
+  </a>
+  <a href="/" class="nav-logo">ric<span>ram</span>cas</a>
+  <div style="width:100px"></div>
+</nav>
+
+<!-- SCREEN 0: IMPACTO -->
+<div id="screen-0" class="screen active">
+<div class="impact-wrap">
+  <div class="impact-eyebrow">🍽️ Herramienta para restaurantes</div>
+  <h1 class="impact-h1">Pagas menos<br>de lo que crees.<br><em>Pero te cuesta más.</em></h1>
+  <p class="impact-sub">El sueldo que le depositas a tu equipo es solo una parte de lo que realmente te cuesta tenerlo. Esta herramienta te da el número real — con IMSS, aguinaldo, INFONAVIT y todo lo que la ley obliga.</p>
+
+  <div class="stat-trio">
+    <div class="stat-card a">
+      <div class="stat-num a">30%</div>
+      <div class="stat-desc">más de lo que depositas en nómina es lo que realmente te cuesta cada empleado cuando sumas IMSS, INFONAVIT y prestaciones</div>
+      <div class="stat-src">IMSS / LFT 2026</div>
+    </div>
+    <div class="stat-card r">
+      <div class="stat-num r">42%</div>
+      <div class="stat-desc">de restaurantes en México no conoce su costo real de nómina — solo saben lo que pagan de sueldo</div>
+      <div class="stat-src">CANIRAC / AMR 2024</div>
+    </div>
+    <div class="stat-card g">
+      <div class="stat-num g">25%</div>
+      <div class="stat-desc">de tus ventas netas debería irse en nómina como máximo. Si te pasas de ahí, el restaurante no cierra bien</div>
+      <div class="stat-src">Referencia industria CANIRAC</div>
+    </div>
+  </div>
+
+  <div class="example-box">
+    <div class="example-box-title">Ejemplo real: ¿Cuánto te cuesta un mesero con sueldo de $10,000/mes?</div>
+    <div class="example-row"><span class="example-lbl">Lo que depositas (sueldo neto aprox.)</span><span class="example-val">$10,000</span></div>
+    <div class="example-row"><span class="example-lbl">IMSS — lo que pagas tú como patrón <span class="tip" tabindex="0" data-tip="El IMSS es el seguro médico de tus empleados. Tú como patrón pagas una parte adicional al sueldo: cubre enfermedades, maternidad, incapacidades y pensión.">ⓘ</span></span><span class="example-val">$1,550</span></div>
+    <div class="example-row"><span class="example-lbl">INFONAVIT <span class="tip" tabindex="0" data-tip="El INFONAVIT es el fondo para que tus empleados puedan comprar casa. Tú pagas el 5% de su sueldo adicional. El dinero va a una cuenta del trabajador, no a ti.">ⓘ</span></span><span class="example-val">$500</span></div>
+    <div class="example-row"><span class="example-lbl">Fondo de retiro <span class="tip" tabindex="0" data-tip="El SAR (Sistema de Ahorro para el Retiro) es la cuenta de ahorro para el retiro del trabajador. Tú aportas el 2% del sueldo cada mes a una AFORE a nombre de tu empleado.">ⓘ</span></span><span class="example-val">$515</span></div>
+    <div class="example-row"><span class="example-lbl">Aguinaldo (parte mensual) <span class="tip" tabindex="0" data-tip="La ley te obliga a dar 15 días de sueldo en diciembre. Si lo distribuyes mensualmente, son 1.25 días por mes.">ⓘ</span></span><span class="example-val">$417</span></div>
+    <div class="example-row"><span class="example-lbl">Vacaciones — extra que paga la ley <span class="tip" tabindex="0" data-tip="La ley te obliga a pagar un 25% extra sobre los días de vacaciones. Si tienes un empleado con 12 días de vacaciones al año, eso equivale a unos $125 al mes calculado proporcionalmente.">ⓘ</span></span><span class="example-val">$125</span></div>
+    <div class="example-row total-row"><span class="example-lbl" style="font-weight:700">Costo real total por mes</span><span class="example-val total">$13,107</span></div>
+  </div>
+
+  <div class="ley-banner">
+    <div class="ley-icon">⚖️</div>
+    <div>
+      <div class="ley-title">Ley de Propinas 2025 — cambió algo importante</div>
+      <div class="ley-text">Desde 2025, las propinas son oficialmente parte del salario de tus empleados. Eso significa que <strong>tienes que calcular el IMSS sobre el sueldo más las propinas</strong> — no solo sobre el sueldo base. Esta herramienta te dice cuánto más te cuesta si declaras las propinas correctamente.</div>
+    </div>
+  </div>
+
+  <div class="impact-cta">
+    <div>
+      <strong>Arma tu equipo y ve el costo real</strong>
+      <p>~5 minutos · Gratis · Sin registro</p>
+    </div>
+    <button class="btn-start" onclick="startTool()">Empezar ahora →</button>
+  </div>
+</div>
+</div>
+
+<!-- SCREEN STEPS -->
+<div id="screen-steps" class="screen">
+
+<div class="steps-hdr">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+    <div style="flex:1;">
+      <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--text);">¿Cuánto te cuesta <em style="color:var(--acc)">tu equipo?</em></div>
+      <div style="font-size:12px;color:var(--t3);margin-top:2px;">Costo real de nómina para restaurantes · 2026</div>
+    </div>
+    <div style="display:inline-flex;align-items:center;gap:6px;background:var(--acclt);color:var(--acc);font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:4px 12px;border-radius:100px;flex-shrink:0;">
+      <span style="width:5px;height:5px;border-radius:50%;background:var(--acc);animation:pulse 2s ease-in-out infinite;" aria-hidden="true"></span>
+      Restaurantes · Nómina
+    </div>
+  </div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-steps" role="list">
+    <div class="ps active" id="ps-1" role="listitem"><span class="ps-n">Paso 1</span><span class="ps-l">Tu equipo</span></div>
+    <div class="ps" id="ps-2" role="listitem"><span class="ps-n">Paso 2</span><span class="ps-l">Tus ventas</span></div>
+    <div class="ps" id="ps-3" role="listitem"><span class="ps-n">Paso 3</span><span class="ps-l">Diagnóstico</span></div>
+  </div>
+  <div class="progress-bar-track" role="progressbar" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100" aria-label="Progreso">
+    <div class="progress-bar-fill" id="prog-fill" style="width:33%"></div>
+  </div>
+</div>
+
+<div class="steps-wrap">
+
+<!-- PASO 1: ARMA TU EQUIPO -->
+<div class="step active" id="step-1">
+  <div class="step-hdr">
+    <div class="rc-wrap" aria-hidden="true">
+      <svg class="rc-svg" width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" fill="none" stroke="#EAEAE6" stroke-width="5"/><circle id="rc-1" cx="32" cy="32" r="26" fill="none" stroke="#C4520A" stroke-width="5" stroke-dasharray="163.4" stroke-dashoffset="163.4" stroke-linecap="round" style="transition:stroke-dashoffset .6s cubic-bezier(.16,1,.3,1)"/></svg>
+      <div class="rc-pct" id="rp-1" style="color:var(--acc)">0%</div>
+      <div class="rc-lbl">equipo configurado</div>
+    </div>
+    <div class="step-meta">
+      <h2>Arma tu equipo</h2>
+      <p>Elige cuántas personas tienes en cada puesto y mueve el slider para ajustar su sueldo. El costo real se actualiza al instante.</p>
+      <div class="badge-row">
+        <span class="step-badge">⏱ ~3 minutos</span>
+        <span class="step-badge">💡 IMSS, INFONAVIT, aguinaldo y más</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">¿Estás en Zona Libre Frontera Norte?
+      <span class="tip" tabindex="0" data-tip="La Zona Libre Frontera Norte incluye municipios como Tijuana, Juárez, Mexicali, Reynosa, Matamoros y otros. El salario mínimo allí es $473.29/día en 2026, vs $315.04 en el resto del país.">ⓘ</span>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="toggle-btn sel" id="zona-no" onclick="setZona(false)" type="button">No, soy del resto del país</button>
+      <button class="toggle-btn" id="zona-si" onclick="setZona(true)" type="button">Sí, zona frontera norte</button>
+    </div>
+    <div style="font-size:11px;color:var(--t3);margin-top:8px;" id="zona-hint">
+      Salario mínimo aplicable: <strong>$315.04/día → $9,451/mes</strong>
+    </div>
+  </div>
+
+  <div id="puestos-wrap">
+    <!-- Generated by JS -->
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn-primary" onclick="goStep(2)" type="button">Siguiente — Tus ventas →</button>
+  </div>
+</div>
+
+<!-- PASO 2: VENTAS Y PROPINAS -->
+<div class="step" id="step-2">
+  <div class="step-hdr">
+    <div class="rc-wrap" aria-hidden="true">
+      <svg class="rc-svg" width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" fill="none" stroke="#EAEAE6" stroke-width="5"/><circle id="rc-2" cx="32" cy="32" r="26" fill="none" stroke="#9B6E1A" stroke-width="5" stroke-dasharray="163.4" stroke-dashoffset="163.4" stroke-linecap="round" style="transition:stroke-dashoffset .6s cubic-bezier(.16,1,.3,1)"/></svg>
+      <div class="rc-pct" id="rp-2" style="color:var(--warn)">0%</div>
+      <div class="rc-lbl">contexto de ventas</div>
+    </div>
+    <div class="step-meta">
+      <h2>Tus ventas y propinas</h2>
+      <p>Para calcular si tu nómina está en el rango sano, necesitamos saber cuánto vende el restaurante al mes.</p>
+      <div class="badge-row">
+        <span class="step-badge">⏱ ~1 minuto</span>
+        <span class="step-badge">⚖️ Incluye Ley de Propinas 2025</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">¿Cuánto vende tu restaurante al mes?</div>
+    <div class="field">
+      <div class="field-label">Ventas netas promedio <span class="tip" tabindex="0" data-tip="Ventas netas = lo que cobras a tus clientes, sin contar el IVA. Si tus ventas con IVA son $115,000, tus ventas netas son $100,000.">ⓘ</span></div>
+      <div class="iw"><span class="pfx">$</span><input type="number" id="ventas-mes" min="0" max="10000000" step="5000" value="150000" placeholder="150000" oninput="upRC2()" aria-label="Ventas mensuales en pesos"></div>
+      <div class="field-hint">Promedio de los últimos 3 meses, sin IVA. Si no sabes exactamente, pon un estimado.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Propinas <span class="tip" tabindex="0" data-tip="Reforma a la Ley Federal del Trabajo 2025: las propinas son oficialmente parte del salario. El patrón debe calcular el IMSS sobre sueldo más propinas. Las propinas NO pueden reemplazar el salario mínimo.">ⓘ</span></div>
+    <div class="field">
+      <div class="field-label">¿Reciben propinas tus meseros?</div>
+      <div class="propinas-toggle">
+        <button class="toggle-btn sel" id="prop-si" onclick="setPropinas(true)" type="button">Sí, reciben propinas</button>
+        <button class="toggle-btn" id="prop-no" onclick="setPropinas(false)" type="button">No, o son mínimas</button>
+      </div>
+    </div>
+    <div id="propinas-monto-wrap" class="field">
+      <div class="field-label">Propinas promedio por mesero al mes <span class="tip" tabindex="0" data-tip="Desde 2025, debes calcular IMSS sobre el sueldo más las propinas que recibe cada mesero. Si no declaras las propinas, técnicamente estás en incumplimiento.">ⓘ</span></div>
+      <div class="iw"><span class="pfx">$</span><input type="number" id="propinas-monto" min="0" max="30000" step="500" value="3000" placeholder="3000" oninput="upRC2()" aria-label="Propinas promedio por mesero"></div>
+      <div class="field-hint">Estimado por mesero al mes. Incluye todas las formas: efectivo, tarjeta, servicio incluido.</div>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn-ghost" onclick="goStep(1)" type="button">← Atrás</button>
+    <button class="btn-primary" onclick="calcular()" type="button">Ver diagnóstico completo →</button>
+  </div>
+</div>
+
+<!-- PASO 3: DIAGNÓSTICO -->
+<div class="step" id="step-3">
+
+  <div class="the-number">
+    <div class="tn-num" id="tn-num">—</div>
+    <div class="tn-text" id="tn-text">Calculando...</div>
+  </div>
+
+  <div id="semaforo-wrap"></div>
+
+  <div class="result-grid" id="result-grid"></div>
+
+  <div class="card">
+    <div class="card-title">Desglose completo por puesto</div>
+    <div class="nomina-tabla">
+      <div class="nt-header">
+        <span>Puesto</span>
+        <span>Sueldo</span>
+        <span>Aguin.+Vacac.</span>
+        <span>IMSS+INF+SAR</span>
+        <span>Costo total</span>
+      </div>
+      <div id="nt-body"></div>
+    </div>
+  </div>
+
+  <div id="propinas-alert-wrap"></div>
+
+  <div class="card">
+    <div class="card-title">🧠 3 cosas concretas que hacer ahora</div>
+    <div id="decs-wrap"></div>
+  </div>
+
+  <div class="share-bar">
+    <div class="share-text">
+      <strong>Diagnóstico de nómina listo</strong>
+      Generado con ricramcas.com · 2026
+    </div>
+    <div class="share-btns">
+      <button class="btn-share" onclick="window.print()" type="button">🖨️ Imprimir</button>
+      <button class="btn-share" onclick="location.reload()" type="button">🔄 Nuevo cálculo</button>
+    </div>
+  </div>
+
+</div><!-- /step-3 -->
+
+</div><!-- /steps-wrap -->
+</div><!-- /screen-steps -->
+
+<!-- TOTAL STICKY BAR -->
+<div class="total-bar" id="total-bar" style="display:none">
+  <div class="total-bar-left">
+    <div class="total-bar-label">Costo nómina total/mes</div>
+    <div class="total-bar-val" id="tb-total">$0</div>
+  </div>
+  <div class="total-bar-chips">
+    <div class="tbchip"><div class="tbchip-val" id="tb-personas">0</div><div class="tbchip-lbl">personas</div></div>
+    <div class="tbchip"><div class="tbchip-val" id="tb-sueldos">$0</div><div class="tbchip-lbl">en sueldos</div></div>
+    <div class="tbchip"><div class="tbchip-val" id="tb-extras">$0</div><div class="tbchip-lbl">en extras</div></div>
+  </div>
+</div>
+
+<!-- CTA COMUNIDAD -->
+<div id="cta-wrap" style="max-width:700px;margin:0 auto;padding:0 24px 40px;display:none">
+  <div class="brujula-cta">
+    <div>
+      <div class="bc-eyebrow">¿Te fue útil? Hay más donde esto vino</div>
+      <div class="bc-title">Únete a la comunidad gratuita</div>
+      <div class="bc-desc">Comparto información útil para tomar mejores decisiones en tu negocio. Sin publicidad. Sin ventas.</div>
+      <div class="bc-btns">
+        <a href="https://chat.whatsapp.com/L5m2FAFlsFl8lA2eT5XNvZ?mode=gi_t" class="bc-wa" target="_blank" rel="noopener">💬 Comunidad WhatsApp</a>
+        <a href="https://instagram.com/ricramcas" class="bc-ig" target="_blank" rel="noopener">📸 @ricramcas en Instagram</a>
+      </div>
+    </div>
+    <div class="bc-icon" aria-hidden="true">💬</div>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// CONSTANTS
+// ─────────────────────────────────────────────
+const SMG_DIA = 315.04;
+const ZFN_DIA = 473.29;
+const SMG_MES = SMG_DIA * 30;   // 9,451.20
+const ZFN_MES = ZFN_DIA * 30;   // 14,198.70
+
+// Prestaciones como % del SBC (mensualizadas)
+// IMSS patronal total (sin cuota fija variable): ~15.5%
+// INFONAVIT: 5%
+// SAR/retiro/cesantía: ~5.15%
+// Riesgo trabajo restaurantes: 0.54%
+// Total IMSS+INFONAVIT+SAR: ~26.2%
+// Aguinaldo (15 días / 12): 1.25% del sueldo mensual
+// Prima vacacional (año 1: 12 días × 25% / 12 meses): ~0.25%
+// Total prestaciones mensualizadas: ~27.7% → redondeamos a 28% para simplificar
+// Con cuota fija IMSS (~$692/mes por empleado), el % real sube para sueldos bajos
+
+const PERC_IMSS_INFONAVIT = 0.262;  // 26.2%
+const PERC_AGUINALDO      = 0.0417; // 15 días / 360 días
+const PERC_PRIMA_VAC      = 0.0083; // aprox año 1
+const CUOTA_FIJA_IMSS     = 692;    // pesos/mes fijos independiente del sueldo
+
+// Total extra sobre el sueldo: ~30%
+// = IMSS+INF+SAR (26.2%) + aguinaldo (4.17%) + prima vac (0.83%) ≈ 31.2%
+// Usamos función que calcula con cuota fija
+
+function costoTotal(sbc) {
+  const imss_inf_sar = sbc * PERC_IMSS_INFONAVIT;
+  const aguinaldo    = sbc * PERC_AGUINALDO;
+  const prima_vac    = sbc * PERC_PRIMA_VAC;
+  return {
+    sueldo:     sbc,
+    imss:       Math.round(imss_inf_sar + CUOTA_FIJA_IMSS),
+    prestaciones: Math.round(aguinaldo + prima_vac),
+    total:      Math.round(sbc + imss_inf_sar + CUOTA_FIJA_IMSS + aguinaldo + prima_vac)
+  };
+}
+
+// ─────────────────────────────────────────────
+// PUESTOS CONFIGURATION
+// ─────────────────────────────────────────────
+const PUESTOS = [
+  { id:'mesero',     icon:'🍽️', nombre:'Mesero',               minSMG: SMG_MES, minZFN: ZFN_MES, defSueldo:10000, minSlider:9000,  maxSlider:18000, step:500,
+    nota:'La Ley de Propinas 2025 aplica directo a este puesto.' },
+  { id:'capitan',    icon:'⭐', nombre:'Capitán de meseros',    minSMG: SMG_MES, minZFN: ZFN_MES, defSueldo:13000, minSlider:9000,  maxSlider:22000, step:500 },
+  { id:'cocinero',   icon:'👨‍🍳', nombre:'Cocinero',             minSMG: SMG_MES, minZFN: ZFN_MES, defSueldo:12000, minSlider:9000,  maxSlider:20000, step:500 },
+  { id:'cocinero_mayor', icon:'👨‍🍳', nombre:'Cocinero mayor / Chef', minSMG:11040, minZFN:ZFN_MES, defSueldo:16000, minSlider:11000, maxSlider:30000, step:1000,
+    nota:'Tiene tabla de salarios mínimos profesionales CONASAMI.' },
+  { id:'lavaloza',   icon:'🫧', nombre:'Lavaloza / Ayudante',  minSMG: SMG_MES, minZFN: ZFN_MES, defSueldo:9500,  minSlider:9000,  maxSlider:14000, step:500 },
+  { id:'hostess',    icon:'🤝', nombre:'Hostess / Recepción',  minSMG: SMG_MES, minZFN: ZFN_MES, defSueldo:10000, minSlider:9000,  maxSlider:16000, step:500 },
+  { id:'cajero',     icon:'💳', nombre:'Cajero',               minSMG: SMG_MES, minZFN: ZFN_MES, defSueldo:10000, minSlider:9000,  maxSlider:15000, step:500 },
+  { id:'gerente',    icon:'📋', nombre:'Gerente / Supervisor', minSMG: null,     minZFN: null,    defSueldo:22000, minSlider:15000, maxSlider:45000, step:1000 },
+];
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+let S = {
+  zonaFrontera: false,
+  propinas: true,
+  propinasMonto: 3000,
+  ventasMes: 150000,
+  puestos: {}
+};
+
+// Init puestos state
+PUESTOS.forEach(p => {
+  S.puestos[p.id] = { qty: 0, sueldo: p.defSueldo };
+});
+
+// ─────────────────────────────────────────────
+// SCREEN + STEP NAVIGATION
+// ─────────────────────────────────────────────
+let curStep = 1;
+
+function startTool() {
+  document.getElementById('screen-0').classList.remove('active');
+  document.getElementById('screen-steps').classList.add('active');
+  document.getElementById('total-bar').style.display = 'flex';
+  renderPuestos();
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+function goStep(n) {
+  document.getElementById('step-'+curStep).classList.remove('active');
+  document.getElementById('step-'+n).classList.add('active');
+  curStep = n;
+  const fills = {1:33, 2:66, 3:100};
+  document.getElementById('prog-fill').style.width = fills[n] + '%';
+  const pt = document.querySelector('[role=progressbar]');
+  if (pt) pt.setAttribute('aria-valuenow', fills[n]);
+  for (let i=1; i<=3; i++) {
+    const ps = document.getElementById('ps-'+i);
+    ps.classList.remove('active','done');
+    if (i === n) ps.classList.add('active');
+    else if (i < n) ps.classList.add('done');
+  }
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+// ─────────────────────────────────────────────
+// ZONA FRONTERA
+// ─────────────────────────────────────────────
+function setZona(esZona) {
+  S.zonaFrontera = esZona;
+  document.getElementById('zona-si').classList.toggle('sel', esZona);
+  document.getElementById('zona-no').classList.toggle('sel', !esZona);
+  const min = esZona ? ZFN_MES : SMG_MES;
+  document.getElementById('zona-hint').innerHTML =
+    'Salario mínimo aplicable: <strong>$' + (esZona ? '473.29/día → $14,199/mes' : '315.04/día → $9,451/mes') + '</strong>';
+  renderPuestos();
+}
+
+// ─────────────────────────────────────────────
+// PROPINAS TOGGLE
+// ─────────────────────────────────────────────
+function setPropinas(val) {
+  S.propinas = val;
+  document.getElementById('prop-si').classList.toggle('sel', val);
+  document.getElementById('prop-no').classList.toggle('sel', !val);
+  document.getElementById('propinas-monto-wrap').style.display = val ? '' : 'none';
+  upRC2();
+}
+
+// ─────────────────────────────────────────────
+// RENDER PUESTOS
+// ─────────────────────────────────────────────
+function fmt(n) {
+  return '$' + Math.round(n).toLocaleString('es-MX');
+}
+
+function renderPuestos() {
+  const wrap = document.getElementById('puestos-wrap');
+  const minMes = S.zonaFrontera ? ZFN_MES : SMG_MES;
+
+  wrap.innerHTML = PUESTOS.map(p => {
+    const qty    = S.puestos[p.id].qty;
+    const sueldo = Math.max(S.puestos[p.id].sueldo, Math.ceil(minMes));
+    const ct     = costoTotal(sueldo);
+    const pmin   = S.zonaFrontera ? p.minZFN : p.minSMG;
+    const porcentaje = ((sueldo - p.minSlider) / (p.maxSlider - p.minSlider)) * 100;
+    const isActive = qty > 0;
+    const belowMin = pmin && sueldo < pmin;
+    const totalPuesto = ct.total * qty;
+
+    return `<div class="puesto-card ${isActive ? 'active-p' : ''}" id="pc-${p.id}">
+      <div class="puesto-top">
+        <span class="puesto-icon">${p.icon}</span>
+        <span class="puesto-nombre">${p.nombre}</span>
+        ${pmin ? `<span class="puesto-min-badge ${belowMin ? 'warn' : ''}">
+          Mín: ${fmt(pmin)}/mes
+        </span>` : ''}
+      </div>
+      <div class="puesto-controls">
+        <div class="puesto-qty">
+          <button class="qty-btn" onclick="changeQty('${p.id}',-1)" type="button" aria-label="Quitar uno">−</button>
+          <span class="qty-num" id="qty-${p.id}">${qty}</span>
+          <button class="qty-btn" onclick="changeQty('${p.id}',1)" type="button" aria-label="Agregar uno">+</button>
+        </div>
+        <div class="puesto-slider-wrap">
+          <div class="sueldo-display ${isActive ? 'hot' : ''}" id="sd-${p.id}">${fmt(sueldo)}<span style="font-size:14px;font-weight:400;color:var(--t3);"> /mes</span></div>
+          <input type="range"
+            id="sl-${p.id}"
+            min="${p.minSlider}" max="${p.maxSlider}" step="${p.step}" value="${sueldo}"
+            aria-label="Sueldo de ${p.nombre}"
+            aria-valuenow="${sueldo}"
+            aria-valuemin="${p.minSlider}"
+            aria-valuemax="${p.maxSlider}"
+            aria-valuetext="${fmt(sueldo)} por mes"
+            oninput="updateSueldo('${p.id}', this.value)"
+            style="background:linear-gradient(to right,var(--acc) ${porcentaje}%,var(--bg3) ${porcentaje}%)">
+          <div class="slider-poles"><span>${fmt(p.minSlider)}</span><span>${fmt(p.maxSlider)}</span></div>
+        </div>
+        <div class="puesto-costo">
+          <div class="costo-label">Costo real/mes</div>
+          <div class="costo-val" id="cv-${p.id}">${qty > 0 ? fmt(totalPuesto) : '—'}</div>
+          <div class="costo-sub">${qty > 0 ? qty + ' × ' + fmt(ct.total) : 'Sin personas aún'}</div>
+        </div>
+      </div>
+      ${isActive ? `<div class="puesto-desglose">
+        <div class="des-item"><div class="des-item-val">${fmt(sueldo)}</div><div class="des-item-lbl">Sueldo</div></div>
+        <div class="des-item"><div class="des-item-val">${fmt(ct.imss)}</div><div class="des-item-lbl">IMSS+INF+SAR</div></div>
+        <div class="des-item"><div class="des-item-val">${fmt(ct.prestaciones)}</div><div class="des-item-lbl">Aguin.+Vacac.</div></div>
+        <div class="des-item"><div class="des-item-val" style="color:var(--acc)">${fmt(ct.total)}</div><div class="des-item-lbl">Total c/u</div></div>
+      </div>` : ''}
+      ${belowMin ? `<div class="puesto-alerta">⚠ Este sueldo está por debajo del salario mínimo legal de ${fmt(pmin)}/mes — riesgo de multa del IMSS.</div>` : ''}
+      ${p.nota && isActive ? `<div style="font-size:11px;color:var(--t3);margin-top:6px;padding:6px 10px;background:var(--bg);border-radius:6px;">${p.nota}</div>` : ''}
+    </div>`;
+  }).join('');
+
+  updateTotalBar();
+  upRC1();
+}
+
+function changeQty(id, delta) {
+  S.puestos[id].qty = Math.max(0, Math.min(20, S.puestos[id].qty + delta));
+  renderPuestos();
+}
+
+function updateSueldo(id, val) {
+  val = parseInt(val);
+  S.puestos[id].sueldo = val;
+  // Update just this card's display without full re-render
+  const p = PUESTOS.find(x => x.id === id);
+  const qty = S.puestos[id].qty;
+  const ct = costoTotal(val);
+  const porcentaje = ((val - p.minSlider) / (p.maxSlider - p.minSlider)) * 100;
+
+  const sd = document.getElementById('sd-'+id);
+  if (sd) { sd.innerHTML = fmt(val) + '<span style="font-size:14px;font-weight:400;color:var(--t3);"> /mes</span>'; }
+
+  const cv = document.getElementById('cv-'+id);
+  if (cv) {
+    cv.textContent = qty > 0 ? fmt(ct.total * qty) : '—';
+    cv.nextElementSibling.textContent = qty > 0 ? qty + ' × ' + fmt(ct.total) : 'Sin personas aún';
+  }
+
+  const sl = document.getElementById('sl-'+id);
+  if (sl) {
+    sl.style.background = `linear-gradient(to right,var(--acc) ${porcentaje}%,var(--bg3) ${porcentaje}%)`;
+    sl.setAttribute('aria-valuenow', val);
+    sl.setAttribute('aria-valuetext', fmt(val) + ' por mes');
+  }
+
+  // Update desglose if active
+  if (qty > 0) {
+    const card = document.getElementById('pc-'+id);
+    if (card) {
+      const des = card.querySelector('.puesto-desglose');
+      if (des) {
+        des.querySelectorAll('.des-item-val')[0].textContent = fmt(val);
+        des.querySelectorAll('.des-item-val')[1].textContent = fmt(ct.imss);
+        des.querySelectorAll('.des-item-val')[2].textContent = fmt(ct.prestaciones);
+        des.querySelectorAll('.des-item-val')[3].textContent = fmt(ct.total);
+      }
+    }
+  }
+
+  updateTotalBar();
+  upRC1();
+}
+
+// ─────────────────────────────────────────────
+// TOTAL BAR
+// ─────────────────────────────────────────────
+function getTotals() {
+  let totalPersonas = 0, totalSueldos = 0, totalExtras = 0;
+  PUESTOS.forEach(p => {
+    const qty = S.puestos[p.id].qty;
+    if (qty === 0) return;
+    const sueldo = S.puestos[p.id].sueldo;
+    const ct = costoTotal(sueldo);
+    totalPersonas += qty;
+    totalSueldos  += sueldo * qty;
+    totalExtras   += (ct.total - sueldo) * qty;
+  });
+  return { personas: totalPersonas, sueldos: totalSueldos, extras: totalExtras, total: totalSueldos + totalExtras };
+}
+
+function updateTotalBar() {
+  const t = getTotals();
+  document.getElementById('tb-total').textContent    = fmt(t.total);
+  document.getElementById('tb-personas').textContent = t.personas;
+  document.getElementById('tb-sueldos').textContent  = fmt(t.sueldos);
+  document.getElementById('tb-extras').textContent   = fmt(t.extras);
+}
+
+// ─────────────────────────────────────────────
+// PROGRESS CIRCLES
+// ─────────────────────────────────────────────
+function setRC(n, pct, id) {
+  const circle = document.getElementById('rc-'+n);
+  const label  = document.getElementById('rp-'+n);
+  if (!circle || !label) return;
+  const circumference = 163.4;
+  const offset = circumference - (pct / 100) * circumference;
+  circle.style.strokeDashoffset = offset;
+  label.textContent = Math.round(pct) + '%';
+}
+
+function upRC1() {
+  const t = getTotals();
+  const pct = Math.min(100, t.personas > 0 ? Math.min(100, (t.personas / 8) * 100) : 0);
+  setRC(1, pct, 'rc-1');
+}
+
+function upRC2() {
+  S.ventasMes = parseInt(document.getElementById('ventas-mes').value) || 0;
+  S.propinasMonto = parseInt(document.getElementById('propinas-monto').value) || 0;
+  const hasVentas = S.ventasMes > 0;
+  setRC(2, hasVentas ? 100 : 0, 'rc-2');
+}
+
+// ─────────────────────────────────────────────
+// CALCULAR
+// ─────────────────────────────────────────────
+function calcular() {
+  S.ventasMes     = parseInt(document.getElementById('ventas-mes').value) || 0;
+  S.propinasMonto = S.propinas ? (parseInt(document.getElementById('propinas-monto').value) || 0) : 0;
+
+  const t = getTotals();
+  const meseros = S.puestos['mesero'].qty + S.puestos['capitan'].qty;
+
+  // Propinas: IMSS extra sobre propinas de meseros
+  let costoPropinasExtra = 0;
+  if (S.propinas && meseros > 0) {
+    const sbc_propinas = S.propinasMonto;
+    costoPropinasExtra = meseros * (sbc_propinas * PERC_IMSS_INFONAVIT + CUOTA_FIJA_IMSS * 0.5);
+  }
+
+  const totalConPropinas = t.total + costoPropinasExtra;
+  const pctDeVentas = S.ventasMes > 0 ? (totalConPropinas / S.ventasMes) * 100 : 0;
+
+  // ── THE NUMBER ──
+  const tn = document.getElementById('tn-num');
+  const tt = document.getElementById('tn-text');
+  tn.textContent = fmt(totalConPropinas);
+  tt.innerHTML = `<strong>es lo que te cuesta tu equipo cada mes en total</strong><br>
+    ${fmt(t.sueldos)} en sueldos + ${fmt(t.extras + costoPropinasExtra)} en IMSS, INFONAVIT, aguinaldo y vacaciones`;
+
+  // ── SEMÁFORO ──
+  let semClass, semTitle, semDesc;
+  if (S.ventasMes === 0) {
+    semClass = 'amarillo';
+    semTitle = 'Sin datos de ventas';
+    semDesc  = 'Agrega tus ventas mensuales para ver si tu nómina está en el rango sano de la industria.';
+  } else if (pctDeVentas <= 25) {
+    semClass = 'verde';
+    semTitle = `Nómina sana — ${pctDeVentas.toFixed(1)}% de tus ventas`;
+    semDesc  = `Tu nómina representa el ${pctDeVentas.toFixed(1)}% de tus ventas. El rango ideal para restaurantes es 15–25%. Estás en zona verde.`;
+  } else if (pctDeVentas <= 32) {
+    semClass = 'amarillo';
+    semTitle = `Nómina alta — ${pctDeVentas.toFixed(1)}% de tus ventas`;
+    semDesc  = `Tu nómina representa el ${pctDeVentas.toFixed(1)}% de tus ventas. El rango ideal es 15–25%. Estás ligeramente por arriba — revisa si puedes optimizar sin afectar el servicio.`;
+  } else {
+    semClass = 'rojo';
+    semTitle = `Nómina crítica — ${pctDeVentas.toFixed(1)}% de tus ventas`;
+    semDesc  = `Tu nómina representa el ${pctDeVentas.toFixed(1)}% de tus ventas — por encima del 32% es difícil que el restaurante cierre bien el mes. Necesitas reducir nómina, aumentar ventas, o ambas.`;
+  }
+  document.getElementById('semaforo-wrap').innerHTML = `
+    <div class="semaforo-card ${semClass}">
+      <div class="sem-dot"></div>
+      <div>
+        <div class="sem-title">${semTitle}</div>
+        <div class="sem-desc">${semDesc}</div>
+      </div>
+    </div>`;
+
+  // ── RESULT CARDS ──
+  const cards = [
+    { cls:'a', num: fmt(t.total), lbl:'Sueldos + prestaciones', desc:'Sin contar impacto de propinas en IMSS' },
+    { cls: pctDeVentas===0?'a': pctDeVentas<=25?'g':pctDeVentas<=32?'a':'r',
+      num: S.ventasMes > 0 ? pctDeVentas.toFixed(1)+'%' : '—',
+      lbl:'De tus ventas mensuales',
+      desc:'Ideal: 15–25% según CANIRAC' },
+    { cls:'a', num: fmt(t.extras), lbl:'En IMSS, INFONAVIT y prestaciones', desc:'Encima de lo que depositas en nómina' },
+  ];
+  document.getElementById('result-grid').innerHTML = cards.map(c => `
+    <div class="r-card ${c.cls}">
+      <div class="r-lbl">${c.lbl}</div>
+      <div class="r-num ${c.cls}">${c.num}</div>
+      <div class="r-desc">${c.desc}</div>
+    </div>`).join('');
+
+  // ── TABLA DESGLOSE ──
+  const rows = PUESTOS.filter(p => S.puestos[p.id].qty > 0).map(p => {
+    const qty = S.puestos[p.id].qty;
+    const sueldo = S.puestos[p.id].sueldo;
+    const ct = costoTotal(sueldo);
+    return `<div class="nt-row">
+      <div class="nt-nombre">${p.icon} ${p.nombre}<small>${qty} persona${qty>1?'s':''}</small></div>
+      <div class="nt-val">${fmt(sueldo)}</div>
+      <div class="nt-val">${fmt(ct.prestaciones)}</div>
+      <div class="nt-val">${fmt(ct.imss)}</div>
+      <div class="nt-val bold">${fmt(ct.total * qty)}</div>
+    </div>`;
+  });
+
+  if (costoPropinasExtra > 0) {
+    rows.push(`<div class="nt-row" style="background:var(--warnlt)">
+      <div class="nt-nombre">⚖️ IMSS extra por propinas<small>Meseros y capitanes (Ley 2025)</small></div>
+      <div class="nt-val">—</div>
+      <div class="nt-val">—</div>
+      <div class="nt-val" style="color:var(--warn);font-weight:700">${fmt(costoPropinasExtra)}</div>
+      <div class="nt-val bold">${fmt(costoPropinasExtra)}</div>
+    </div>`);
+  }
+
+  rows.push(`<div class="nt-row subtotal">
+    <div class="nt-nombre" style="font-weight:700">Total mensual</div>
+    <div class="nt-val bold">${fmt(t.sueldos)}</div>
+    <div class="nt-val bold">${fmt(t.extras)}</div>
+    <div class="nt-val bold">${fmt(t.extras + costoPropinasExtra)}</div>
+    <div class="nt-val acc">${fmt(totalConPropinas)}</div>
+  </div>`);
+
+  document.getElementById('nt-body').innerHTML = rows.join('');
+
+  // ── PROPINAS ALERT ──
+  let propAlert = '';
+  if (S.propinas && meseros > 0) {
+    propAlert = `<div class="propinas-alert">
+      <div class="pa-title">⚖️ Ley de Propinas 2025 — lo que debes saber</div>
+      <div class="pa-item">Las propinas son parte del salario desde la reforma del 2025. No pueden reemplazar el sueldo mínimo.</div>
+      <div class="pa-item">Tienes que calcular y pagar el IMSS sobre el sueldo base <strong>más</strong> las propinas que recibe cada mesero.</div>
+      <div class="pa-item">No puedes apropiarte de las propinas ni retenerlas. Deben distribuirse entre el personal de servicio según lo acordado.</div>
+      <div class="pa-item">Si no lo haces, puedes recibir multas del IMSS y demandas laborales. Esta herramienta ya incluyó el costo extra de ${fmt(costoPropinasExtra)}/mes en el total.</div>
+    </div>`;
+  }
+  document.getElementById('propinas-alert-wrap').innerHTML = propAlert;
+
+  // ── DECISIONES ──
+  const decs = generarDecisiones(t, pctDeVentas, S.ventasMes, meseros);
+  document.getElementById('decs-wrap').innerHTML = decs.map((d,i) => `
+    <div class="dec-card">
+      <div class="dec-num">${i+1}</div>
+      <div class="dec-body">
+        <div class="dec-title">${d.titulo}</div>
+        <div class="dec-desc">${d.desc}</div>
+      </div>
+    </div>`).join('');
+
+  // Show CTA
+  document.getElementById('cta-wrap').style.display = 'block';
+
+  goStep(3);
+}
+
+// ─────────────────────────────────────────────
+// DECISIONES DINÁMICAS
+// ─────────────────────────────────────────────
+function generarDecisiones(t, pctVentas, ventas, meseros) {
+  const decs = [];
+  const totalPersonas = t.personas;
+  const extras = t.extras;
+
+  // 1. Sobre el % de ventas
+  if (ventas === 0) {
+    decs.push({
+      titulo: 'Calcula tu % de nómina sobre ventas',
+      desc: 'Agregar tus ventas mensuales en el paso 2 te dará el dato más importante: si tu nómina es sostenible. El rango sano es 15–25% de las ventas netas.'
+    });
+  } else if (pctVentas > 32) {
+    decs.push({
+      titulo: 'Tu nómina está en zona crítica — revisa la estructura',
+      desc: `Con ${pctVentas.toFixed(0)}% de tus ventas en nómina, cada mes cierras en números rojos. El primer paso es identificar qué puestos se pueden optimizar sin afectar el servicio. Un restaurante de servicio completo saludable opera con 22–28%.`
+    });
+  } else if (pctVentas > 25) {
+    decs.push({
+      titulo: 'Estás por encima del rango ideal — no es urgente, pero sí importante',
+      desc: `Tu nómina está al ${pctVentas.toFixed(0)}% de las ventas. Antes de contratar más personas, evalúa si puedes incrementar las ventas — generalmente es más fácil que recortar equipo.`
+    });
+  } else {
+    decs.push({
+      titulo: 'Tu nómina está en rango sano — cuídalo al crecer',
+      desc: `Estás al ${pctVentas.toFixed(0)}% de ventas en nómina. Cuando crezcas en ventas, el tentador es contratar más gente. Asegúrate de que cada persona nueva agregue más valor del que cuesta.`
+    });
+  }
+
+  // 2. Sobre el costo oculto
+  const pctExtra = totalPersonas > 0 ? Math.round((extras / t.sueldos) * 100) : 30;
+  decs.push({
+    titulo: `El ${pctExtra}% que no ves en la nómina te cuesta ${fmt(extras)}/mes`,
+    desc: `IMSS, INFONAVIT, aguinaldo y vacaciones suman ${fmt(extras)} al mes encima de los sueldos. Si no tienes esta cifra presupuestada, significa que estás gastando más de lo que crees cada mes.`
+  });
+
+  // 3. Sobre propinas o mínimo
+  if (meseros > 0 && S.propinas) {
+    decs.push({
+      titulo: 'Declara las propinas correctamente — el riesgo no vale la pena',
+      desc: 'La reforma de 2025 es clara: las propinas forman parte del salario y debes calcular IMSS sobre ellas. Las multas del IMSS por omisión pueden costar más que lo que "ahorras" al no declararlas. Esta herramienta ya te mostró el costo real de hacerlo bien.'
+    });
+  } else if (t.personas > 0) {
+    const minMes = S.zonaFrontera ? ZFN_MES : SMG_MES;
+    const bajosDelMin = PUESTOS.filter(p => S.puestos[p.id].qty > 0 && S.puestos[p.id].sueldo < minMes);
+    if (bajosDelMin.length > 0) {
+      decs.push({
+        titulo: 'Tienes puestos por debajo del salario mínimo legal',
+        desc: `${bajosDelMin.map(p=>p.nombre).join(', ')} tienen sueldo por debajo de ${fmt(minMes)}/mes. Pagar menos que el mínimo te expone a multas del IMSS y del INFONAVIT, y a demandas laborales. Ajusta los sueldos lo antes posible.`
+      });
+    } else {
+      decs.push({
+        titulo: 'Revisa si tu estructura de puestos es la correcta para tu volumen',
+        desc: `Con ${t.personas} personas en tu equipo, asegúrate de que la distribución tenga sentido para tus mesas. El estándar de la industria es 1 mesero por cada 4–6 mesas, y 1 cocinero por cada 25–30 cubiertos.`
+      });
+    }
+  }
+
+  return decs.slice(0, 3);
+}
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+window.addEventListener('load', function() {
+  // Pre-populate with a typical small restaurant for demo
+  // (all zeros until user interacts)
+  updateTotalBar();
+});
+</script>
+
+</body>
+</html>
