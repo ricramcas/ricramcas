@@ -489,7 +489,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
     <!-- RESTAURANTES -->
     <div class="tt-panel active" id="panel-rest" role="tabpanel" aria-labelledby="tab-rest">
-      <a href="/herramientas/restaurantes" class="tool-card" onclick="gtag('event','click_herramienta',{herramienta:'Diagnóstico de Precio',tab:'restaurantes'})">
+      <a href="/herramientas/restaurantes" class="tool-card">
         <div class="tc-top"><div class="tc-icon orange">🎯</div><span class="tc-badge-live">Disponible</span></div>
         <div class="tc-name">Diagnóstico de Precio</div>
         <div class="tc-desc">¿Estás cobrando lo que deberías? Descubre si tu precio encaja con lo que cobra tu tipo de cocina en tu ciudad, quiénes en tu mercado pueden pagarte, y cuántos clientes necesitas para llenar tu restaurante.</div>
@@ -503,7 +503,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
         <div class="tc-who">Para cocinas de cualquier tamaño · datos de la industria restaurantera 2026</div>
         <div class="tc-soon-txt">Próximamente disponible</div>
       </div>
-      <a href="/herramientas/restaurantes/nomina" class="tool-card" onclick="gtag('event','click_herramienta',{herramienta:'Nómina',tab:'restaurantes'})">
+      <a href="/herramientas/restaurantes/nomina" class="tool-card">
         <div class="tc-top"><div class="tc-icon orange">👥</div><span class="tc-badge-live">Disponible</span></div>
         <div class="tc-name">¿Cuánto te cuesta tu equipo?</div>
         <div class="tc-desc">Calcula el costo real de tu nómina: IMSS, INFONAVIT, aguinaldo y vacaciones incluidos. Simulador en tiempo real donde subes y bajas sueldos y ves al instante cuánto te cuesta cada persona. Incluye la Ley de Propinas 2025.</div>
@@ -521,14 +521,14 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
     <!-- EMPRENDIMIENTO -->
     <div class="tt-panel" id="panel-emp" role="tabpanel" aria-labelledby="tab-emp">
-      <a href="/herramientas/producto/brujula-valor" class="tool-card" onclick="gtag('event','click_herramienta',{herramienta:'Brújula de Valor',tab:'emprendimiento'})">
+      <a href="/herramientas/producto/brujula-valor" class="tool-card">
         <div class="tc-top"><div class="tc-icon blue">🧭</div><span class="tc-badge-live">Disponible</span></div>
         <div class="tc-name">Brújula de Valor</div>
         <div class="tc-desc">Antes de gastar dinero o tiempo construyendo tu idea: descubre si vale la pena. En unos minutos analizas si el problema que quieres resolver es real, si tu solución encaja con lo que la gente necesita, y si tu modelo de negocio tiene sentido. Con datos de por qué fracasan los proyectos.</div>
         <div class="tc-who">Para cualquiera que tenga una idea de negocio · cualquier industria</div>
         <div class="tc-action">Analizar mi idea →</div>
       </a>
-      <a href="/herramientas/producto/strategy-canvas" class="tool-card" onclick="gtag('event','click_herramienta',{herramienta:'Canvas de Diferenciación',tab:'emprendimiento'})">
+      <a href="/herramientas/producto/strategy-canvas" class="tool-card">
         <div class="tc-top"><div class="tc-icon blue">🗺️</div><span class="tc-badge-live">Disponible</span></div>
         <div class="tc-name">¿En qué eres diferente?</div>
         <div class="tc-desc">Compárate con la competencia factor por factor y ve las diferencias en una gráfica en tiempo real. Descubre dónde realmente destacas, dónde estás igual y dónde estás por debajo — y qué hacer con cada uno.</div>
@@ -761,6 +761,20 @@ heroRight.forEach((el) => {
   el.style.transition = 'opacity .5s ease ' + delay + 's, transform .5s ease ' + delay + 's';
   delay += 0.1;
   requestAnimationFrame(() => requestAnimationFrame(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }));
+});
+
+// TOOL CARD TRACKING — event delegation, non-blocking
+document.querySelectorAll('a.tool-card[href]').forEach(function(card) {
+  card.addEventListener('click', function() {
+    var href = card.getAttribute('href');
+    var name = card.querySelector('.tc-name');
+    if (typeof gtag !== 'undefined' && name) {
+      gtag('event', 'click_herramienta', {
+        herramienta: name.textContent.trim(),
+        destino: href
+      });
+    }
+  });
 });
 
 // SCROLL REVEAL
