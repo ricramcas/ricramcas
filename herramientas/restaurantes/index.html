@@ -683,7 +683,13 @@ function goStep(n){
   for(let i=1;i<=3;i++){const ps=document.getElementById('ps-'+i);ps.classList.remove('active','done');if(i===n)ps.classList.add('active');else if(i<n)ps.classList.add('done');}
   window.scrollTo({top:0,behavior:'smooth'});
 }
-function irPaso2(){S.mesas=parseInt(document.getElementById('mesas').value)||10;S.personas=parseInt(document.getElementById('personas').value)||3;gtag('event','calc_paso1',{ciudad:S.ciudad||'',cocina:selectedCocina||'',ticket:sliderValue||0});goStep(2);}
+function irPaso2(){
+  if(!S.ciudad){alert('Por favor elige tu ciudad antes de continuar.');return;}
+  if(!S.cocina){alert('Por favor elige el tipo de cocina antes de continuar.');return;}
+  if(!S.ticket||S.ticket<=0){alert('Por favor indica tu precio por persona antes de continuar.');return;}
+  gtag('event','calc_paso1',{ciudad:S.ciudad||'',cocina:S.cocina||'',ticket:S.ticket||0});
+  goStep(2);
+}
 
 function selCocina(btn){
   document.querySelectorAll('#cocina-grid .cocina-btn').forEach(b=>b.classList.remove('sel'));
@@ -750,7 +756,7 @@ function calcDiag(){
     if(r<0.5){ef='Muy accesible';ec='var(--green)';eb='var(--greenlt)';}
     else if(r<1.5){ef='Accesible';ec='#2D7A4F';eb='#F0FAF4';}
     else if(r<3){ef='Razonable';ec='var(--warn)';eb='var(--warnlt)';}
-    else if(r<5){ef='Significativo';ec='var(--red)';eb:'var(--redlt)';}
+    else if(r<5){ef='Significativo';ec='var(--red)';eb='var(--redlt)';}
     else{ef='Fuera de alcance';ec='#6B0F0A';eb='#FDE0DE';}
     const vis=Math.floor((nse.ing*0.06)/S.ticket);
     const tr=document.createElement('tr');
@@ -792,9 +798,10 @@ function calcDiag(){
 
   setTimeout(()=>setRC(3,100,'var(--green)'),600);
   gtag('event','calc_paso2',{mesas:S.mesas||0,personas:S.personas||0});
-  gtag('event','diagnostico_completado',{ciudad:S.ciudad||'',cocina:selectedCocina||'',ticket:sliderValue||0});
+  gtag('event','diagnostico_completado',{ciudad:S.ciudad||'',cocina:S.cocina||'',ticket:S.ticket||0});
   goStep(3);
 }
 </script>
 </body>
 </html>
+
